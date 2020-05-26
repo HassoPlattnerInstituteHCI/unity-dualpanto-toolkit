@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+/// <summary>
+/// The main DualPanto class. Takes care of the communication with the Panto.
+/// </summary>
 public class DualPantoSync : MonoBehaviour
 {
     public delegate void SyncDelegate(ulong handle);
@@ -33,39 +36,45 @@ public class DualPantoSync : MonoBehaviour
     private GameObject debugLowerObject;
     private GameObject debugUpperObject;
 
-    [DllImport("serial")]
+    #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+    private const string plugin = "serial";
+    #else
+    private const string plugin = "libserial";
+    #endif
+
+    [DllImport(plugin)]
     private static extern uint GetRevision();
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SetSyncHandler(SyncDelegate func);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SetHeartbeatHandler(HeartbeatDelegate func);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SetLoggingHandler(LoggingDelegate func);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern ulong Open(IntPtr port);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void Close(ulong handle);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void Poll(ulong handle);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SendSyncAck(ulong handle);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SendHeartbeatAck(ulong handle);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SendMotor(ulong handle, byte controlMethod, byte pantoIndex, float positionX, float positionY, float rotation);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void FreeMotor(ulong handle, byte controlMethod, byte pantoIndex);
-    [DllImport("serial")]
+    [DllImport(plugin)]
     private static extern void SetPositionHandler(PositionDelegate func);
-    [DllImport("Serial")]
+    [DllImport(plugin)]
     private static extern void CreateObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
-    [DllImport("Serial")]
+    [DllImport(plugin)]
     private static extern void AddToObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
-    [DllImport("Serial")]
+    [DllImport(plugin)]
     private static extern void RemoveObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
-    [DllImport("Serial")]
+    [DllImport(plugin)]
     private static extern void EnableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
-    [DllImport("Serial")]
+    [DllImport(plugin)]
     private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
 
     private static void SyncHandler(ulong handle)
