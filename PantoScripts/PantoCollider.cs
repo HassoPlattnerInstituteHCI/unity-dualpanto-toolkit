@@ -33,15 +33,18 @@ public abstract class PantoCollider : PantoBehaviour
         return new Vector2[] { topRight, bottomRight, bottomLeft, topLeft };
     }
 
+    /// <summary>
+    /// Registers the obstacle on the Panto, the shape depends on its type
+    /// </summary>
     public abstract void CreateObstacle();
 
-    public void CreateBoxObstacle()
+    protected void CreateBoxObstacle()
     {
         Bounds bounds = GetComponent<Collider>().bounds;
         CreateFromCorners(CornersFromBounds(bounds));
     }
 
-    public void CreateCircularCollider(int numberOfCorners)
+    protected void CreateCircularCollider(int numberOfCorners)
     {
         Vector3 center = GetComponent<SphereCollider>().center + transform.position;
         Vector3 radius = GetComponent<SphereCollider>().radius * transform.lossyScale;
@@ -84,9 +87,12 @@ public abstract class PantoCollider : PantoBehaviour
         GetPantoSync().DisableObstacle(getPantoIndex(), id);
     }
 
+    /// <summar>
+    /// Removes the obstacle. This is not yet supported, use DisableSelf() instead.
+    /// </summary>
     public void RemoveSelf()
     {
-        GetPantoSync().RemoveObstacle(getPantoIndex(), id);
+        //GetPantoSync().RemoveObstacle(getPantoIndex(), id);
     }
 
     public void EnableSelf()

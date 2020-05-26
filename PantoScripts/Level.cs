@@ -14,6 +14,10 @@ public class Level : PantoBehaviour
         audioSource = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
         //audioSource = GetComponent<AudioSource>();
     }
+
+    /// <summary>
+    /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
+    /// </summary>
     public IEnumerator playIntroduction()
     {
         ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
@@ -23,6 +27,8 @@ public class Level : PantoBehaviour
         {
             yield return introduceObject(gos[index]);
         }
+        GetPantoGameObject().GetComponent<LowerHandle>().Free();
+        GetPantoGameObject().GetComponent<UpperHandle>().Free();
     }
 
     public IEnumerator introduceObject(ObjectOfInterest objectOfInterest)
@@ -49,8 +55,6 @@ public class Level : PantoBehaviour
         {
             yield return pantoHandle.SwitchTo(objectOfInterest.gameObject, 0.2f);
         }
-        GetPantoGameObject().GetComponent<LowerHandle>().Free();
-        GetPantoGameObject().GetComponent<UpperHandle>().Free();
     }
 }
 

@@ -20,9 +20,7 @@ public class DualPantoSync : MonoBehaviour
     // bounds are defined by center and extent
     private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) };
     private static Vector2[] unityBounds;
-
-    [Tooltip("Upper middle of the Play Area, if you use the default size, you don't need to update this")]
-    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 13f); //unityToPanto(new Vector2(0, -32));
+    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
     private static Vector3 upperHandlePos = handleDefaultPosition;
     private static Vector3 lowerHandlePos = handleDefaultPosition;
     private static Vector3 upperGodObject = handleDefaultPosition;
@@ -101,8 +99,7 @@ public class DualPantoSync : MonoBehaviour
 
     private static void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
     {
-        //Debug.Log("Received positions: (" + positions[5] + "|" + positions[6] + "rot:" + positions[7] + ")");
-        //Debug.Log("Rotation Upper: " + positions[2] + "  ---  Lower: "  + positions[7]);
+        //Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + "rot:" + positions[2] + ")");
         Vector2 unityPosUpper = pantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
         Vector2 unityGodUpper = pantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
         upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
@@ -166,6 +163,8 @@ public class DualPantoSync : MonoBehaviour
 
     void OnDestroy()
     {
+        FreeHandle(true);
+        FreeHandle(false);
         Close(Handle);
     }
 
@@ -229,7 +228,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-            //SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
+            FreeMotor(Handle, (byte) 0, isUpper ? (byte)0 : (byte)1);
         }
     }
 
@@ -250,15 +249,20 @@ public class DualPantoSync : MonoBehaviour
                 GameObject debugObject = getDebugObject(isUpper);
                 //TODO make it so position can be null
                 if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
-                if (rotation != null) debugObject.transform.eulerAngles = new Vector3(0, (float)rotation, 0);
+                if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
 
             }
         Vector2 pantoPoint = unityToPanto(new Vector2(position.x, position.z));
         if (IsInBounds(pantoPoint))
         {
-                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0; 
-                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
+            Vector2 currentPantoPoint = unityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
+            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 5f) {
+                Debug.LogWarning("Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
+                return;
+            }
+            float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0; 
+            SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
         }
         else
         {
@@ -285,12 +289,20 @@ public class DualPantoSync : MonoBehaviour
 
     private static Vector2 unityToPanto(Vector2 point)
     {
+        if (unityBounds == null) {
+            Debug.LogError("Unity Bounds are null, did you forget to create a Play Area?");
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
         float newX = (point.x - unityBounds[0].x) * pantoBounds[1].x / unityBounds[1].x + pantoBounds[0].x;
         float newY = (point.y - unityBounds[0].y) * pantoBounds[1].y / unityBounds[1].y + pantoBounds[0].y;
         return new Vector2(newX, newY);
     }
     private static Vector2 pantoToUnity(Vector2 point)
     {
+        if (unityBounds == null) {
+            Debug.LogError("Unity Bounds are null, did you forget to create a Play Area?");
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
         float newX = (point.x - pantoBounds[0].x) * unityBounds[1].x / pantoBounds[1].x + unityBounds[0].x;
         float newY = (point.y - pantoBounds[0].y) * unityBounds[1].y / pantoBounds[1].y + unityBounds[0].y;
         return new Vector2(newX, newY);
