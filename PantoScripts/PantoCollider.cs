@@ -34,7 +34,7 @@ public abstract class PantoCollider : PantoBehaviour
     }
 
     /// <summary>
-    /// Registers the obstacle on the Panto, the shape depends on its type
+    /// Registers the obstacle on the Panto, the shape depends on its type. Don't forget to call EnableSelf()
     /// </summary>
     public abstract void CreateObstacle();
 
@@ -76,6 +76,9 @@ public abstract class PantoCollider : PantoBehaviour
         pantoSync.AddToObstacle(index, id, corners[corners.Length - 1], corners[0]);
     }
 
+    /// <summar>
+    /// Disables the obstacle
+    /// </summary>
     public void DisableSelf()
     {
         if (!pantoEnabled)
@@ -95,6 +98,9 @@ public abstract class PantoCollider : PantoBehaviour
         //GetPantoSync().RemoveObstacle(getPantoIndex(), id);
     }
 
+    /// <summar>
+    /// Enables the obstacle. This needs to be called after creating the obstacle.
+    /// </summary>
     public void EnableSelf()
     {
         if (pantoEnabled)

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using SpeechIO;
 
+/// <summary>
+/// A level that can be introduced to the player. You could use one of these for each scene, or for each room in a scene.
+/// </summary>
 public class Level : PantoBehaviour
 {
     AudioSource audioSource;
@@ -11,7 +14,7 @@ public class Level : PantoBehaviour
     protected override void Awake()
     {
         base.Awake();
-        audioSource = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
+        //audioSource = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
         //audioSource = GetComponent<AudioSource>();
     }
 
