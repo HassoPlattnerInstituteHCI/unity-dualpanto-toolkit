@@ -10,16 +10,30 @@ You will need something to edit code (e.g. the VisualStudio IDE or VisualStudio 
 For version control you will need git.
 
 ### Install the ESP32 driver
-
 - [Download](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers) the installer for your OS-Version.
 - Run the installer.
 
-### SpeechIO
-You will also need the [UnitySpeechIO Project](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity)
+### Adding the framework to your project
+Create a Unity project in a git repo, then add this framework as a submodule into the Assets folder:
+```
+cd path/to/repo
+cd Assets
+git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
+```
+You will also need the [UnitySpeechIO Project](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity).
+```
+cd path/to/repo
+cd Assets
+git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
+```
 
-## Running your application on a dualpanto device
+## Creating a new Panto Application in Unity
+Prepare your scene by making sure the camera is facing straight down onto your scene.
+Drag the Panto Prefab into your scene. The Panto game object has four components attached to it: the DualPantoSync, the lower handle, the upper handle and a level.
 
-After adding the Panto object to your scene check it in the inspector and make sure that the debug mode is disabled
+There are two ways to test your app:
+* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle.
+* Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer.
 
 ### Find out the serial port of your device 
 
