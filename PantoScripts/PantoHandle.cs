@@ -27,9 +27,9 @@ public class PantoHandle : PantoBehaviour
         userControlledRotation = false;
         if (inTransition)
         {
-            Debug.LogWarning("Discarding not yet reached gameObject" + gameObject);
+            Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject" + gameObject);
         }
-        Debug.Log("Switching to:" + position);
+        Debug.Log("[DualPanto] Switching to:" + position);
         //handledGameObject = newHandle;
         speed = newSpeed;
         inTransition = true;
@@ -50,9 +50,9 @@ public class PantoHandle : PantoBehaviour
         userControlledRotation = false;
         if (inTransition)
         {
-            Debug.LogWarning("Discarding not yet reached gameObject: " + handledGameObject.name);
+            Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject: " + handledGameObject.name);
         }
-        Debug.Log("Switching to:" + newHandle.name);
+        Debug.Log("[DualPanto] Switching to: " + newHandle.name);
         handledGameObject = newHandle;
         speed = newSpeed;
         inTransition = true;
@@ -213,7 +213,7 @@ public class PantoHandle : PantoBehaviour
         else
         {
             if (inTransition) {
-                Debug.Log("Reached: " + handledGameObject.name);
+                Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
                 inTransition = false;
             }
             GetPantoSync().UpdateHandlePosition(goalPos, handledGameObject.transform.eulerAngles.y, isUpper);

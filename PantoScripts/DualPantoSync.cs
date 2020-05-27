@@ -79,13 +79,13 @@ public class DualPantoSync : MonoBehaviour
 
     private static void SyncHandler(ulong handle)
     {
-        Debug.Log("Received sync");
+        Debug.Log("[DualPanto] Received sync");
         SendSyncAck(handle);
     }
 
     private static void HeartbeatHandler(ulong handle)
     {
-        Debug.Log("Received heartbeat");
+        Debug.Log("[DualPanto] Received heartbeat");
         SendHeartbeatAck(handle);
     }
 
@@ -98,11 +98,11 @@ public class DualPantoSync : MonoBehaviour
         }
         else if (message.Contains("failed"))
         {
-            Debug.LogError(message);
+            Debug.LogError("[DualPanto] " +  message);
         }
         else
         {
-            Debug.Log(message);
+            Debug.Log("[DualPanto] " + message);
         }
     }
 
@@ -145,7 +145,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-            Debug.Log("Serial protocol revision: " + GetRevision());
+            Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
             SetLoggingHandler(LogHandler);
             SetSyncHandler(SyncHandler);
             SetHeartbeatHandler(HeartbeatHandler);
@@ -267,7 +267,7 @@ public class DualPantoSync : MonoBehaviour
         {
             Vector2 currentPantoPoint = unityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
             if (Vector2.Distance(currentPantoPoint, pantoPoint) > 5f) {
-                Debug.LogWarning("Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
+                Debug.LogWarning("[DualPanto] Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
                 return;
             }
             float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0; 
@@ -275,7 +275,7 @@ public class DualPantoSync : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Position not in bounds: " + pantoPoint);
+            Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
         }
     }
 
@@ -299,7 +299,7 @@ public class DualPantoSync : MonoBehaviour
     private static Vector2 unityToPanto(Vector2 point)
     {
         if (unityBounds == null) {
-            Debug.LogError("Unity Bounds are null, did you forget to create a Play Area?");
+            Debug.LogError("[DualPanto] Unity Bounds are null, did you forget to create a Play Area?");
             UnityEditor.EditorApplication.isPlaying = false;
         }
         float newX = (point.x - unityBounds[0].x) * pantoBounds[1].x / unityBounds[1].x + pantoBounds[0].x;
@@ -309,7 +309,7 @@ public class DualPantoSync : MonoBehaviour
     private static Vector2 pantoToUnity(Vector2 point)
     {
         if (unityBounds == null) {
-            Debug.LogError("Unity Bounds are null, did you forget to create a Play Area?");
+            Debug.LogError("[DualPanto] Unity Bounds are null, did you forget to create a Play Area?");
             UnityEditor.EditorApplication.isPlaying = false;
         }
         float newX = (point.x - pantoBounds[0].x) * unityBounds[1].x / pantoBounds[1].x + unityBounds[0].x;
@@ -339,7 +339,7 @@ public class DualPantoSync : MonoBehaviour
 
     public void SetUnityBounds(Vector3 origin, Vector3 extent)
     {
-        Debug.Log("Play Area setting bounds");
+        Debug.Log("[DualPanto] Play Area setting bounds");
         unityBounds = new Vector2[] { new Vector2(origin.x, origin.z), new Vector2(extent.x, extent.z) };
     }
 

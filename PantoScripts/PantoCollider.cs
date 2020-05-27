@@ -66,7 +66,7 @@ public abstract class PantoCollider : PantoBehaviour
         byte index = getPantoIndex();
         if (index == 2)
         {
-            Debug.LogWarning("Skipping creation for object with no handles");
+            Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
         }
         pantoSync.CreateObstacle(index, id, corners[0], corners[1]);
         for (int i = 1; i < corners.Length - 1; i++)
@@ -83,7 +83,7 @@ public abstract class PantoCollider : PantoBehaviour
     {
         if (!pantoEnabled)
         {
-            Debug.Log("Already disabled");
+            Debug.Log("[DualPanto] Obstacle already disabled");
             return;
         }
         pantoEnabled = false;
@@ -105,7 +105,7 @@ public abstract class PantoCollider : PantoBehaviour
     {
         if (pantoEnabled)
         {
-            Debug.Log("Already enabled");
+            Debug.Log("[DualPanto] Obstacle already enabled");
             return;
         }
         pantoEnabled = true;

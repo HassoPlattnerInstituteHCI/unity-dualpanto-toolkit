@@ -46,7 +46,6 @@ public class PantoCompoundCollider : PantoCollider
 
     public void CreateCompundObstacle()
     {
-        Debug.Log("Compound");
         Collider[] colliders = gameObject.GetComponentsInChildren<Collider>();
         Collider coll = colliders[0];
 
