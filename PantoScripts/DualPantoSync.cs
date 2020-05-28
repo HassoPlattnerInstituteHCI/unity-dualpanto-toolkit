@@ -244,7 +244,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-            FreeMotor(Handle, (byte) 0, isUpper ? (byte)0 : (byte)1);
+            SendMotor(Handle, (byte) 0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
         }
     }
 
