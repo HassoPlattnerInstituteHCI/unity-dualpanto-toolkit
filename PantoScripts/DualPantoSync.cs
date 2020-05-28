@@ -21,7 +21,8 @@ public class DualPantoSync : MonoBehaviour
     private static UpperHandle upperHandle;
 
     // bounds are defined by center and extent
-    private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) };
+    //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
+    private static Vector2[] pantoBounds = { new Vector2(20, -80), new Vector2(180, 140) }; // ember
     private static Vector2[] unityBounds;
     public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
     private static Vector3 upperHandlePos = handleDefaultPosition;
