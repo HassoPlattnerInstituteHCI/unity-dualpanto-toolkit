@@ -78,6 +78,9 @@ public class DualPantoSync : MonoBehaviour
     [DllImport(plugin)]
     private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
 
+    void Start(){
+        Application.targetFrameRate = 60;
+    }
     private static void SyncHandler(ulong handle)
     {
         Debug.Log("[DualPanto] Received sync");
