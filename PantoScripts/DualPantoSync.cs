@@ -13,6 +13,8 @@ public class DualPantoSync : MonoBehaviour
     public delegate void HeartbeatDelegate(ulong handle);
     public delegate void LoggingDelegate(IntPtr msg);
     public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
+
+    [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
     public bool debug = false;
     public float debugRotationSpeed = 10.0f;
     public KeyCode toggleVisionKey = KeyCode.B;
