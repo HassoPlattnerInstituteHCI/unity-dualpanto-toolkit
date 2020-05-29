@@ -14,7 +14,7 @@ public class DualPantoSync : MonoBehaviour
     public delegate void LoggingDelegate(IntPtr msg);
     public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
     public bool debug = false;
-    public float debugScrollSpeed = 10.0f;
+    public float debugRotationSpeed = 10.0f;
     public KeyCode toggleVisionKey = KeyCode.B;
     protected ulong Handle;
     private static LowerHandle lowerHandle;
@@ -190,7 +190,7 @@ public class DualPantoSync : MonoBehaviour
         else
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float mouseRotation = Input.GetAxis("Horizontal") * debugScrollSpeed;
+            float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed;
             Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
             float r = debugUpperObject.transform.eulerAngles.y + mouseRotation;
             upperHandlePos = position;
