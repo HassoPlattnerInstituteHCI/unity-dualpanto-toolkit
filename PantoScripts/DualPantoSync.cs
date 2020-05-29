@@ -24,7 +24,7 @@ public class DualPantoSync : MonoBehaviour
     //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
     private static Vector2[] pantoBounds = { new Vector2(20, -80), new Vector2(180, 140) }; // ember
     private static Vector2[] unityBounds;
-    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
+    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 0f);//new Vector3(0f, 0f, 14.5f);
     private static Vector3 upperHandlePos = handleDefaultPosition;
     private static Vector3 lowerHandlePos = handleDefaultPosition;
     private static Vector3 upperGodObject = handleDefaultPosition;
@@ -148,8 +148,8 @@ public class DualPantoSync : MonoBehaviour
     void Awake()
     {
         // should be discovered automatically
-        Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
-        if(Handle == (ulong)0){ // if deivce not found then switch to debug mode.
+        Handle = OpenPort("//.//COM3");
+        if(Handle == (ulong) 0){ // if deivce not found then switch to debug mode.
             debug = true; 
         }
         if (!debug)
@@ -260,15 +260,14 @@ public class DualPantoSync : MonoBehaviour
 
     public void UpdateHandlePosition(Vector3 position, float? rotation, bool isUpper)
     {
-            if (debug)
-            {
-                GameObject debugObject = getDebugObject(isUpper);
-                //TODO make it so position can be null
-                if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
-                if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
-                return;
-
-            }
+        if (debug)
+        {
+            GameObject debugObject = getDebugObject(isUpper);
+            //TODO make it so position can be null
+            if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
+            if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
+            return;
+        }
         Vector2 pantoPoint = unityToPanto(new Vector2(position.x, position.z));
         if (IsInBounds(pantoPoint))
         {
@@ -348,6 +347,7 @@ public class DualPantoSync : MonoBehaviour
     {
         Debug.Log("[DualPanto] Play Area setting bounds");
         unityBounds = new Vector2[] { new Vector2(origin.x, origin.z), new Vector2(extent.x, extent.z) };
+        //unityBounds = new Vector2[] { new Vector2(origin.x - extent.x / 4, origin.z), new Vector2(extent.x / 2, extent.z / 2) };
     }
 
     public void RegisterUpperHandle(UpperHandle newHandle)
