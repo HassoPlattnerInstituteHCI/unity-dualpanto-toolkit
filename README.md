@@ -30,7 +30,7 @@ git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
 ## Creating a new Panto Application in Unity
 Drag the Panto Prefab into your scene. The Panto game object has four components attached to it: the DualPantoSync, the lower handle, the upper handle and a level.
 
-Prepare your scene by making sure the camera is facing straight down onto your scene. `Main Camera -> Projecttion` should be `orthographic`. Rotate it to `90` on the x axis, so it's facing downwards. Adjust the position, height and size so that you can see the entire area of the level.
+Prepare your scene by making sure the camera is facing straight down onto your scene. `Main Camera -> Projection` should be `orthographic`. Rotate it to `90` on the x axis, so it's facing downwards. Adjust the position, height and size so that you can see the entire area of the level.
 
 It is good practice to reduce the rendering quality of your application, you can do this via `Edit -> Project Settings -> Quality`.
 
