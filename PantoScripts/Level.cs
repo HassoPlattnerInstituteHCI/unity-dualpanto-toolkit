@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SpeechIO;
+using System.Threading.Tasks;
 
 /// <summary>
 /// A level that can be introduced to the player. You could use one of these for each scene, or for each room in a scene.
@@ -14,31 +15,28 @@ public class Level : PantoBehaviour
     protected override void Awake()
     {
         base.Awake();
-        //audioSource = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
-        //audioSource = GetComponent<AudioSource>();
     }
 
     /// <summary>
     /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
     /// </summary>
-    public IEnumerator playIntroduction()
+    async public Task playIntroduction()
     {
         ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
         Array.Sort(gos, ((go1, go2) => go2.priority.CompareTo(go1.priority)));
 
         for (int index = 0; index < gos.Length; index++)
         {
-            yield return introduceObject(gos[index]);
+           await introduceObject(gos[index]);
         }
         GetPantoGameObject().GetComponent<LowerHandle>().Free();
         GetPantoGameObject().GetComponent<UpperHandle>().Free();
     }
 
-    public IEnumerator introduceObject(ObjectOfInterest objectOfInterest)
+    async public Task introduceObject(ObjectOfInterest objectOfInterest)
     {
-        //audioSource.clip = objectOfInterest.introductionSound;
-        //audioSource.Play();
-        speechOut.Speak(objectOfInterest.description);
+        Task[] tasks =  new Task[2];
+        tasks[0] = speechOut.Speak(objectOfInterest.description);
 
         PantoHandle pantoHandle = objectOfInterest.isOnUpper
             ? (PantoHandle)GetPantoGameObject().GetComponent<UpperHandle>()
@@ -52,12 +50,14 @@ public class Level : PantoBehaviour
                 children.Add(child.gameObject);
             }
             children.Sort((GameObject g1, GameObject g2) => g1.name.CompareTo(g2.name));
-            yield return pantoHandle.TraceObjectByPoints(children, 0.2f);
+            tasks[1] = pantoHandle.TraceObjectByPoints(children, 0.2f);
         }
         else
         {
-            yield return pantoHandle.SwitchTo(objectOfInterest.gameObject, 0.2f);
+            tasks[1] = pantoHandle.SwitchTo(objectOfInterest.gameObject, 0.2f);
         }
+        await Task.WhenAll(tasks);
+        await Task.Delay(500);
     }
 }
 
