@@ -28,15 +28,17 @@ git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
 ```
 
 ## Creating a new Panto Application in Unity
-Prepare your scene by making sure the camera is facing straight down onto your scene.
 Drag the Panto Prefab into your scene. The Panto game object has four components attached to it: the DualPantoSync, the lower handle, the upper handle and a level.
 
+Prepare your scene by making sure the camera is facing straight down onto your scene. `Main Camera -> Projecttion` should be `orthographic`. Rotate it to `90` on the x axis, so it's facing downwards. Adjust the position, height and size so that you can see the entire area of the level.
+
+It is good practice to reduce the rendering quality of your application, you can do this via `Edit -> Project Settings -> Quality`.
+
 There are two ways to test your app:
-* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle.
+* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, they will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer.
 
 ### Find out the serial port of your device 
-
 At this point we still need to manually update the serial port of our panto before running the application.
 Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the file _Assets -> PantoScripts -> DualPantoSync.cs_ with our serial port.
 
