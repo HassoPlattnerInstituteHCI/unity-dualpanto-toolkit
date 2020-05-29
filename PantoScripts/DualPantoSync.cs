@@ -15,7 +15,7 @@ public class DualPantoSync : MonoBehaviour
     public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
     public bool debug = false;
     public float debugScrollSpeed = 10.0f;
-    public KeyCode toggleVisionKey = KeyCode.Space;
+    public KeyCode toggleVisionKey = KeyCode.B;
     protected ulong Handle;
     private static LowerHandle lowerHandle;
     private static UpperHandle upperHandle;
@@ -222,16 +222,10 @@ public class DualPantoSync : MonoBehaviour
         }
         else
         {
-            Light upperLight = debugUpperObject.transform.GetChild(0).GetComponent<Light>();
-            Light lowerLight = debugLowerObject.transform.GetChild(0).GetComponent<Light>();
-            upperLight.enabled = !upperLight.enabled;
-            lowerLight.enabled = !lowerLight.enabled;
-
-            GameObject lights = GameObject.Find("Light");
-            if (lights.GetComponent<Light>()) lights.GetComponent<Light>().enabled = !lights.GetComponent<Light>().enabled;
-            foreach (Transform child in lights.transform)
+            Light[] lights = GameObject.FindObjectsOfType<Light>();
+            foreach (Light light in lights)
             {
-                child.GetComponent<Light>().enabled = !child.GetComponent<Light>().enabled;
+                light.enabled = !light.enabled;
             }
         }
         isBlindModeOn = !isBlindModeOn;

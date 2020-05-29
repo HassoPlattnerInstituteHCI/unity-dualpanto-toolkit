@@ -38,6 +38,10 @@ There are two ways to test your app:
 * Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, they will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer.
 
+To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. By default, pressing `b` during game play will toggle this mode.
+If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
+This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
+
 ### Find out the serial port of your device 
 At this point we still need to manually update the serial port of our panto before running the application.
 Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the file _Assets -> PantoScripts -> DualPantoSync.cs_ with our serial port.
