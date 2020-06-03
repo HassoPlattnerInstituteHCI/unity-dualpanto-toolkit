@@ -14,7 +14,9 @@ For version control you will need git.
 - Run the installer.
 
 ### Adding the framework to your project
-Create a Unity project in a git repo, then add this framework as a submodule into the Assets folder:
+If you already have a Unity project, that's great. If not, create a new Unity 3D project, initialize a git repo with `git init` and add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore).
+
+Add this framework as a submodule into the Assets folder:
 ```
 cd path/to/repo
 cd Assets
@@ -27,30 +29,35 @@ cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
 ```
 
-## Creating a new Panto Application in Unity
-Drag the Panto Prefab into your scene. The Panto game object has four components attached to it: the DualPantoSync, the lower handle, the upper handle and a level.
+## Creating a Panto Application in Unity
+### Adding the right components
+Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-framework -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a child component: the Panto Working Area. This is the area the DualPanto can reach.
 
+### Setting up the camera
 Prepare your scene by making sure the camera is facing straight down onto your scene. `Main Camera -> Projection` should be `orthographic`. Rotate it to `90` on the x axis, so it's facing downwards. Adjust the position, height and size so that you can see the entire area of the level.
 
-It is good practice to reduce the rendering quality of your application, you can do this via `Edit -> Project Settings -> Quality`.
-
-There are two ways to test your app:
-* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, they will follow the mouse. You emulate rotation input with `a` and `d`.
-* Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer.
-
-To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. By default, pressing `b` during game play will toggle this mode.
-If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
-This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
+### Reducing the rendering quality
+It is good practice to reduce the rendering quality of your application, you can do this via `Edit -> Project Settings -> Quality`. Select `Very Low` in the `Default` dropdown.
 
 ### Find out the serial port of your device 
 At this point we still need to manually update the serial port of our panto before running the application.
-Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the file _Assets -> PantoScripts -> DualPantoSync.cs_ with our serial port.
+Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the Panto prefab.
 
 On Windows open the _Device Manager_ and go to _Ports (COM & LPT)_. Under that tab you will find a device called "Silicon Labs CP..." with the usb serial port in brackets (e.g. "COM6"). 
-The string in your _DualPantoSync.cs_ would hence after updating be "//.//COM6".
+The _Port Name_ in your Pant Object would hence after updating be "//.//COM6".
 
 On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
 To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
-Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _DualPantoSync.cs_.
+Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ on the Panto Object.
 
 Now you're ready to run the application by clicking the play button. :)
+
+### Testing your app
+There are two ways to test your app:
+* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, they will follow the mouse. You emulate rotation input with `a` and `d`.
+* Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer. If you have no device connect, it will fall back to the emulator mode.
+
+### Using the Blind emulator
+To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. By default, pressing `b` during game play will toggle this mode.
+If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
+This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
