@@ -13,9 +13,11 @@ public class DualPantoSync : MonoBehaviour
     public delegate void HeartbeatDelegate(ulong handle);
     public delegate void LoggingDelegate(IntPtr msg);
     public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
+
+    [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
     public bool debug = false;
-    public float debugScrollSpeed = 10.0f;
-    public KeyCode toggleVisionKey = KeyCode.Space;
+    public float debugRotationSpeed = 10.0f;
+    public KeyCode toggleVisionKey = KeyCode.B;
     protected ulong Handle;
     private static LowerHandle lowerHandle;
     private static UpperHandle upperHandle;
@@ -147,11 +149,6 @@ public class DualPantoSync : MonoBehaviour
 
     void Awake()
     {
-        // should be discovered automatically
-        Handle = OpenPort("//.//COM3");
-        if(Handle == (ulong) 0){ // if deivce not found then switch to debug mode.
-            debug = true; 
-        }
         if (!debug)
         {
             Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
@@ -159,8 +156,14 @@ public class DualPantoSync : MonoBehaviour
             SetSyncHandler(SyncHandler);
             SetHeartbeatHandler(HeartbeatHandler);
             SetPositionHandler(PositionHandler);
+            // should be discovered automatically
+            Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
+            //Handle = OpenPort("//.//COM3");
+            if(Handle == (ulong)0){ // if device not found then switch to debug mode.
+                debug = true; 
+            }
         }
-        else
+        if (debug)
         {
             CreateDebugObjects();
         }
@@ -193,7 +196,7 @@ public class DualPantoSync : MonoBehaviour
         else
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float mouseRotation = Input.GetAxis("Horizontal") * debugScrollSpeed;
+            float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed;
             Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
             float r = debugUpperObject.transform.eulerAngles.y + mouseRotation;
             upperHandlePos = position;
@@ -225,16 +228,10 @@ public class DualPantoSync : MonoBehaviour
         }
         else
         {
-            Light upperLight = debugUpperObject.transform.GetChild(0).GetComponent<Light>();
-            Light lowerLight = debugLowerObject.transform.GetChild(0).GetComponent<Light>();
-            upperLight.enabled = !upperLight.enabled;
-            lowerLight.enabled = !lowerLight.enabled;
-
-            GameObject lights = GameObject.Find("Light");
-            if (lights.GetComponent<Light>()) lights.GetComponent<Light>().enabled = !lights.GetComponent<Light>().enabled;
-            foreach (Transform child in lights.transform)
+            Light[] lights = GameObject.FindObjectsOfType<Light>();
+            foreach (Light light in lights)
             {
-                child.GetComponent<Light>().enabled = !child.GetComponent<Light>().enabled;
+                light.enabled = !light.enabled;
             }
         }
         isBlindModeOn = !isBlindModeOn;
