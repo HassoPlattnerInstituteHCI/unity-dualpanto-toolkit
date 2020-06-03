@@ -80,6 +80,9 @@ public class DualPantoSync : MonoBehaviour
     [DllImport(plugin)]
     private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
 
+    void Start(){
+        Application.targetFrameRate = 60;
+    }
     private static void SyncHandler(ulong handle)
     {
         Debug.Log("[DualPanto] Received sync");
@@ -146,11 +149,6 @@ public class DualPantoSync : MonoBehaviour
 
     void Awake()
     {
-        // should be discovered automatically
-        Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
-        if(Handle == (ulong)0){ // if deivce not found then switch to debug mode.
-            debug = true; 
-        }
         if (!debug)
         {
             Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
@@ -158,8 +156,14 @@ public class DualPantoSync : MonoBehaviour
             SetSyncHandler(SyncHandler);
             SetHeartbeatHandler(HeartbeatHandler);
             SetPositionHandler(PositionHandler);
+            // should be discovered automatically
+            Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
+            //Handle = OpenPort("//.//COM3");
+            if(Handle == (ulong)0){ // if device not found then switch to debug mode.
+                debug = true; 
+            }
         }
-        else
+        if (debug)
         {
             CreateDebugObjects();
         }
@@ -237,7 +241,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-            FreeMotor(Handle, (byte) 0, isUpper ? (byte)0 : (byte)1);
+            SendMotor(Handle, (byte) 0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
         }
     }
 
@@ -266,7 +270,7 @@ public class DualPantoSync : MonoBehaviour
         if (IsInBounds(pantoPoint))
         {
             Vector2 currentPantoPoint = unityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 5f) {
+            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 100f) {
                 Debug.LogWarning("[DualPanto] Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
                 return;
             }

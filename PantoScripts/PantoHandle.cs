@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -14,14 +15,16 @@ public class PantoHandle : PantoBehaviour
     private float rotation;
     static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
     private Vector3 position = handleDefaultPosition;
+    private Vector3 startPosition; //tweening
     private Vector3? godObjectPosition;
     protected bool userControlledPosition = true; //for debug only
     protected bool userControlledRotation = true; //for debug only
 
+    public float tweenValue  = 0.0f; //tweening
     /// <summary>
     /// Moves the handle to the given position at the given speed. The handle will then be freed.
     /// </summary>
-    public IEnumerator MoveToPosition(Vector3 position, float newSpeed) {
+    async public Task MoveToPosition(Vector3 position, float newSpeed) {
         //TODO
         userControlledPosition = false;
         userControlledRotation = false;
@@ -36,7 +39,7 @@ public class PantoHandle : PantoBehaviour
 
         while (inTransition)
         {
-            yield return new WaitForSeconds(.01f);
+            await Task.Delay(10);
         }
         Free();
     }
@@ -44,7 +47,7 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
     /// </summary>
-    public IEnumerator SwitchTo(GameObject newHandle, float newSpeed)
+    async public Task SwitchTo(GameObject newHandle, float newSpeed)
     {
         userControlledPosition = false;
         userControlledRotation = false;
@@ -57,10 +60,16 @@ public class PantoHandle : PantoBehaviour
         speed = newSpeed;
         inTransition = true;
 
+        tweenValue = 0;
+        startPosition = getPosition();
+
         while (inTransition)
         {
-            yield return new WaitForSeconds(.01f);
+            await Task.Delay(10);
         }
+        //tweenValue = 0;
+        //startPosition = getPosition();
+        //Debug.Log("startPosition" + startPosition);
     }
 
     /// <summary>
@@ -120,7 +129,6 @@ public class PantoHandle : PantoBehaviour
             }
         }
         return newPosition;
-        //return transform.position = new Vector3(0, 0, 0);
     }
 
     public Vector3? getGodObjectPosition() {
@@ -185,17 +193,18 @@ public class PantoHandle : PantoBehaviour
         godObjectPosition = newGodObjectPosition;
     }
 
-    public IEnumerator TraceObjectByPoints(List<GameObject> cornerObjects, float speed)
+    async public Task TraceObjectByPoints(List<GameObject> cornerObjects, float speed)
     {
         for (int i = 0; i < cornerObjects.Count; i++)
         {
-            yield return SwitchTo(cornerObjects[i], speed);
+            await SwitchTo(cornerObjects[i], speed);
         }
-        yield return SwitchTo(cornerObjects[0], speed);
+        await SwitchTo(cornerObjects[0], speed);
     }
 
     protected void Update()
     {
+        tweenValue = Mathf.Min(1.0f, tweenValue+0.04f);
         if (handledGameObject == null)
         {
             inTransition = false;
@@ -207,8 +216,8 @@ public class PantoHandle : PantoBehaviour
 
         if (Vector3.Distance(currentPos, goalPos) > movementSpeed)
         {
-            Vector3 movement = (goalPos - currentPos).normalized * movementSpeed;
-            GetPantoSync().UpdateHandlePosition(currentPos + movement, handledGameObject.transform.eulerAngles.y, isUpper);
+            Vector3 movement = startPosition + (goalPos - startPosition) * tweenValue;
+            GetPantoSync().UpdateHandlePosition(movement, handledGameObject.transform.eulerAngles.y, isUpper);
         }
         else
         {
