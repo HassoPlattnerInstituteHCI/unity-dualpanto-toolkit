@@ -14,6 +14,7 @@ public class DualPantoSync : MonoBehaviour
     public delegate void LoggingDelegate(IntPtr msg);
     public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
 
+    public string portName = "//.//COM3";
     [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
     public bool debug = false;
     public float debugRotationSpeed = 10.0f;
@@ -98,11 +99,11 @@ public class DualPantoSync : MonoBehaviour
     private static void LogHandler(IntPtr msg)
     {
         String message = Marshal.PtrToStringAnsi(msg);
-        if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\""))
+        if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
         {
             return;
         }
-        else if (message.Contains("failed"))
+        else if (message.Contains("failed") || message.Contains("disconnected"))
         {
             Debug.LogError("[DualPanto] " +  message);
         }
@@ -160,8 +161,7 @@ public class DualPantoSync : MonoBehaviour
             SetHeartbeatHandler(HeartbeatHandler);
             SetPositionHandler(PositionHandler);
             // should be discovered automatically
-            //Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
-            Handle = OpenPort("//.//COM3");
+            Handle = OpenPort(portName);
             if(Handle == (ulong)0){ // if device not found then switch to debug mode.
                 debug = true; 
             }
