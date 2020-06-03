@@ -26,7 +26,7 @@ public class DualPantoSync : MonoBehaviour
     //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
     private static Vector2[] pantoBounds = { new Vector2(20, -80), new Vector2(180, 140) }; // ember
     private static Vector2[] unityBounds;
-    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 0f);//new Vector3(0f, 0f, 14.5f);
+    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 0f);
     private static Vector3 upperHandlePos = handleDefaultPosition;
     private static Vector3 lowerHandlePos = handleDefaultPosition;
     private static Vector3 upperGodObject = handleDefaultPosition;
@@ -115,6 +115,9 @@ public class DualPantoSync : MonoBehaviour
     private static void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
     {
         //Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + "rot:" + positions[2] + ")");
+        if (unityBounds != null) {
+            Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + " -> " + pantoToUnity(new Vector2((float)positions[0], (float)positions[1])));
+        }
         Vector2 unityPosUpper = pantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
         Vector2 unityGodUpper = pantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
         upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
@@ -157,8 +160,8 @@ public class DualPantoSync : MonoBehaviour
             SetHeartbeatHandler(HeartbeatHandler);
             SetPositionHandler(PositionHandler);
             // should be discovered automatically
-            Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
-            //Handle = OpenPort("//.//COM3");
+            //Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
+            Handle = OpenPort("//.//COM3");
             if(Handle == (ulong)0){ // if device not found then switch to debug mode.
                 debug = true; 
             }
