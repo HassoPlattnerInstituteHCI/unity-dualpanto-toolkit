@@ -50,7 +50,8 @@ On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
 To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
 Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ on the Panto Object.
 
-Now you're ready to run the application by clicking the play button. :)
+### Your first Panto demo
+In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `Player` component to this cube. It should now follow the movement of the Upper Panto Handle.
 
 ### Testing your app
 There are two ways to test your app:
