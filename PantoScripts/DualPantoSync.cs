@@ -147,11 +147,6 @@ public class DualPantoSync : MonoBehaviour
 
     void Awake()
     {
-        // should be discovered automatically
-        Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
-        if(Handle == (ulong)0){ // if deivce not found then switch to debug mode.
-            debug = true; 
-        }
         if (!debug)
         {
             Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
@@ -159,8 +154,14 @@ public class DualPantoSync : MonoBehaviour
             SetSyncHandler(SyncHandler);
             SetHeartbeatHandler(HeartbeatHandler);
             SetPositionHandler(PositionHandler);
+            // should be discovered automatically
+            Handle = OpenPort("/dev/cu.SLAB_USBtoUART");
+            //Handle = OpenPort("//.//COM3");
+            if(Handle == (ulong)0){ // if device not found then switch to debug mode.
+                debug = true; 
+            }
         }
-        else
+        if (debug)
         {
             CreateDebugObjects();
         }
