@@ -52,6 +52,7 @@ Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ o
 
 ### Your first Panto demo
 In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `Player` component to this cube. It should now follow the movement of the Upper Panto Handle.
+You can find more sample scenes to get insprired by [here](https://github.com/HassoPlattnerInstituteHCI/SampleDualPantoScenes).
 
 ### Testing your app
 There are two ways to test your app:
