@@ -44,10 +44,10 @@ It is good practice to reduce the rendering quality of your application, you can
 
 ### Find out the serial port of your device 
 At this point we still need to manually update the serial port of our panto before running the application.
-Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the Panto prefab.
+Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the Panto prefab under DualPantoSync _Port Name_.
 
 On Windows open the _Device Manager_ and go to _Ports (COM & LPT)_. Under that tab you will find a device called "Silicon Labs CP..." with the usb serial port in brackets (e.g. "COM6"). 
-The _Port Name_ in your Pant Object would hence after updating be "//.//COM6".
+The _Port Name_ in your Panto Object would hence after updating be "//.//COM6".
 
 On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
 To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
