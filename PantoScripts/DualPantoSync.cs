@@ -304,7 +304,9 @@ public class DualPantoSync : MonoBehaviour
     {
         if (unityBounds == null) {
             Debug.LogError("[DualPanto] Unity Bounds are null, did you forget to create a Play Area?");
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
         float newX = (point.x - unityBounds[0].x) * pantoBounds[1].x / unityBounds[1].x + pantoBounds[0].x;
         float newY = (point.y - unityBounds[0].y) * pantoBounds[1].y / unityBounds[1].y + pantoBounds[0].y;
@@ -314,7 +316,9 @@ public class DualPantoSync : MonoBehaviour
     {
         if (unityBounds == null) {
             Debug.LogError("[DualPanto] Unity Bounds are null, did you forget to create a Play Area?");
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
         float newX = (point.x - pantoBounds[0].x) * unityBounds[1].x / pantoBounds[1].x + unityBounds[0].x;
         float newY = (point.y - pantoBounds[0].y) * unityBounds[1].y / pantoBounds[1].y + unityBounds[0].y;
