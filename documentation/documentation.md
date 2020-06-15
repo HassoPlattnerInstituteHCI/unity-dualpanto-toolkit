@@ -20,6 +20,9 @@ If in debug mode, you can control the rotation with `a` and `d`.
 Moves the handle to the specified game object. The handle will then follow the game object until it is switched to another game object.  
 :warning: Please make sure to not move the object too fast, as the Panto handle will try to follow it.
 
+* `async MoveToPosition(Vector3 position, float speed, bool shouldFree = true)`  
+Moves the handle to the specified position. The handle will be freed by default, unless otherwise specified with `shouldFree`.
+
 * `Free()`  
 Frees the handle, it can now be controlled by the player.
 

@@ -24,7 +24,7 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Moves the handle to the given position at the given speed. The handle will then be freed.
     /// </summary>
-    async public Task MoveToPosition(Vector3 position, float newSpeed) {
+    async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true) {
         userControlledPosition = false;
         userControlledRotation = false;
         if (inTransition)
@@ -32,7 +32,11 @@ public class PantoHandle : PantoBehaviour
             Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject" + gameObject);
         }
         Debug.Log("[DualPanto] Switching to:" + position);
-        //handledGameObject = newHandle;
+
+        GameObject go = new GameObject();
+        go.transform.position = position;
+        handledGameObject = go;
+
         speed = newSpeed;
         inTransition = true;
 
@@ -40,7 +44,10 @@ public class PantoHandle : PantoBehaviour
         {
             await Task.Delay(10);
         }
-        Free();
+        if (shouldFreeHandle) {
+            Free();
+        }
+        Destroy(go);
     }
 
     /// <summary>
