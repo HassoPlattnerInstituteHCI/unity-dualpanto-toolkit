@@ -25,9 +25,9 @@ public class DualPantoSync : MonoBehaviour
 
     // bounds are defined by center and extent
     //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
-    private static Vector2[] pantoBounds = { new Vector2(20, -80), new Vector2(180, 140) }; // ember
+    private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
     private static Vector2[] unityBounds;
-    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
+    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 0f);
     private static Vector3 upperHandlePos = handleDefaultPosition;
     private static Vector3 lowerHandlePos = handleDefaultPosition;
     private static Vector3 upperGodObject = handleDefaultPosition;
@@ -257,20 +257,19 @@ public class DualPantoSync : MonoBehaviour
 
     public void UpdateHandlePosition(Vector3 position, float? rotation, bool isUpper)
     {
-            if (debug)
-            {
-                GameObject debugObject = GetDebugObject(isUpper);
-                //TODO make it so position can be null
-                if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
-                if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
-                return;
-
-            }
+        if (debug)
+        {
+            GameObject debugObject = GetDebugObject(isUpper);
+            //TODO make it so position can be null
+            if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
+            if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
+            return;
+        }
         Vector2 pantoPoint = UnityToPanto(new Vector2(position.x, position.z));
         if (IsInBounds(pantoPoint))
         {
             Vector2 currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 100f) {
+            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f) {
                 Debug.LogWarning("[DualPanto] Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
                 return;
             }
@@ -302,26 +301,12 @@ public class DualPantoSync : MonoBehaviour
 
     private static Vector2 UnityToPanto(Vector2 point)
     {
-        if (unityBounds == null) {
-            Debug.LogError("[DualPanto] Unity Bounds are null, did you forget to create a Play Area?");
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        }
-        float newX = (point.x - unityBounds[0].x) * pantoBounds[1].x / unityBounds[1].x + pantoBounds[0].x;
-        float newY = (point.y - unityBounds[0].y) * pantoBounds[1].y / unityBounds[1].y + pantoBounds[0].y;
-        return new Vector2(newX, newY);
+        return point * 10;
     }
     private static Vector2 PantoToUnity(Vector2 point)
     {
-        if (unityBounds == null) {
-            Debug.LogError("[DualPanto] Unity Bounds are null, did you forget to create a Play Area?");
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        }
-        float newX = (point.x - pantoBounds[0].x) * unityBounds[1].x / pantoBounds[1].x + unityBounds[0].x;
-        float newY = (point.y - pantoBounds[0].y) * unityBounds[1].y / pantoBounds[1].y + unityBounds[0].y;
+        float newX = point.x / 10;
+        float newY = point.y / 10;
         return new Vector2(newX, newY);
     }
 
@@ -332,12 +317,6 @@ public class DualPantoSync : MonoBehaviour
         //should be betwwen -30 and -190
         bool vertCorrect = point.y >= (pantoBounds[0].y - pantoBounds[1].y * 0.5) && point.y <= (pantoBounds[0].y + pantoBounds[1].y * 0.5);
         return hortCorrect && vertCorrect;
-    }
-
-    public void SetUnityBounds(Vector3 origin, Vector3 extent)
-    {
-        Debug.Log("[DualPanto] Play Area setting bounds");
-        unityBounds = new Vector2[] { new Vector2(origin.x, origin.z), new Vector2(extent.x, extent.z) };
     }
 
     public void RegisterUpperHandle(UpperHandle newHandle)
