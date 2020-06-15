@@ -12,6 +12,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        transform.position = upperHandle.getPosition();
+        transform.position = upperHandle.GetPosition();
     }
 }

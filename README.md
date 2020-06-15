@@ -44,10 +44,10 @@ It is good practice to reduce the rendering quality of your application, you can
 
 ### Find out the serial port of your device 
 At this point we still need to manually update the serial port of our panto before running the application.
-Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the Panto prefab.
+Therefore we have to find the used serial port on our computer and replace the string "//.//COM3" in the Panto prefab under DualPantoSync _Port Name_.
 
 On Windows open the _Device Manager_ and go to _Ports (COM & LPT)_. Under that tab you will find a device called "Silicon Labs CP..." with the usb serial port in brackets (e.g. "COM6"). 
-The _Port Name_ in your Pant Object would hence after updating be "//.//COM6".
+The _Port Name_ in your Panto Object would hence after updating be "//.//COM6".
 
 On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
 To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
@@ -57,11 +57,13 @@ Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ o
 
 ### Your first Panto demo
 In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `Player` component to this cube. It should now follow the movement of the Upper Panto Handle.
-You can find more sample scenes to get insprired by [here](https://github.com/HassoPlattnerInstituteHCI/SampleDualPantoScenes).
+![Adding the player script to the cube](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/adding_script_to_object.png)
+  
+**You can find more sample scenes to get insprired by [here](https://github.com/HassoPlattnerInstituteHCI/SampleDualPantoScenes).**
 
 ### Testing your app
 There are two ways to test your app:
-* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, they will follow the mouse. You emulate rotation input with `a` and `d`.
+* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, both will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer. If you have no device connect, it will fall back to the emulator mode.
 ![First App](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/first_app.gif)
 

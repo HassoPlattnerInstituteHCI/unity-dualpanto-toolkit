@@ -79,7 +79,7 @@ public abstract class PantoCollider : PantoBehaviour
     /// <summar>
     /// Disables the obstacle
     /// </summary>
-    public void DisableSelf()
+    public void Disable()
     {
         if (!pantoEnabled)
         {
@@ -93,7 +93,7 @@ public abstract class PantoCollider : PantoBehaviour
     /// <summar>
     /// Removes the obstacle. This is not yet supported, use DisableSelf() instead.
     /// </summary>
-    public void RemoveSelf()
+    public void Remove()
     {
         //GetPantoSync().RemoveObstacle(getPantoIndex(), id);
     }
@@ -101,7 +101,7 @@ public abstract class PantoCollider : PantoBehaviour
     /// <summar>
     /// Enables the obstacle. This needs to be called after creating the obstacle.
     /// </summary>
-    public void EnableSelf()
+    public void Enable()
     {
         if (pantoEnabled)
         {

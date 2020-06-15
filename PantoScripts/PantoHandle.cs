@@ -25,7 +25,6 @@ public class PantoHandle : PantoBehaviour
     /// Moves the handle to the given position at the given speed. The handle will then be freed.
     /// </summary>
     async public Task MoveToPosition(Vector3 position, float newSpeed) {
-        //TODO
         userControlledPosition = false;
         userControlledRotation = false;
         if (inTransition)
@@ -61,7 +60,7 @@ public class PantoHandle : PantoBehaviour
         inTransition = true;
 
         tweenValue = 0;
-        startPosition = getPosition();
+        startPosition = GetPosition();
 
         while (inTransition)
         {
@@ -75,12 +74,12 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Get the current rotation of the handle, use this as the y axis in Unity.
     /// </summary>
-    public float getRotation() {
+    public float GetRotation() {
         if (pantoSync.debug) {
             if (userControlledRotation) {
                 return rotation;
             } else {
-                GameObject debugObject = pantoSync.getDebugObject(isUpper);
+                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 return debugObject.transform.eulerAngles.y;
             }
         } else {
@@ -91,12 +90,12 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Get the current position of the handle in Unity coordinates.
     /// </summary>
-    public Vector3 getPosition() {
+    public Vector3 GetPosition() {
         if (pantoSync.debug) {
             if (userControlledPosition) {
                 return GetPositionOutsideObstacles(position);
             } else {
-                GameObject debugObject = pantoSync.getDebugObject(isUpper);
+                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 return debugObject.transform.position;
             }
         } else {
@@ -131,10 +130,6 @@ public class PantoHandle : PantoBehaviour
         return newPosition;
     }
 
-    public Vector3? getGodObjectPosition() {
-        return godObjectPosition;
-    }
-
     /// <summary>
     /// Get the current position of the handle in Unity coordinates.
     /// </summary>
@@ -149,7 +144,7 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Get the current position of the handle in Unity coordinates.
     /// </summary>
-    public void applyForce(Vector3 direction)
+    public void ApplyForce(Vector3 direction)
     {
         pantoSync.ApplyForce(isUpper, direction);
     }
@@ -181,11 +176,11 @@ public class PantoHandle : PantoBehaviour
     public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
     {
         if (pantoSync.debug && userControlledRotation) {
-            GameObject debugObject = pantoSync.getDebugObject(isUpper);
+            GameObject debugObject = pantoSync.GetDebugObject(isUpper);
             debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
         }
         if (pantoSync.debug && userControlledPosition) {
-            GameObject debugObject = pantoSync.getDebugObject(isUpper);
+            GameObject debugObject = pantoSync.GetDebugObject(isUpper);
             debugObject.transform.position = position;
         }
         position = newPosition;
@@ -204,14 +199,14 @@ public class PantoHandle : PantoBehaviour
 
     protected void Update()
     {
-        tweenValue = Mathf.Min(1.0f, tweenValue+0.04f);
+        tweenValue = Mathf.Min(1.0f, tweenValue + 0.04f);
         if (handledGameObject == null)
         {
             inTransition = false;
             return;
         }
         float movementSpeed = Mathf.Min(MaxMovementSpeed(), speed);
-        Vector3 currentPos = getPosition();
+        Vector3 currentPos = GetPosition();
         Vector3 goalPos = handledGameObject.transform.position;
 
         if (Vector3.Distance(currentPos, goalPos) > movementSpeed)

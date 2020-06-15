@@ -116,15 +116,15 @@ public class DualPantoSync : MonoBehaviour
     private static void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
     {
         //Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + "rot:" + positions[2] + ")");
-        Vector2 unityPosUpper = pantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
-        Vector2 unityGodUpper = pantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
+        Vector2 unityPosUpper = PantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
+        Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
         upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
         upperHandleRot = PantoToUnityRotation(positions[2]);
         upperGodObject = new Vector3(unityGodUpper.x, 0, unityGodUpper.y);
         upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
 
-        Vector2 unityPosLower = pantoToUnity(new Vector2((float)positions[5], (float)positions[6]));
-        Vector2 unityGodLower = pantoToUnity(new Vector2((float)positions[8], (float)positions[9]));
+        Vector2 unityPosLower = PantoToUnity(new Vector2((float)positions[5], (float)positions[6]));
+        Vector2 unityGodLower = PantoToUnity(new Vector2((float)positions[8], (float)positions[9]));
         lowerHandlePos = new Vector3(unityPosLower.x, 0, unityPosLower.y);
         lowerHandleRot = PantoToUnityRotation(positions[7]);
         lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
@@ -136,7 +136,7 @@ public class DualPantoSync : MonoBehaviour
         return Open(Marshal.StringToHGlobalAnsi(port));
     }
 
-    public GameObject getDebugObject(bool isUpper)
+    public GameObject GetDebugObject(bool isUpper)
     {
         if (isUpper)
         {
@@ -209,11 +209,11 @@ public class DualPantoSync : MonoBehaviour
 
         if (Input.GetKeyDown(toggleVisionKey))
         {
-            toggleBlindMode();
+            ToggleBlindMode();
         }
     }
 
-    private void toggleBlindMode()
+    private void ToggleBlindMode()
     {
         if (!debug)
         {
@@ -259,16 +259,16 @@ public class DualPantoSync : MonoBehaviour
     {
         if (debug)
         {
-            GameObject debugObject = getDebugObject(isUpper);
+            GameObject debugObject = GetDebugObject(isUpper);
             //TODO make it so position can be null
             if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
             if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
             return;
         }
-        Vector2 pantoPoint = unityToPanto(new Vector2(position.x, position.z));
+        Vector2 pantoPoint = UnityToPanto(new Vector2(position.x, position.z));
         if (IsInBounds(pantoPoint))
         {
-            Vector2 currentPantoPoint = unityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
+            Vector2 currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
             if (Vector2.Distance(currentPantoPoint, pantoPoint) > 100f) {
                 Debug.LogWarning("[DualPanto] Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
                 return;
@@ -284,7 +284,7 @@ public class DualPantoSync : MonoBehaviour
 
     public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)
     {
-        GameObject debugObject = getDebugObject(isUpper);
+        GameObject debugObject = GetDebugObject(isUpper);
         if (position != null) debugObject.transform.position = (Vector3)position;
         if (rotation != null) debugObject.transform.eulerAngles = new Vector3(0, (float)rotation, transform.eulerAngles.z);
     }
@@ -299,26 +299,15 @@ public class DualPantoSync : MonoBehaviour
         return (float)((180f / Mathf.PI) * -pantoDegrees);
     }
 
-    private static Vector2 unityToPanto(Vector2 point)
+    private static Vector2 UnityToPanto(Vector2 point)
     {
         return point * 10;
     }
-    private static Vector2 pantoToUnity(Vector2 point)
+    private static Vector2 PantoToUnity(Vector2 point)
     {
         float newX = point.x / 10;
         float newY = point.y / 10;
         return new Vector2(newX, newY);
-    }
-
-    private void testConversion()
-    {
-        Assert.IsTrue(unityToPanto(new Vector2(25.0f, -25.0f)) == new Vector2(160.0f, -190.0f));
-        Assert.IsTrue(unityToPanto(new Vector2(0.0f, 0.0f)) == new Vector2(0.0f, -110.0f));
-        Assert.IsTrue(unityToPanto(new Vector2(0.0f, -25.0f)) == new Vector2(0.0f, -190.0f));
-
-        Assert.IsTrue(new Vector2(25.0f, -25.0f) == pantoToUnity(new Vector2(160.0f, -190.0f)));
-        Assert.IsTrue(new Vector2(0.0f, 0.0f) == pantoToUnity(new Vector2(0.0f, -110.0f)));
-        Assert.IsTrue(new Vector2(0.0f, -25.0f) == pantoToUnity(new Vector2(0.0f, -190.0f)));
     }
 
     private bool IsInBounds(Vector2 point)
@@ -347,15 +336,15 @@ public class DualPantoSync : MonoBehaviour
 
     public void CreateObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
     {
-        Vector2 pantoStartPoint = unityToPanto(startPoint);
-        Vector2 pantoEndPoint = unityToPanto(endPoint);
+        Vector2 pantoStartPoint = UnityToPanto(startPoint);
+        Vector2 pantoEndPoint = UnityToPanto(endPoint);
         CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
     }
 
     public void AddToObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
     {
-        Vector2 pantoStartPoint = unityToPanto(startPoint);
-        Vector2 pantoEndPoint = unityToPanto(endPoint);
+        Vector2 pantoStartPoint = UnityToPanto(startPoint);
+        Vector2 pantoEndPoint = UnityToPanto(endPoint);
         AddToObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
     }
 
