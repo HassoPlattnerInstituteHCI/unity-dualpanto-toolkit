@@ -16,7 +16,7 @@ If in debug mode, there are two options: if the handle is attached to an object,
 Returns the current rotation of the respective handle.  
 If in debug mode, you can control the rotation with `a` and `d`.
 
-* `async SwitchTo()`  
+* `async SwitchTo(GameObject gameObject, float speed)`  
 Moves the handle to the specified game object. The handle will then follow the game object until it is switched to another game object.  
 :warning: Please make sure to not move the object too fast, as the Panto handle will try to follow it.
 
@@ -33,7 +33,7 @@ The Level component is attached to the Panto Prefab. You can add the ObjectOfInt
 * `bool traceShape `**:** If this is true, the handle will not move to the game object, but instead to all its children.
 
 ### Level
-* `async playIntroduction()`   
+* `async PlayIntroduction()`   
 Finds all ObjectOfInterest in the scene, sorts them by their priority and moves the handle to each one, reading its description.
 
 
@@ -46,10 +46,10 @@ Creates the obstacles in the shape as defined by the subclass, see below. Don't 
 * `CreateFromCorners(Vector2[] corners)`  
 Creates an obstacle from an array of corner points. You can define more complex obstacles using this function. Don't forget to enable the obstacle as well.
 
-* `EnableSelf()`  
+* `Enable()`  
 Enables the obstacle. Only when this function is called, will you be able to feel it using the DualPanto.
 
-* `DisableSelf()`  
+* `Disable()`  
 Disables the obstacle.
 
 ### PantoBoxCollider
