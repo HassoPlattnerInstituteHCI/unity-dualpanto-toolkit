@@ -20,20 +20,20 @@ public class Level : PantoBehaviour
     /// <summary>
     /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
     /// </summary>
-    async public Task playIntroduction()
+    async public Task PlayIntroduction()
     {
         ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
         Array.Sort(gos, ((go1, go2) => go2.priority.CompareTo(go1.priority)));
 
         for (int index = 0; index < gos.Length; index++)
         {
-           await introduceObject(gos[index]);
+           await IntroduceObject(gos[index]);
         }
         GetPantoGameObject().GetComponent<LowerHandle>().Free();
         GetPantoGameObject().GetComponent<UpperHandle>().Free();
     }
 
-    async public Task introduceObject(ObjectOfInterest objectOfInterest)
+    async private Task IntroduceObject(ObjectOfInterest objectOfInterest)
     {
         Task[] tasks =  new Task[2];
         tasks[0] = speechOut.Speak(objectOfInterest.description);

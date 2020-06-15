@@ -9,7 +9,7 @@ public class PantoCompoundCollider : PantoCollider
 {
     public override void CreateObstacle()
     {
-        CreateCompundObstacle();
+        CreateCompoundObstacle();
     }
 
     private IntPoint IntPointFromVector2(Vector2 vector)
@@ -41,10 +41,9 @@ public class PantoCompoundCollider : PantoCollider
             value[i] = (new Vector2(path[i].X / 1000f, path[i].Y / 1000f));
         }
         return value;
-
     }
 
-    public void CreateCompundObstacle()
+    public void CreateCompoundObstacle()
     {
         Collider[] colliders = gameObject.GetComponentsInChildren<Collider>();
         Collider coll = colliders[0];

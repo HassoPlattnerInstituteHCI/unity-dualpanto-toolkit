@@ -11,11 +11,13 @@ public class PantoBehaviour : MonoBehaviour
         pantoSync = GetPantoGameObject().GetComponent<DualPantoSync>();
     }
 
-    protected GameObject GetPantoGameObject(){
+    protected GameObject GetPantoGameObject()
+    {
         return GameObject.Find("Panto");
     }
 
-    protected DualPantoSync GetPantoSync(){
+    protected DualPantoSync GetPantoSync()
+    {
         return pantoSync;
     }
 }
