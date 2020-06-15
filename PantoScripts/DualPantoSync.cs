@@ -269,7 +269,7 @@ public class DualPantoSync : MonoBehaviour
         if (IsInBounds(pantoPoint))
         {
             Vector2 currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 100f) {
+            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f) {
                 Debug.LogWarning("[DualPanto] Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
                 return;
             }
