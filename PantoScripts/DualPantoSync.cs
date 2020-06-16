@@ -344,31 +344,46 @@ public class DualPantoSync : MonoBehaviour
 
     public void CreateObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
     {
-        Vector2 pantoStartPoint = UnityToPanto(startPoint);
-        Vector2 pantoEndPoint = UnityToPanto(endPoint);
-        CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+        if (!debug)
+        {
+            Vector2 pantoStartPoint = UnityToPanto(startPoint);
+            Vector2 pantoEndPoint = UnityToPanto(endPoint);
+            CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+        }
     }
 
     public void AddToObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
     {
-        Vector2 pantoStartPoint = UnityToPanto(startPoint);
-        Vector2 pantoEndPoint = UnityToPanto(endPoint);
-        AddToObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+        if (!debug)
+        {
+            Vector2 pantoStartPoint = UnityToPanto(startPoint);
+            Vector2 pantoEndPoint = UnityToPanto(endPoint);
+            AddToObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+        }
     }
 
     public void EnableObstacle(byte pantoIndex, ushort obstacleId)
     {
-        EnableObstacle(Handle, pantoIndex, obstacleId);
+        if (!debug)
+        {
+            EnableObstacle(Handle, pantoIndex, obstacleId);
+        }
     }
 
     public void DisableObstacle(byte pantoIndex, ushort obstacleId)
     {
+        if (!debug)
+        {
         DisableObstacle(Handle, pantoIndex, obstacleId);
+        }
     }
 
     public void RemoveObstacle(byte pantoIndex, ushort obstacleId)
     {
+        if (!debug)
+        {
         RemoveObstacle(Handle, pantoIndex, obstacleId);
+        }
     }
 }
 class DebugPopUp : EditorWindow
