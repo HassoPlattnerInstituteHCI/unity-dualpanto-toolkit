@@ -40,11 +40,11 @@ public class DualPantoSync : MonoBehaviour
     private GameObject debugLowerObject;
     private GameObject debugUpperObject;
 
-    #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
     private const string plugin = "serial";
-    #else
+#else
     private const string plugin = "libserial";
-    #endif
+#endif
 
     [DllImport(plugin)]
     private static extern uint GetRevision();
@@ -81,7 +81,8 @@ public class DualPantoSync : MonoBehaviour
     [DllImport(plugin)]
     private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
 
-    void Start(){
+    void Start()
+    {
         Application.targetFrameRate = 60;
     }
     private static void SyncHandler(ulong handle)
@@ -105,7 +106,7 @@ public class DualPantoSync : MonoBehaviour
         }
         else if (message.Contains("failed") || message.Contains("disconnected"))
         {
-            Debug.LogError("[DualPanto] " +  message);
+            Debug.LogError("[DualPanto] " + message);
         }
         else
         {
@@ -159,8 +160,9 @@ public class DualPantoSync : MonoBehaviour
             SetPositionHandler(PositionHandler);
             // should be discovered automatically
             Handle = OpenPort(portName);
-            if(Handle == (ulong)0){ // if device not found then switch to debug mode.
-                debug = true; 
+            if (Handle == (ulong)0)
+            { // if device not found then switch to debug mode.
+                debug = true;
             }
         }
         if (debug)
@@ -201,7 +203,7 @@ public class DualPantoSync : MonoBehaviour
             float r = debugUpperObject.transform.eulerAngles.y + mouseRotation;
             upperHandlePos = position;
             upperHandle.SetPositions(upperHandlePos, r, null);
-            
+
             lowerHandleRot = debugLowerObject.transform.eulerAngles.y + mouseRotation;
             lowerHandlePos = position;
             lowerHandle.SetPositions(lowerHandlePos, r, null);
@@ -241,7 +243,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-            SendMotor(Handle, (byte) 0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
+            SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
         }
     }
 
@@ -250,7 +252,8 @@ public class DualPantoSync : MonoBehaviour
         return wantedPosition;
     }
 
-    public void ApplyForce(bool isUpper, Vector3 direction) {
+    public void ApplyForce(bool isUpper, Vector3 direction)
+    {
         direction = direction.normalized;
         SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
     }
@@ -269,11 +272,12 @@ public class DualPantoSync : MonoBehaviour
         if (IsInBounds(pantoPoint))
         {
             Vector2 currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f) {
-                Debug.LogWarning("[DualPanto] Handle moving too fast: " +  Vector3.Distance(currentPantoPoint, pantoPoint));
+            if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
+            {
+                Debug.LogWarning("[DualPanto] Handle moving too fast: " + Vector3.Distance(currentPantoPoint, pantoPoint));
                 return;
             }
-            float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0; 
+            float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
             SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
         }
         else

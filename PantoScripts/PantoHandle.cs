@@ -20,11 +20,12 @@ public class PantoHandle : PantoBehaviour
     protected bool userControlledPosition = true; //for debug only
     protected bool userControlledRotation = true; //for debug only
 
-    public float tweenValue  = 0.0f; //tweening
+    public float tweenValue = 0.0f; //tweening
     /// <summary>
     /// Moves the handle to the given position at the given speed. The handle will then be freed.
     /// </summary>
-    async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true) {
+    async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
+    {
         userControlledPosition = false;
         userControlledRotation = false;
         if (inTransition)
@@ -44,7 +45,8 @@ public class PantoHandle : PantoBehaviour
         {
             await Task.Delay(10);
         }
-        if (shouldFreeHandle) {
+        if (shouldFreeHandle)
+        {
             Free();
         }
         Destroy(go);
@@ -81,15 +83,22 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Get the current rotation of the handle, use this as the y axis in Unity.
     /// </summary>
-    public float GetRotation() {
-        if (pantoSync.debug) {
-            if (userControlledRotation) {
+    public float GetRotation()
+    {
+        if (pantoSync.debug)
+        {
+            if (userControlledRotation)
+            {
                 return rotation;
-            } else {
+            }
+            else
+            {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 return debugObject.transform.eulerAngles.y;
             }
-        } else {
+        }
+        else
+        {
             return rotation;
         }
     }
@@ -97,19 +106,26 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Get the current position of the handle in Unity coordinates.
     /// </summary>
-    public Vector3 GetPosition() {
-        if (pantoSync.debug) {
-            if (userControlledPosition) {
+    public Vector3 GetPosition()
+    {
+        if (pantoSync.debug)
+        {
+            if (userControlledPosition)
+            {
                 return GetPositionOutsideObstacles(position);
-            } else {
+            }
+            else
+            {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 return debugObject.transform.position;
             }
-        } else {
+        }
+        else
+        {
             return position;
         }
     }
-    
+
     private Vector3 GetPositionOutsideObstacles(Vector3 newPosition)
     {
         var colliders = FindObjectsOfType<PantoCollider>();
@@ -140,10 +156,14 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Get the current position of the handle in Unity coordinates.
     /// </summary>
-    public void FreeRotation() {
-        if (pantoSync.debug) {
+    public void FreeRotation()
+    {
+        if (pantoSync.debug)
+        {
             userControlledRotation = true;
-        } else {
+        }
+        else
+        {
             //TODO
         }
     }
@@ -162,10 +182,13 @@ public class PantoHandle : PantoBehaviour
     public void Free()
     {
         handledGameObject = null;
-        if (pantoSync.debug) {
+        if (pantoSync.debug)
+        {
             userControlledPosition = true;
             userControlledRotation = true;
-        } else {
+        }
+        else
+        {
             pantoSync.FreeHandle(isUpper);
         }
     }
@@ -182,11 +205,13 @@ public class PantoHandle : PantoBehaviour
 
     public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
     {
-        if (pantoSync.debug && userControlledRotation) {
+        if (pantoSync.debug && userControlledRotation)
+        {
             GameObject debugObject = pantoSync.GetDebugObject(isUpper);
             debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
         }
-        if (pantoSync.debug && userControlledPosition) {
+        if (pantoSync.debug && userControlledPosition)
+        {
             GameObject debugObject = pantoSync.GetDebugObject(isUpper);
             debugObject.transform.position = position;
         }
@@ -223,7 +248,8 @@ public class PantoHandle : PantoBehaviour
         }
         else
         {
-            if (inTransition) {
+            if (inTransition)
+            {
                 Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
                 inTransition = false;
             }

@@ -27,7 +27,7 @@ public class Level : PantoBehaviour
 
         for (int index = 0; index < gos.Length; index++)
         {
-           await IntroduceObject(gos[index]);
+            await IntroduceObject(gos[index]);
         }
         GetPantoGameObject().GetComponent<LowerHandle>().Free();
         GetPantoGameObject().GetComponent<UpperHandle>().Free();
@@ -35,7 +35,7 @@ public class Level : PantoBehaviour
 
     async private Task IntroduceObject(ObjectOfInterest objectOfInterest)
     {
-        Task[] tasks =  new Task[2];
+        Task[] tasks = new Task[2];
         tasks[0] = speechOut.Speak(objectOfInterest.description);
 
         PantoHandle pantoHandle = objectOfInterest.isOnUpper

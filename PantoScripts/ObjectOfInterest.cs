@@ -10,7 +10,7 @@ public class ObjectOfInterest : MonoBehaviour
     public bool isOnUpper = false;
     //public AudioClip introductionSound;
     [Tooltip("Description will be read aloud on introduction")]
-    [TextArea(3,10)]
+    [TextArea(3, 10)]
     public string description;
     [Tooltip("Objects of interest are sorted by their priority. Highest priority will be introduced first")]
     public int priority = 0;
