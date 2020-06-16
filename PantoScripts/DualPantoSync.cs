@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.Assertions;
 
 /// <summary>
@@ -104,7 +105,7 @@ public class DualPantoSync : MonoBehaviour
         {
             return;
         }
-        else if (message.Contains("failed") || message.Contains("disconnected"))
+        else if (message.Contains("disconnected"))
         {
             Debug.LogError("[DualPanto] " + message);
         }
@@ -161,7 +162,10 @@ public class DualPantoSync : MonoBehaviour
             // should be discovered automatically
             Handle = OpenPort(portName);
             if (Handle == (ulong)0)
-            { // if device not found then switch to debug mode.
+            {
+                DebugPopUp window = ScriptableObject.CreateInstance<DebugPopUp>();
+                window.position = new Rect(Screen.width / 2, Screen.height / 2, 250, 150);
+                window.ShowPopup();
                 debug = true;
             }
         }
@@ -366,4 +370,33 @@ public class DualPantoSync : MonoBehaviour
     {
         RemoveObstacle(Handle, pantoIndex, obstacleId);
     }
+}
+class DebugPopUp : EditorWindow
+{
+    void OnGUI()
+    {
+        EditorGUILayout.LabelField("No Panto was found. Run in Debug Mode instead?", EditorStyles.wordWrappedLabel);
+        GUILayout.Space(40);
+        if (GUILayout.Button("Run in Debug"))
+        {
+            Close();
+            GUIUtility.ExitGUI();
+        }
+        if (GUILayout.Button("Close App"))
+        {
+            OnStopApp();
+            Close();
+            GUIUtility.ExitGUI();
+        }
+    }
+
+    void OnStopApp()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
+    }
+
 }
