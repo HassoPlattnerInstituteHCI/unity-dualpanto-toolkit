@@ -152,6 +152,7 @@ public class DualPantoSync : MonoBehaviour
 
     void Awake()
     {
+        CreateDebugObjects();
         if (!debug)
         {
             Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
@@ -168,10 +169,6 @@ public class DualPantoSync : MonoBehaviour
                 window.ShowPopup();
                 debug = true;
             }
-        }
-        if (debug)
-        {
-            CreateDebugObjects();
         }
     }
 
@@ -374,7 +371,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-        DisableObstacle(Handle, pantoIndex, obstacleId);
+            DisableObstacle(Handle, pantoIndex, obstacleId);
         }
     }
 
@@ -382,7 +379,7 @@ public class DualPantoSync : MonoBehaviour
     {
         if (!debug)
         {
-        RemoveObstacle(Handle, pantoIndex, obstacleId);
+            RemoveObstacle(Handle, pantoIndex, obstacleId);
         }
     }
 }

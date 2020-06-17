@@ -131,7 +131,7 @@ public class PantoHandle : PantoBehaviour
         var colliders = FindObjectsOfType<PantoCollider>();
         foreach (PantoCollider collider in colliders)
         {
-            if (collider.GetComponent<Collider>() != null && collider.GetComponent<Collider>().bounds.Contains(newPosition))
+            if (collider.GetComponent<Collider>() != null && collider.GetComponent<Collider>().bounds.Contains(newPosition) && collider.enabled)
             {
                 Bounds bounds = collider.GetComponent<Collider>().bounds;
                 //which side am I closer to?
@@ -147,7 +147,9 @@ public class PantoHandle : PantoBehaviour
                 {
                     z = newPosition.z < bounds.center.z ? bounds.min.z : bounds.max.z;
                 }
-                return new Vector3(x, transform.position.y, z);
+                Vector3 correctedPosition = new Vector3(x, transform.position.y, z);
+                Debug.DrawLine(newPosition, correctedPosition, Color.red, 0f, false);
+                return correctedPosition;
             }
         }
         return newPosition;
@@ -213,6 +215,12 @@ public class PantoHandle : PantoBehaviour
         if (pantoSync.debug && userControlledPosition)
         {
             GameObject debugObject = pantoSync.GetDebugObject(isUpper);
+            debugObject.transform.position = position;
+        }
+        if (!pantoSync.debug)
+        {
+            GameObject debugObject = pantoSync.GetDebugObject(isUpper);
+            debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
             debugObject.transform.position = position;
         }
         position = newPosition;
