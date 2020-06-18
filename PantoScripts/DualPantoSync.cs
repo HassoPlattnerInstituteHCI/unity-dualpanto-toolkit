@@ -154,7 +154,7 @@ public class DualPantoSync : MonoBehaviour
         Vector3 handleDefaultPosition = transform.position + new Vector3(0, 0, 3);
         upperHandlePos = handleDefaultPosition;
         lowerHandlePos = handleDefaultPosition;
-        CreateDebugObjects();
+        CreateDebugObjects(handleDefaultPosition);
         if (!debug)
         {
             Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
@@ -181,15 +181,15 @@ public class DualPantoSync : MonoBehaviour
         globalSync.PositionHandler(handle, positions);
     }
 
-    private void CreateDebugObjects()
+    private void CreateDebugObjects(Vector3 position)
     {
         UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
         debugLowerObject = Instantiate(prefab) as GameObject;
-        debugLowerObject.transform.position = new Vector3(0f, 0.5f, 13.0f);
+        debugLowerObject.transform.position = position;
 
         prefab = Resources.Load("MeHandlePrefab");
         debugUpperObject = Instantiate(prefab) as GameObject;
-        debugUpperObject.transform.position = new Vector3(0f, 0.5f, 13.0f);
+        debugUpperObject.transform.position = position;
     }
 
     void OnDestroy()
