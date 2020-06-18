@@ -110,15 +110,8 @@ public class PantoHandle : PantoBehaviour
     {
         if (pantoSync.debug)
         {
-            if (userControlledPosition)
-            {
-                return GetPositionOutsideObstacles(position);
-            }
-            else
-            {
-                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                return debugObject.transform.position;
-            }
+            GameObject debugObject = pantoSync.GetDebugObject(isUpper);
+            return debugObject.transform.position;
         }
         else
         {
@@ -126,33 +119,22 @@ public class PantoHandle : PantoBehaviour
         }
     }
 
-    private Vector3 GetPositionOutsideObstacles(Vector3 newPosition)
+    public Vector3 HandlePosition(Vector3 currentPosition)
     {
-        var colliders = FindObjectsOfType<PantoCollider>();
-        foreach (PantoCollider collider in colliders)
+        //TODO only consider enabled obstacles
+        if (!pantoSync.debug) return GetPosition();
+        Vector3 desiredPosition = GetPosition();
+        Vector3 direction = desiredPosition - currentPosition;
+        Ray ray = new Ray(currentPosition, direction);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, direction.magnitude))
         {
-            if (collider.GetComponent<Collider>() != null && collider.GetComponent<Collider>().bounds.Contains(newPosition) && collider.enabled)
-            {
-                Bounds bounds = collider.GetComponent<Collider>().bounds;
-                //which side am I closer to?
-                float x = newPosition.x;
-                float z = newPosition.z;
-                float maxXDistance = Mathf.Max(Mathf.Abs(newPosition.x - bounds.min.x), Mathf.Abs(newPosition.x - bounds.max.x));
-                float maxZDistance = Mathf.Max(Mathf.Abs(newPosition.z - bounds.min.z), Mathf.Abs(newPosition.z - bounds.max.z));
-                if (maxXDistance > maxZDistance)
-                {
-                    x = newPosition.x < bounds.center.x ? bounds.min.x : bounds.max.x;
-                }
-                else
-                {
-                    z = newPosition.z < bounds.center.z ? bounds.min.z : bounds.max.z;
-                }
-                Vector3 correctedPosition = new Vector3(x, transform.position.y, z);
-                Debug.DrawLine(newPosition, correctedPosition, Color.red, 0f, false);
-                return correctedPosition;
-            }
+            return hit.point - (direction.normalized * 0.01f);
         }
-        return newPosition;
+        else
+        {
+            return desiredPosition;
+        }
     }
 
     /// <summary>
