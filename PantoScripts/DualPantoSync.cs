@@ -281,8 +281,9 @@ public class DualPantoSync : MonoBehaviour
         Vector2 pantoPoint = UnityToPanto(new Vector2(position.x, position.z));
         if (IsInBounds(pantoPoint))
         {
-            //TODO why is this using lowerHandlePos?
-            Vector2 currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
+            Vector2 currentPantoPoint = new Vector2();
+            if(isUpper)currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
+            else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
             if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
             {
                 Debug.LogWarning("[DualPanto] Handle moving too fast: " + Vector3.Distance(currentPantoPoint, pantoPoint));
