@@ -28,13 +28,12 @@ public class DualPantoSync : MonoBehaviour
     //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
     private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
     private static Vector2[] unityBounds;
-    public static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 0f);
-    private static Vector3 upperHandlePos = handleDefaultPosition;
-    private static Vector3 lowerHandlePos = handleDefaultPosition;
-    private static Vector3 upperGodObject = handleDefaultPosition;
-    private static Vector3 lowerGodObject = handleDefaultPosition;
-    private static float lowerHandleRot = 0f;
-    private static float upperHandleRot = 0f;
+    private Vector3 upperHandlePos;
+    private Vector3 lowerHandlePos;
+    private Vector3 upperGodObject;
+    private Vector3 lowerGodObject;
+    private float lowerHandleRot = 0f;
+    private float upperHandleRot = 0f;
 
     private bool isBlindModeOn = false;
     private ushort currentObstacleId = 0;
@@ -115,7 +114,7 @@ public class DualPantoSync : MonoBehaviour
         }
     }
 
-    private static void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
+    private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
     {
         //Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + "rot:" + positions[2] + ")");
         Vector2 unityPosUpper = PantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
@@ -152,14 +151,18 @@ public class DualPantoSync : MonoBehaviour
 
     void Awake()
     {
+        Vector3 handleDefaultPosition = transform.position + new Vector3(0, 0, 3);
+        upperHandlePos = handleDefaultPosition;
+        lowerHandlePos = handleDefaultPosition;
         CreateDebugObjects();
         if (!debug)
         {
             Debug.Log("[DualPanto] Serial protocol revision: " + GetRevision());
+            globalSync = this;
             SetLoggingHandler(LogHandler);
             SetSyncHandler(SyncHandler);
             SetHeartbeatHandler(HeartbeatHandler);
-            SetPositionHandler(PositionHandler);
+            SetPositionHandler(StaticPositionHandler);
             // should be discovered automatically
             Handle = OpenPort(portName);
             if (Handle == (ulong)0)
@@ -170,6 +173,12 @@ public class DualPantoSync : MonoBehaviour
                 debug = true;
             }
         }
+    }
+
+    static DualPantoSync globalSync;
+    static void StaticPositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
+    {
+        globalSync.PositionHandler(handle, positions);
     }
 
     private void CreateDebugObjects()
@@ -272,6 +281,7 @@ public class DualPantoSync : MonoBehaviour
         Vector2 pantoPoint = UnityToPanto(new Vector2(position.x, position.z));
         if (IsInBounds(pantoPoint))
         {
+            //TODO why is this using lowerHandlePos?
             Vector2 currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
             if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
             {
@@ -304,22 +314,20 @@ public class DualPantoSync : MonoBehaviour
         return (float)((180f / Mathf.PI) * -pantoDegrees);
     }
 
-    private static Vector2 UnityToPanto(Vector2 point)
+    private Vector2 UnityToPanto(Vector2 point)
     {
-        return point * 10;
+        return (point + new Vector2(transform.position.x, transform.position.y)) * 10;
     }
-    private static Vector2 PantoToUnity(Vector2 point)
+    private Vector2 PantoToUnity(Vector2 point)
     {
-        float newX = point.x / 10;
-        float newY = point.y / 10;
-        return new Vector2(newX, newY);
+        return (point / 10) - new Vector2(transform.position.x, transform.position.z);
     }
 
     private bool IsInBounds(Vector2 point)
     {
-        //should be betwwen -160 and 160
+        //should be between -160 and 160
         bool hortCorrect = point.x >= (pantoBounds[0].x - pantoBounds[1].x * 0.5) && point.x <= (pantoBounds[0].x + pantoBounds[1].x * 0.5);
-        //should be betwwen -30 and -190
+        //should be between -30 and -190
         bool vertCorrect = point.y >= (pantoBounds[0].y - pantoBounds[1].y * 0.5) && point.y <= (pantoBounds[0].y + pantoBounds[1].y * 0.5);
         return hortCorrect && vertCorrect;
     }
