@@ -59,7 +59,7 @@ Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ o
 In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `Player` component to this cube. It should now follow the movement of the Upper Panto Handle.
 ![Adding the player script to the cube](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/adding_script_to_object.png)
   
-**You can find more sample scenes to get insprired by [here](https://github.com/HassoPlattnerInstituteHCI/SampleDualPantoScenes).**
+**You can find more sample scenes to get insprired in `ExampleScenes`**
 
 ### Testing your app
 There are two ways to test your app:
