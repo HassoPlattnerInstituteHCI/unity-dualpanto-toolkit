@@ -73,9 +73,21 @@ If you are using a panto, it will simply hide the game. If you are using the emu
 This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
 ![Blind mode emulator](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/blind_mode.png)
 
-## Trouble Shooting
+## Troubleshooting
 
 ### Updating Submodules
 if a function does not seem to exist (unity throws an error like "missing assembly reference") or if you try to use content that we released at a later stage than when the framework was released, try to update your submodules first before reaching out to us (we will always use the latest state of the submodules when we try to debug your code). 
 
 git submodule update --remote
+
+### How do I turn my dualPanto device on?
+On the back of your dualPanto device is a power switch. Push so that it turns to **On**.
+
+### How do I reset my dualPanto device?
+On the back of your dualPanto device is a button next to the cable connection. Move the linkages back in the closing position, turn the handles so they point to the right, press the button and wait 3 seconds.
+
+### dualPanto handles not moving inside the game/Message _Revision id not matching. Try resetting the panto._ appears.
+Try to reset the dualPanto device using the button on the back. For this see _How do I reset my dualPanto device._
+
+### dualPanto handles not moving physically.
+Have you turned the device on? For this see _How do I turn my dualPanto device on?_
