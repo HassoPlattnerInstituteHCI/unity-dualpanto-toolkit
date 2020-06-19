@@ -90,4 +90,4 @@ On the back of your dualPanto device is a button next to the cable connection. M
 Try to reset the dualPanto device using the button on the back. For this see _How do I reset my dualPanto device._
 
 ### dualPanto handles not moving physically.
-Have you turned the device on? For this see https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on.
+Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on).
