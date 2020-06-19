@@ -212,6 +212,10 @@ public class PantoHandle : PantoBehaviour
 
     async public Task TraceObjectByPoints(List<GameObject> cornerObjects, float speed)
     {
+        if (cornerObjects.Count == 0) {
+            Debug.LogWarning("[DualPanto] Can't trace shape if object has no children");
+            return;
+        }
         for (int i = 0; i < cornerObjects.Count; i++)
         {
             await SwitchTo(cornerObjects[i], speed);
