@@ -22,6 +22,24 @@ public abstract class PantoCollider : PantoBehaviour
         return 2;
     }
 
+    protected Vector2[] CornersFromRotatedRectangle(Vector3 center, float angle, Vector2 dimensions)
+    {
+        angle *= -Mathf.Deg2Rad;
+
+        Vector2 v1 = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        Vector2 v2 = new Vector2(-v1.y, v1.x);
+        v1 *= (dimensions.x / 2);
+        v2 *= (dimensions.y / 2);
+
+        Vector2 center2 = new Vector2(center.x, center.z);
+        return new Vector2[] {
+            center2 + v1 + v2,
+            center2 - v1 + v2,
+            center2 - v1 - v2,
+            center2 + v1 - v2,
+        };
+    }
+
     protected Vector2[] CornersFromBounds(Bounds bounds)
     {
         Vector3 center = bounds.center;
@@ -40,8 +58,9 @@ public abstract class PantoCollider : PantoBehaviour
 
     protected void CreateBoxObstacle()
     {
-        Bounds bounds = GetComponent<Collider>().bounds;
-        CreateFromCorners(CornersFromBounds(bounds));
+        BoxCollider collider = GetComponent<BoxCollider>();
+        Vector2 size = new Vector2(collider.size.x * transform.localScale.x, collider.size.z * transform.localScale.z);
+        CreateFromCorners(CornersFromRotatedRectangle(transform.position, transform.eulerAngles.y, size));
     }
 
     protected void CreateCircularCollider(int numberOfCorners)
