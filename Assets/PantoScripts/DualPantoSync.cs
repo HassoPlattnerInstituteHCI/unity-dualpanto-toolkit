@@ -130,6 +130,9 @@ public class DualPantoSync : MonoBehaviour
         lowerHandleRot = PantoToUnityRotation(positions[7]);
         lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
         lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
+
+        Debug.DrawLine(lowerHandlePos, lowerHandlePos + Quaternion.Euler(0, lowerHandleRot, 0) * Vector3.forward, Color.black);
+        Debug.DrawLine(upperHandlePos, upperHandlePos + Quaternion.Euler(0, upperHandleRot, 0) * Vector3.forward, Color.black);
     }
 
     private static ulong OpenPort(string port)
@@ -282,7 +285,7 @@ public class DualPantoSync : MonoBehaviour
         if (IsInBounds(pantoPoint))
         {
             Vector2 currentPantoPoint = new Vector2();
-            if(isUpper)currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
+            if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
             else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
             if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
             {
