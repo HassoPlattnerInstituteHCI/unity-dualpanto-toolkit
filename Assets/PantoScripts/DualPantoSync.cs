@@ -131,8 +131,13 @@ public class DualPantoSync : MonoBehaviour
         lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
         lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
 
-        Debug.DrawLine(lowerHandlePos, lowerHandlePos + Quaternion.Euler(0, lowerHandleRot, 0) * Vector3.forward, Color.black);
-        Debug.DrawLine(upperHandlePos, upperHandlePos + Quaternion.Euler(0, upperHandleRot, 0) * Vector3.forward, Color.black);
+        Quaternion lower = Quaternion.Euler(0, lowerHandleRot, 0);
+        Quaternion upper = Quaternion.Euler(0, upperHandleRot, 0);
+        Debug.DrawLine(lowerHandlePos + lower * Vector3.back * 0.5f, lowerHandlePos + lower * Vector3.forward, Color.black);
+        Debug.DrawLine(lowerHandlePos + lower * Vector3.left * 0.5f, lowerHandlePos + lower * Vector3.right * 0.5f, Color.black);
+
+        Debug.DrawLine(upperHandlePos + upper * Vector3.back * 0.5f, upperHandlePos + upper * Vector3.forward, Color.black);
+        Debug.DrawLine(upperHandlePos + upper * Vector3.left * 0.5f, upperHandlePos + upper * Vector3.right * 0.5f, Color.black);
     }
 
     private static ulong OpenPort(string port)
