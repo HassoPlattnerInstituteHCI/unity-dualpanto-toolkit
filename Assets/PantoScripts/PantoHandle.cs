@@ -212,7 +212,8 @@ public class PantoHandle : PantoBehaviour
 
     async public Task TraceObjectByPoints(List<GameObject> cornerObjects, float speed)
     {
-        if (cornerObjects.Count == 0) {
+        if (cornerObjects.Count == 0)
+        {
             Debug.LogWarning("[DualPanto] Can't trace shape if object has no children");
             return;
         }
@@ -235,7 +236,8 @@ public class PantoHandle : PantoBehaviour
         Vector3 currentPos = GetPosition();
         Vector3 goalPos = handledGameObject.transform.position;
 
-        if (Vector3.Distance(currentPos, goalPos) > movementSpeed)
+        float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
+        if (distance > movementSpeed)
         {
             Vector3 movement = startPosition + (goalPos - startPosition) * tweenValue;
             GetPantoSync().UpdateHandlePosition(movement, handledGameObject.transform.eulerAngles.y, isUpper);
