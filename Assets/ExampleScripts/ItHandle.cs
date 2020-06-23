@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerLower : MonoBehaviour
+public class ItHandle : MonoBehaviour
 {
     PantoHandle lowerHandle;
     void Start()
