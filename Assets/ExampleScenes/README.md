@@ -16,5 +16,5 @@ Contains a cube that is moved via a script. The lower handle will move towards i
 ### MoveToPosition
 Contains two cubes, each handle will move to one cube, one handle will be freed afterwards.
 
-### Me Movement
+### Movement
 Contains two spheres, each can be contained by one handle.
