@@ -85,3 +85,6 @@ Try to reset the dualPanto device using the button on the back. For this see _Ho
 
 ### dualPanto handles not moving physically.
 Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on)
+
+### dualPanto works sometimes/Message _Skipping god object_ appears.
+Don't hold the handles too hard or push against the motors too hard.
