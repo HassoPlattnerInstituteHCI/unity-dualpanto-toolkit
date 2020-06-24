@@ -75,7 +75,7 @@ if a function does not seem to exist (unity throws an error like "missing assemb
 git submodule update --remote
 
 ### How do I turn my dualPanto device on?
-On the back of your dualPanto device is a power switch. Push so that it turns to **On**.
+On the back of your dualPanto device is a power switch. Push so that it turns to **On** and make sure the battery is charged.
 
 ### How do I reset my dualPanto device?
 On the back of your dualPanto device is a button next to the cable connection. Move the linkages back in the closing position, turn the handles so they point to the right, press the button and wait 3 seconds.
