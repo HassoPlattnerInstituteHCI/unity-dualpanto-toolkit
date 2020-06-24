@@ -189,11 +189,13 @@ public class DualPantoSync : MonoBehaviour
 
     void SetUpDebugValuesWindow()
     {
+#if UNITY_EDITOR
         debugValuesWindow = ScriptableObject.CreateInstance<DebugValuesWindow>();
         debugValuesWindow.position = new Rect(Screen.width / 4, Screen.height / 4, 500, 150);
         debugValuesWindow.ShowPopup();
         debugValuesWindow.SetSerialVersion((int)GetRevision());
         debugValuesWindow.SetPortName(portName);
+#endif
     }
 
     static DualPantoSync globalSync;
@@ -472,13 +474,20 @@ class DebugValuesWindow : EditorWindow
     void OnGUI()
     {
         buildLabel("Port", portName);
-        TimeSpan ts = (DateTime.Now - lastHeartBeat);
-        buildLabel("Time Since Last Heartbeat", ts.TotalMilliseconds.ToString());
+        buildHeartbeatLabel();
         buildLabel("Serial Revision Id", serialVersion.ToString());
         buildLabel("Upper Handle Position", rawMePosX.ToString("F4") + " @ " + rawMePosY.ToString("F4"));
         buildLabel("Upper Handle Rotation", rawMeRot.ToString("F4"));
         buildLabel("Lower Handle Position", rawItPosX.ToString("F4") + " @ " + rawItPosY.ToString("F4"));
         buildLabel("Lower Handle Rotation", rawItRot.ToString("F4"));
+    }
+
+    private void buildHeartbeatLabel()
+    {
+        TimeSpan ts = (DateTime.Now - lastHeartBeat);
+        GUIStyle s = new GUIStyle(EditorStyles.boldLabel);
+        s.normal.textColor = ts.TotalMilliseconds > 1000 ? Color.red : Color.green;
+        EditorGUILayout.LabelField("Ms Since Last Heartbeat", ts.TotalMilliseconds.ToString(), s);
     }
 
     private void buildLabel(string title, string value)
