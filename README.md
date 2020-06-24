@@ -22,12 +22,6 @@ cd path/to/repo
 cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
 ```
-You will also need the [UnitySpeechIO Project](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity).
-```
-cd path/to/repo
-cd Assets
-git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
-```
 
 ## Creating a Panto Application in Unity
 ### Adding the right components
