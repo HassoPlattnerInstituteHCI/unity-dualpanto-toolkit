@@ -85,3 +85,6 @@ Try to reset the dualPanto device using the button on the back. For this see _Ho
 
 ### dualPanto handles not moving physically.
 Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on)
+
+### Debugging
+If you keep having troubles, you can enable `show raw values` in the DualPantoSync component. A Popup will show you the raw position and rotation values Unity receives for each handle, how much time has passed since t last received a heartbeat from the device, the name of the port and the current protocol revision id.
