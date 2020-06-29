@@ -8,8 +8,11 @@ public class RegisterCollider : MonoBehaviour
     async void Start()
     {
         await Task.Delay(2000);
-        PantoBoxCollider collider = GetComponent<PantoBoxCollider>();
-        collider.CreateObstacle();
-        collider.Enable();
+        PantoCollider[] pantoColliders = GameObject.FindObjectsOfType<PantoCollider>();
+        foreach (PantoCollider collider in pantoColliders)
+        {
+            collider.CreateObstacle();
+            collider.Enable();
+        }
     }
 }

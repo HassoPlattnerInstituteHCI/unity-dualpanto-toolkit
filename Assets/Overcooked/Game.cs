@@ -26,7 +26,8 @@ public class Game : MonoBehaviour
     public AudioClip customerLeaving;
     public AudioClip gameLost;
 
-    void Awake() {
+    void Awake()
+    {
         audioSource = AddAudio();
         customerAudioSource = AddAudio();
     }
@@ -37,64 +38,76 @@ public class Game : MonoBehaviour
         SpawnCustomers();
     }
 
-    async void SpawnCustomers() {
-        while (true) {
+    async void SpawnCustomers()
+    {
+        while (true)
+        {
             await SpawnCustomer();
         }
     }
 
-    AudioSource AddAudio() 
-    { 
+    AudioSource AddAudio()
+    {
         AudioSource newAudio = gameObject.AddComponent<AudioSource>();
         newAudio.loop = false;
         newAudio.playOnAwake = false;
-        return newAudio; 
+        return newAudio;
     }
-    
-    async Task failDelivery() {
+
+    async Task failDelivery()
+    {
         failedDeliveries++;
-        if (failedDeliveries >= 3) {
+        if (failedDeliveries >= 3)
+        {
             await playSound(audioSource, gameLost);
         }
     }
 
-    async Task SpawnCustomer() {
+    async Task SpawnCustomer()
+    {
         customerSatisfied = false;
         await playSound(customerAudioSource, customerOrdering);
-        await Task.Delay(2000);
+        await Task.Delay(3000);
         if (customerSatisfied) return;
         await playSound(customerAudioSource, customerHungry);
-        await Task.Delay(2000);
+        await Task.Delay(3000);
         if (customerSatisfied) return;
         await playSound(customerAudioSource, customerAngry);
-        await Task.Delay(2000);
+        await Task.Delay(3000);
         if (customerSatisfied) return;
         await playSound(customerAudioSource, customerLeaving);
         await failDelivery();
     }
 
-    void OnApplicationQuit() {
+    void OnApplicationQuit()
+    {
         customerSatisfied = true;
     }
 
-    public async Task playSound(AudioSource source, AudioClip clip) {
+    public async Task playSound(AudioSource source, AudioClip clip)
+    {
         source.clip = clip;
         source.Play();
         await Task.Delay(Mathf.RoundToInt(clip.length * 1000));
     }
-    public async Task playSound(AudioClip clip) {
+    public async Task playSound(AudioClip clip)
+    {
         await playSound(audioSource, clip);
     }
 
-    public async void EnteredArea(string areaName, AudioClip successSound) {
-        if (!enabled) {
+    public async void EnteredArea(string areaName, AudioClip successSound)
+    {
+        if (!enabled)
+        {
             GetComponent<Tutorial>().EnteredArea(areaName, successSound);
             return;
         }
-        if (areaName == steps[currentStep]) {
+        if (areaName == steps[currentStep])
+        {
             await playSound(successSound);
             currentStep++;
-            if (currentStep >= steps.Length) {
+            if (currentStep >= steps.Length)
+            {
                 customerSatisfied = true;
                 customerAudioSource.Stop();
                 currentStep = 0;
