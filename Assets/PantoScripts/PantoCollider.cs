@@ -8,6 +8,7 @@ public abstract class PantoCollider : PantoBehaviour
     protected bool pantoEnabled = false;
     public bool onUpper = true;
     public bool onLower = true;
+    public bool isPassable = false;
 
     public new void Awake()
     {
@@ -87,7 +88,14 @@ public abstract class PantoCollider : PantoBehaviour
         {
             Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
         }
-        pantoSync.CreateObstacle(index, id, corners[0], corners[1]);
+        if (this.isPassable)
+        {
+            pantoSync.CreatePassableObstacle(index, id, corners[0], corners[1]);
+        } else
+        {
+            pantoSync.CreateObstacle(index, id, corners[0], corners[1]);
+        }
+        
         for (int i = 1; i < corners.Length - 1; i++)
         {
             pantoSync.AddToObstacle(index, id, corners[i], corners[i + 1]);
