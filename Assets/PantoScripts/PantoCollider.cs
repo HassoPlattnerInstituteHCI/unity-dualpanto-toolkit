@@ -122,7 +122,7 @@ public abstract class PantoCollider : PantoBehaviour
     /// </summary>
     public void Remove()
     {
-        //GetPantoSync().RemoveObstacle(getPantoIndex(), id);
+        GetPantoSync().RemoveObstacle(getPantoIndex(), id);
     }
 
     /// <summar>

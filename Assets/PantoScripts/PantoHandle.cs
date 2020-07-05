@@ -15,12 +15,11 @@ public class PantoHandle : PantoBehaviour
     private float rotation;
     static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
     private Vector3 position = handleDefaultPosition;
-    private Vector3 startPosition; //tweening
+    private Vector3 startPosition; 
     private Vector3? godObjectPosition;
     protected bool userControlledPosition = true; //for debug only
     protected bool userControlledRotation = true; //for debug only
 
-    public float tweenValue = 0.0f; //tweening
     /// <summary>
     /// Moves the handle to the given position at the given speed. The handle will then be freed.
     /// </summary>
@@ -40,6 +39,7 @@ public class PantoHandle : PantoBehaviour
 
         speed = newSpeed;
         inTransition = true;
+        GetPantoSync().UpdateHandlePosition(position, handledGameObject.transform.eulerAngles.y, isUpper);
 
         while (inTransition)
         {
@@ -68,16 +68,13 @@ public class PantoHandle : PantoBehaviour
         speed = newSpeed;
         inTransition = true;
 
-        tweenValue = 0;
         startPosition = GetPosition();
+        GetPantoSync().UpdateHandlePosition(newHandle.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
 
         while (inTransition)
         {
             await Task.Delay(10);
         }
-        //tweenValue = 0;
-        //startPosition = getPosition();
-        //Debug.Log("startPosition" + startPosition);
     }
 
     /// <summary>
@@ -226,30 +223,22 @@ public class PantoHandle : PantoBehaviour
 
     protected void Update()
     {
-        tweenValue = Mathf.Min(1.0f, tweenValue + 0.04f);
         if (handledGameObject == null)
         {
             inTransition = false;
             return;
         }
+        
         float movementSpeed = Mathf.Min(MaxMovementSpeed(), speed);
         Vector3 currentPos = GetPosition();
         Vector3 goalPos = handledGameObject.transform.position;
 
         float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
-        if (distance > movementSpeed)
+        
+        if (inTransition && distance < 0.2)
         {
-            Vector3 movement = startPosition + (goalPos - startPosition) * tweenValue;
-            GetPantoSync().UpdateHandlePosition(movement, handledGameObject.transform.eulerAngles.y, isUpper);
-        }
-        else
-        {
-            if (inTransition)
-            {
-                Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
-                inTransition = false;
-            }
-            GetPantoSync().UpdateHandlePosition(goalPos, handledGameObject.transform.eulerAngles.y, isUpper);
+            Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
+            inTransition = false;
         }
     }
 }
