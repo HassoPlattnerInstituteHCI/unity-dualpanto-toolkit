@@ -130,7 +130,7 @@ public class PantoHandle : PantoBehaviour
         Vector3 direction = desiredPosition - currentPosition;
         Ray ray = new Ray(currentPosition, direction);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, direction.magnitude))
+        if (Physics.Raycast(ray, out hit, direction.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             return hit.point - (direction.normalized * 0.01f);
         }
