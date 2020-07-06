@@ -72,7 +72,7 @@ This will work best if you disable environment lighting in the scene first: Open
 ### Updating Submodules
 if a function does not seem to exist (unity throws an error like "missing assembly reference") or if you try to use content that we released at a later stage than when the framework was released, try to update your submodules first before reaching out to us (we will always use the latest state of the submodules when we try to debug your code). 
 
-git submodule update --remote
+`git submodule update --remote`
 
 ### How do I turn my dualPanto device on?
 On the back of your dualPanto device is a power switch. Push so that it turns to **On** and make sure the battery is charged.
