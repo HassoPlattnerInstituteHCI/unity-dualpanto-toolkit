@@ -237,7 +237,7 @@ public class DualPantoSync : MonoBehaviour
         else
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed;
+            float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
             Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
             float r = debugUpperObject.transform.eulerAngles.y + mouseRotation;
             upperHandlePos = position;
