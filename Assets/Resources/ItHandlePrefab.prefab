@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2760152653773881903}
   m_Layer: 0
-  m_Name: MeHandlePrefab
+  m_Name: ItHandlePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,6 +227,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ItHandle
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 931327b4327c7c843b671ab2ed4245fe,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 931327b4327c7c843b671ab2ed4245fe,
         type: 3}
