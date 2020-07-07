@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using DualPantoFramework;
 
 public class RotationIt : MonoBehaviour
 {
@@ -13,6 +12,6 @@ public class RotationIt : MonoBehaviour
 
     void FixedUpdate()
     {
-       gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, 0.5f);
+        gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, 0.5f);
     }
 }

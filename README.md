@@ -22,12 +22,6 @@ cd path/to/repo
 cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
 ```
-You will also need the [UnitySpeechIO Project](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity).
-```
-cd path/to/repo
-cd Assets
-git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
-```
 
 ## Creating a Panto Application in Unity
 ### Adding the right components
@@ -78,10 +72,10 @@ This will work best if you disable environment lighting in the scene first: Open
 ### Updating Submodules
 if a function does not seem to exist (unity throws an error like "missing assembly reference") or if you try to use content that we released at a later stage than when the framework was released, try to update your submodules first before reaching out to us (we will always use the latest state of the submodules when we try to debug your code). 
 
-git submodule update --remote
+`git submodule update --remote`
 
 ### How do I turn my dualPanto device on?
-On the back of your dualPanto device is a power switch. Push so that it turns to **On**.
+On the back of your dualPanto device is a power switch. Push so that it turns to **On** and make sure the battery is charged.
 
 ### How do I reset my dualPanto device?
 On the back of your dualPanto device is a button next to the cable connection. Move the linkages back in the closing position, turn the handles so they point to the right, press the button and wait 3 seconds.
@@ -91,3 +85,16 @@ Try to reset the dualPanto device using the button on the back. For this see _Ho
 
 ### dualPanto handles not moving physically.
 Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on)
+
+### dualPanto works sometimes/Message _Skipping god object_ appears.
+Don't hold the handles too hard or push against the motors too hard.
+
+### Game objects do not collide with obstacles in debug mode.
+Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Assets/documentation/documentation.md) for more info on usage.
+
+
+### No input or output from the DualPanto is arriving, the Console is showing *Received sync*, but no *Received heartbeat*.  
+This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  
+
+### Debugging
+If you keep having troubles, you can enable `show raw values` in the DualPantoSync component. A Popup will show you the raw position and rotation values Unity receives for each handle, how much time has passed since t last received a heartbeat from the device, the name of the port and the current protocol revision id.

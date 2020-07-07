@@ -1,9 +1,29 @@
 fileFormatVersion: 2
-guid: 104b6ead6170b534b8531814ae585146
+guid: 0b15e889ce5c72948bba1db0898dc4f8
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MainBodyIt
+    second: {fileID: 2100000, guid: cb1e3091397191f4d9ee7e828cb2b9c6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MainBodyMe
+    second: {fileID: 2100000, guid: d30dfe83c7a2d3546b56e1c49a0b11df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Marker
+    second: {fileID: 2100000, guid: dd8473404e0adbb41ad1eeeeac93de0c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Text
+    second: {fileID: 2100000, guid: 30eb23731b284f34e846a33b4eb9d588, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

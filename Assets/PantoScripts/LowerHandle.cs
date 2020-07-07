@@ -1,16 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-/// <summary>
-/// The lower handle of the Panto, usually the It Handle.
-/// </summary>
-public class LowerHandle : PantoHandle
+namespace DualPantoFramework
 {
-    new void Awake()
+    /// <summary>
+    /// The lower handle of the Panto, usually the It Handle.
+    /// </summary>
+    public class LowerHandle : PantoHandle
     {
-        base.Awake();
-        isUpper = false;
-        pantoSync.RegisterLowerHandle(this);
+        new void Awake()
+        {
+            base.Awake();
+            isUpper = false;
+            pantoSync.RegisterLowerHandle(this);
+        }
     }
 }

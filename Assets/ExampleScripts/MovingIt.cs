@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using DualPantoFramework;
 
 public class MovingIt : MonoBehaviour
 {
@@ -10,16 +9,17 @@ public class MovingIt : MonoBehaviour
     public float speed = 0.2f;
     async void Start()
     {
-        itHandle = GameObject.Find("Panto").GetComponent<LowerHandle>(); 
+        itHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
         await itHandle.SwitchTo(gameObject, 0.4f);
         movementStarted = true;
     }
 
     void Update()
     {
-        if(!movementStarted) return;
-        if (transform.position.x > 12 || transform.position.x < -12) {
-           direction *= -1; 
+        if (!movementStarted) return;
+        if (transform.position.x > 12 || transform.position.x < -12)
+        {
+            direction *= -1;
         }
         transform.position += direction * speed;
     }

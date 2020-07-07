@@ -1,23 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PantoBehaviour : MonoBehaviour
+namespace DualPantoFramework
 {
-    protected DualPantoSync pantoSync;
-
-    protected virtual void Awake()
+    public class PantoBehaviour : MonoBehaviour
     {
-        pantoSync = GetPantoGameObject().GetComponent<DualPantoSync>();
-    }
+        protected DualPantoSync pantoSync;
 
-    protected GameObject GetPantoGameObject()
-    {
-        return GameObject.Find("Panto");
-    }
+        protected virtual void Awake()
+        {
+            pantoSync = GetPantoGameObject().GetComponent<DualPantoSync>();
+        }
 
-    protected DualPantoSync GetPantoSync()
-    {
-        return pantoSync;
+        protected GameObject GetPantoGameObject()
+        {
+            return GameObject.Find("Panto");
+        }
+
+        protected DualPantoSync GetPantoSync()
+        {
+            return pantoSync;
+        }
     }
 }

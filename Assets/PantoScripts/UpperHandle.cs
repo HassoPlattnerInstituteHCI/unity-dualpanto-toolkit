@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// The upper handle of the Panto, usually the Me Handle.
-/// </summary>
-public class UpperHandle : PantoHandle
+﻿namespace DualPantoFramework
 {
-    new void Awake()
+    /// <summary>
+    /// The upper handle of the Panto, usually the Me Handle.
+    /// </summary>
+    public class UpperHandle : PantoHandle
     {
-        base.Awake();
-        isUpper = true;
-        pantoSync.RegisterUpperHandle(this);
+        new void Awake()
+        {
+            base.Awake();
+            isUpper = true;
+            pantoSync.RegisterUpperHandle(this);
+        }
     }
 }

@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using SpeechIO;
+using DualPantoFramework;
 
 public class IntroductionManager : MonoBehaviour
 {
@@ -14,7 +13,8 @@ public class IntroductionManager : MonoBehaviour
         await speech.Speak("Introduction finished, handles are free");
     }
 
-    void OnApplicationQuit() {
+    void OnApplicationQuit()
+    {
         speech.Stop();
     }
 

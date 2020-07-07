@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PantoBoxCollider : PantoCollider
+namespace DualPantoFramework
 {
-    public override void CreateObstacle()
+    public class PantoBoxCollider : PantoCollider
     {
-        CreateBoxObstacle();
+        public override void CreateObstacle()
+        {
+            CreateBoxObstacle();
+        }
     }
 }

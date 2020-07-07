@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PantoCircularCollider : PantoCollider
+namespace DualPantoFramework
 {
-    public int numberOfCorners = 8;
-    public override void CreateObstacle()
+    public class PantoCircularCollider : PantoCollider
     {
-        CreateCircularCollider(numberOfCorners);
+        public int numberOfCorners = 8;
+        public override void CreateObstacle()
+        {
+            CreateCircularCollider(numberOfCorners);
+        }
     }
 }
