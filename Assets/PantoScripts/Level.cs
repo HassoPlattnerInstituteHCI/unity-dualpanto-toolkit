@@ -1,63 +1,64 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SpeechIO;
 using System.Threading.Tasks;
 
-/// <summary>
-/// A level that can be introduced to the player. You could use one of these for each scene, or for each room in a scene.
-/// </summary>
-public class Level : PantoBehaviour
+namespace DualPantoFramework
 {
-    AudioSource audioSource;
-    SpeechOut speechOut = new SpeechOut();
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     /// <summary>
-    /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
+    /// A level that can be introduced to the player. You could use one of these for each scene, or for each room in a scene.
     /// </summary>
-    async public Task PlayIntroduction()
+    public class Level : PantoBehaviour
     {
-        ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
-        Array.Sort(gos, ((go1, go2) => go2.priority.CompareTo(go1.priority)));
-
-        for (int index = 0; index < gos.Length; index++)
+        AudioSource audioSource;
+        SpeechOut speechOut = new SpeechOut();
+        protected override void Awake()
         {
-            await IntroduceObject(gos[index]);
+            base.Awake();
         }
-        GetPantoGameObject().GetComponent<LowerHandle>().Free();
-        GetPantoGameObject().GetComponent<UpperHandle>().Free();
-    }
 
-    async private Task IntroduceObject(ObjectOfInterest objectOfInterest)
-    {
-        Task[] tasks = new Task[2];
-        tasks[0] = speechOut.Speak(objectOfInterest.description);
-
-        PantoHandle pantoHandle = objectOfInterest.isOnUpper
-            ? (PantoHandle)GetPantoGameObject().GetComponent<UpperHandle>()
-            : (PantoHandle)GetPantoGameObject().GetComponent<LowerHandle>();
-
-        if (objectOfInterest.traceShape)
+        /// <summary>
+        /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
+        /// </summary>
+        async public Task PlayIntroduction()
         {
-            List<GameObject> children = new List<GameObject>();
-            foreach (Transform child in objectOfInterest.transform)
+            ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
+            Array.Sort(gos, ((go1, go2) => go2.priority.CompareTo(go1.priority)));
+
+            for (int index = 0; index < gos.Length; index++)
             {
-                children.Add(child.gameObject);
+                await IntroduceObject(gos[index]);
             }
-            children.Sort((GameObject g1, GameObject g2) => g1.name.CompareTo(g2.name));
-            tasks[1] = pantoHandle.TraceObjectByPoints(children, 0.2f);
+            GetPantoGameObject().GetComponent<LowerHandle>().Free();
+            GetPantoGameObject().GetComponent<UpperHandle>().Free();
         }
-        else
+
+        async private Task IntroduceObject(ObjectOfInterest objectOfInterest)
         {
-            tasks[1] = pantoHandle.SwitchTo(objectOfInterest.gameObject, 0.2f);
+            Task[] tasks = new Task[2];
+            tasks[0] = speechOut.Speak(objectOfInterest.description);
+
+            PantoHandle pantoHandle = objectOfInterest.isOnUpper
+                ? (PantoHandle)GetPantoGameObject().GetComponent<UpperHandle>()
+                : (PantoHandle)GetPantoGameObject().GetComponent<LowerHandle>();
+
+            if (objectOfInterest.traceShape)
+            {
+                List<GameObject> children = new List<GameObject>();
+                foreach (Transform child in objectOfInterest.transform)
+                {
+                    children.Add(child.gameObject);
+                }
+                children.Sort((GameObject g1, GameObject g2) => g1.name.CompareTo(g2.name));
+                tasks[1] = pantoHandle.TraceObjectByPoints(children, 0.2f);
+            }
+            else
+            {
+                tasks[1] = pantoHandle.SwitchTo(objectOfInterest.gameObject, 0.2f);
+            }
+            await Task.WhenAll(tasks);
+            await Task.Delay(500);
         }
-        await Task.WhenAll(tasks);
-        await Task.Delay(500);
     }
 }
-

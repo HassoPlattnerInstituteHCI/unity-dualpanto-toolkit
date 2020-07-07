@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using DualPantoFramework;
 
 public class MoveToPosition : MonoBehaviour
 {
@@ -9,8 +8,8 @@ public class MoveToPosition : MonoBehaviour
     async void Start()
     {
         PantoHandle handle = isUpper
-            ? (PantoHandle) GameObject.Find("Panto").GetComponent<UpperHandle>()
-            : (PantoHandle) GameObject.Find("Panto").GetComponent<LowerHandle>();
+            ? (PantoHandle)GameObject.Find("Panto").GetComponent<UpperHandle>()
+            : (PantoHandle)GameObject.Find("Panto").GetComponent<LowerHandle>();
 
         await handle.MoveToPosition(gameObject.transform.position, 0.3f, shouldFreeHandle);
     }

@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
+using DualPantoFramework;
 
 public class ObstacleManager : MonoBehaviour
 {
