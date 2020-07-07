@@ -119,6 +119,9 @@ public class PantoHandle : PantoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get the current position (taking obstacles into account) of the handle in Unity coordinates.
+    /// </summary>
     public Vector3 HandlePosition(Vector3 currentPosition)
     {
         //TODO only consider enabled obstacles
@@ -127,7 +130,7 @@ public class PantoHandle : PantoBehaviour
         Vector3 direction = desiredPosition - currentPosition;
         Ray ray = new Ray(currentPosition, direction);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, direction.magnitude))
+        if (Physics.Raycast(ray, out hit, direction.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             return hit.point - (direction.normalized * 0.01f);
         }
@@ -153,11 +156,19 @@ public class PantoHandle : PantoBehaviour
     }
 
     /// <summary>
-    /// Get the current position of the handle in Unity coordinates.
+    /// Apply a force to the handle.
     /// </summary>
     public void ApplyForce(Vector3 direction)
     {
         pantoSync.ApplyForce(isUpper, direction);
+    }
+
+    /// <summary>
+    /// Cancel forces applied to a handle.
+    /// </summary>
+    public void StopApplyingForce()
+    {
+        pantoSync.ApplyForce(isUpper, new Vector3(0, 0, 0));
     }
 
     /// <summary>

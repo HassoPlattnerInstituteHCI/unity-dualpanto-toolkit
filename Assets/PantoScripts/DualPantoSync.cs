@@ -298,7 +298,10 @@ public class DualPantoSync : MonoBehaviour
     public void ApplyForce(bool isUpper, Vector3 direction)
     {
         direction = direction.normalized;
-        SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
+        if (!debug)
+        {
+            SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
+        }
     }
 
     public void UpdateHandlePosition(Vector3 position, float? rotation, bool isUpper)
