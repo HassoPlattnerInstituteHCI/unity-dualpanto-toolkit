@@ -8,11 +8,11 @@ public class ForceField : MonoBehaviour
     {
         if (other.tag == "MeHandle")
         {
-            GameObject.Find("Panto").GetComponent<UpperHandle>().ApplyForce(new Vector3(1, 0, 0));
+            GameObject.Find("Panto").GetComponent<UpperHandle>().ApplyForce(new Vector3(1, 0, 0), 0.3f);
         }
         else if (other.tag == "ItHandle")
         {
-            GameObject.Find("Panto").GetComponent<LowerHandle>().ApplyForce(new Vector3(1, 0, 0));
+            GameObject.Find("Panto").GetComponent<LowerHandle>().ApplyForce(new Vector3(1, 0, 0), 0.3f);
         }
     }
 

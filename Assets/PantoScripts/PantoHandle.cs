@@ -158,9 +158,9 @@ public class PantoHandle : PantoBehaviour
     /// <summary>
     /// Apply a force to the handle.
     /// </summary>
-    public void ApplyForce(Vector3 direction)
+    public void ApplyForce(Vector3 direction, float strength)
     {
-        pantoSync.ApplyForce(isUpper, direction);
+        pantoSync.ApplyForce(isUpper, direction, strength);
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ public class PantoHandle : PantoBehaviour
     /// </summary>
     public void StopApplyingForce()
     {
-        pantoSync.ApplyForce(isUpper, new Vector3(0, 0, 0));
+        pantoSync.ApplyForce(isUpper, new Vector3(0, 0, 0), 0f);
     }
 
     /// <summary>

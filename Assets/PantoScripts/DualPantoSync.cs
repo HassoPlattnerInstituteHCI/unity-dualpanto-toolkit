@@ -295,9 +295,10 @@ public class DualPantoSync : MonoBehaviour
         return wantedPosition;
     }
 
-    public void ApplyForce(bool isUpper, Vector3 direction)
+    public void ApplyForce(bool isUpper, Vector3 direction, float strength)
     {
-        direction = direction.normalized;
+        strength = Mathf.Min(strength, 1);
+        direction = direction.normalized * strength;
         if (!debug)
         {
             SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
