@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Area : MonoBehaviour
 {
@@ -19,15 +17,19 @@ public class Area : MonoBehaviour
         game = GameObject.Find("Game").GetComponent<Game>();
     }
 
-    void OnTriggerEnter(Collider collider) {
-        if (collider.tag == "Player") {
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "Player")
+        {
             audioSource.Play();
             game.EnteredArea(gameObject.name, successSound);
         }
     }
 
-    void OnTriggerExit(Collider collider) {
-        if (collider.tag == "Player") {
+    void OnTriggerExit(Collider collider)
+    {
+        if (collider.tag == "Player")
+        {
             audioSource.Stop();
         }
     }

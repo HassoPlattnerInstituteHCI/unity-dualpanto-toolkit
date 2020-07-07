@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DualPantoFramework;
 
 public class Tutorial : MonoBehaviour
 {
@@ -28,7 +27,8 @@ public class Tutorial : MonoBehaviour
         await lowerHandle.MoveToPosition(new Vector3(0, 0, -10), 0.2f);
         await GameObject.Find("Panto").GetComponent<UpperHandle>().MoveToPosition(new Vector3(0, 0, -10), 0.2f);
         game = GetComponent<Game>();
-        if (!shouldPlayTutorial) {
+        if (!shouldPlayTutorial)
+        {
             game.enabled = true;
             return;
         }
@@ -37,37 +37,48 @@ public class Tutorial : MonoBehaviour
         await lowerHandle.SwitchTo(GameObject.Find(awaitedAreaNames[currentTutorialStep][awaitedIndex]), 0.2f);
     }
 
-    async void endTutorial() {
+    async void endTutorial()
+    {
         await game.playSound(tutorialSteps[7]);
         Debug.Log("enabling");
         GetComponent<Game>().enabled = true;
     }
 
-    async void playNextTutorialStep(AudioClip successSound) {
+    async void playNextTutorialStep(AudioClip successSound)
+    {
         currentTutorialStep++;
-        if (currentTutorialStep >= 8) {
+        if (currentTutorialStep >= 8)
+        {
             endTutorial();
             return;
         }
         awaitedIndex = 0;
         await game.playSound(tutorialSteps[currentTutorialStep]);
-        if (Array.IndexOf(new int[] {3, 6, 7}, currentTutorialStep) <= -1) {
+        if (Array.IndexOf(new int[] { 3, 6, 7 }, currentTutorialStep) <= -1)
+        {
             await lowerHandle.SwitchTo(GameObject.Find(awaitedAreaNames[currentTutorialStep][awaitedIndex]), 0.2f);
-        } else {
+        }
+        else
+        {
             lowerHandle.Free();
         }
     }
-    
-    public async void EnteredArea(string areaName, AudioClip successSound) {
-        if (currentTutorialStep < 0) {
+
+    public async void EnteredArea(string areaName, AudioClip successSound)
+    {
+        if (currentTutorialStep < 0)
+        {
             return;
         }
-        if (areaName == awaitedAreaNames[currentTutorialStep][awaitedIndex]) {
-            if (successSound) {
+        if (areaName == awaitedAreaNames[currentTutorialStep][awaitedIndex])
+        {
+            if (successSound)
+            {
                 await game.playSound(successSound);
             }
             awaitedIndex++;
-            if (awaitedIndex == awaitedAreaNames[currentTutorialStep].Length) {
+            if (awaitedIndex == awaitedAreaNames[currentTutorialStep].Length)
+            {
                 playNextTutorialStep(successSound);
             }
         }
