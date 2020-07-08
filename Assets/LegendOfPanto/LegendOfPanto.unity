@@ -667,7 +667,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.966394
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -856,12 +856,12 @@ PrefabInstance:
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}
       propertyPath: debug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}
       propertyPath: showRawValues
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4615792043202523929, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}
@@ -927,8 +927,9 @@ GameObject:
   - component: {fileID: 2097128878}
   - component: {fileID: 2097128877}
   - component: {fileID: 2097128876}
+  - component: {fileID: 2097128880}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1008,3 +1009,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &2097128880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097128875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f611ac377b98645b3f017f2c847b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

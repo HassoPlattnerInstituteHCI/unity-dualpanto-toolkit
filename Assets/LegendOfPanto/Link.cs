@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class Link : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public AudioClip nightmareSoundLink;
+    public AudioClip nightmareLaughGanon;
+
     void Start()
     {
-
+        Nightmare();
     }
 
-    void Sleep()
+    void Nightmare()
     {
-        transform.RotateAround();
-        transform.RotateAround();
-
+        Debug.Log("rotate");
+        float speed = 20;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 30, 0), speed * Time.deltaTime);
+        transform.Rotate(Vector3.up);
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, -60, 0), speed * Time.deltaTime);
     }
 
-    // Update is called once per frame
     void Update()
     {
 
