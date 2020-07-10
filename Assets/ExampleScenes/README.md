@@ -18,3 +18,6 @@ Contains two cubes, each handle will move to one cube, one handle will be freed 
 
 ### Movement
 Contains two spheres, each can be contained by one handle.
+
+### Many Obstacles
+A scene with a large amount of obstacles that vary in size.
