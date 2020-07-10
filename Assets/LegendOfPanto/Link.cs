@@ -1,28 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using DualPantoFramework;
 using UnityEngine;
 
-public class Link : MonoBehaviour
+public class Link : LegendBehaviour
 {
-    public AudioClip nightmareSoundLink;
+    public AudioClip nightmareSoundLink1;
+    public AudioClip nightmareSoundLink2;
     public AudioClip nightmareLaughGanon;
+    UpperHandle upperHandle;
+    bool dreaming = false;
+    bool userControlled = false;
+    int direction = 1;
 
-    void Start()
+    new void Awake()
     {
-        Nightmare();
+        base.Awake();
+        upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
     }
 
-    void Nightmare()
+    public async Task Nightmare()
     {
-        Debug.Log("rotate");
-        float speed = 20;
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 30, 0), speed * Time.deltaTime);
-        transform.Rotate(Vector3.up);
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, -60, 0), speed * Time.deltaTime);
+        await upperHandle.SwitchTo(gameObject, 0.3f);
+        dreaming = true;
+        await playSound(nightmareLaughGanon);
+        await playSound(nightmareSoundLink1);
+        await playSound(nightmareSoundLink2);
+        dreaming = false;
+    }
+
+    void TossAndTurn()
+    {
+        transform.RotateAround(transform.position, Vector3.up, 90 * Time.deltaTime * direction);
+        float rot = transform.rotation.eulerAngles.y;
+        if (rot > 40 && rot < 320) direction *= -1;
+    }
+
+    public void Activate()
+    {
+        userControlled = true;
     }
 
     void Update()
     {
-
+        if (dreaming) TossAndTurn();
+        if (userControlled) transform.position = upperHandle.HandlePosition(transform.position);
     }
+
 }
