@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 931327b4327c7c843b671ab2ed4245fe
+guid: 0b15e889ce5c72948bba1db0898dc4f8
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
@@ -7,17 +7,27 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.001
-    second: {fileID: 2100000, guid: 30eb23731b284f34e846a33b4eb9d588, type: 2}
+      name: MainBodyIt
+    second: {fileID: 2100000, guid: cb1e3091397191f4d9ee7e828cb2b9c6, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.004
-    second: {fileID: 2100000, guid: 65d845ae832bfa34ebef9b999c3f1d40, type: 2}
+      name: MainBodyMe
+    second: {fileID: 2100000, guid: d30dfe83c7a2d3546b56e1c49a0b11df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Marker
+    second: {fileID: 2100000, guid: dd8473404e0adbb41ad1eeeeac93de0c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Text
+    second: {fileID: 2100000, guid: 30eb23731b284f34e846a33b4eb9d588, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
-    materialSearch: 0
+    materialSearch: 1
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
