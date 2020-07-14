@@ -103,11 +103,12 @@ namespace DualPantoFramework
         private static void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
-            if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
+            /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
             {
                 return;
             }
-            else if (message.Contains("disconnected"))
+            else */
+            if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
             }

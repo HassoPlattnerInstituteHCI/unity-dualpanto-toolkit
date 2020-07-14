@@ -114,7 +114,7 @@ namespace DualPantoFramework
         /// </summary>
         public void Remove()
         {
-            //GetPantoSync().RemoveObstacle(getPantoIndex(), id);
+            GetPantoSync().RemoveObstacle(getPantoIndex(), id);
         }
 
         /// <summar>
