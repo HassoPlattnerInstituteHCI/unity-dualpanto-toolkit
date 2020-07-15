@@ -1,31 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DualPantoFramework;
 
-public class ForceField : MonoBehaviour
+namespace DualPantoFramework
 {
-    void OnTriggerStay(Collider other)
+    abstract public class ForceField : MonoBehaviour
     {
-        if (other.tag == "MeHandle")
-        {
-            GameObject.Find("Panto").GetComponent<UpperHandle>().ApplyForce(new Vector3(1, 0, 0), 0.3f);
-        }
-        else if (other.tag == "ItHandle")
-        {
-            GameObject.Find("Panto").GetComponent<LowerHandle>().ApplyForce(new Vector3(1, 0, 0), 0.3f);
-        }
-    }
+        public bool onUpper = true;
+        public bool onLower = true;
+        protected abstract Vector3 GetCurrentForce(Collider other);
+        protected abstract float GetCurrentStrength();
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "MeHandle")
+        void OnTriggerStay(Collider other)
         {
-            GameObject.Find("Panto").GetComponent<UpperHandle>().StopApplyingForce();
+            if (other.tag == "MeHandle" && onUpper)
+            {
+                GameObject.Find("Panto").GetComponent<UpperHandle>().ApplyForce(GetCurrentForce(other), GetCurrentStrength());
+                Debug.DrawLine(other.transform.position, other.transform.position + GetCurrentForce(other) * GetCurrentStrength(), Color.red);
+            }
+            else if (other.tag == "ItHandle" && onLower)
+            {
+                GameObject.Find("Panto").GetComponent<LowerHandle>().ApplyForce(GetCurrentForce(other), GetCurrentStrength());
+                Debug.DrawLine(other.transform.position, other.transform.position + GetCurrentForce(other) * GetCurrentStrength(), Color.red);
+            }
         }
-        else if (other.tag == "ItHandle")
+
+        void OnTriggerExit(Collider other)
         {
-            GameObject.Find("Panto").GetComponent<LowerHandle>().StopApplyingForce();
+            if (other.tag == "MeHandle" && onUpper)
+            {
+                GameObject.Find("Panto").GetComponent<UpperHandle>().StopApplyingForce();
+            }
+            else if (other.tag == "ItHandle" && onLower)
+            {
+                GameObject.Find("Panto").GetComponent<LowerHandle>().StopApplyingForce();
+            }
         }
     }
 }

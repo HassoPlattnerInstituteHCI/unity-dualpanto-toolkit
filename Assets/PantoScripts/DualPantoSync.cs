@@ -301,11 +301,7 @@ namespace DualPantoFramework
             direction = direction.normalized * strength;
             if (!debug)
             {
-                direction = direction.normalized;
-                if (!debug)
-                {
-                    SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
-                }
+                SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
             }
         }
 
