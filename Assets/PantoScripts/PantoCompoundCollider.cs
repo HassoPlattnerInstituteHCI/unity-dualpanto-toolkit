@@ -10,6 +10,7 @@ namespace DualPantoFramework
     {
         public override void CreateObstacle()
         {
+            UpdateId();
             CreateCompoundObstacle();
         }
 
