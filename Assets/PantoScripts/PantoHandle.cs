@@ -18,8 +18,8 @@ namespace DualPantoFramework
         private Vector3 position = handleDefaultPosition;
         private Vector3 startPosition; //tweening
         private Vector3? godObjectPosition;
-        protected bool userControlledPosition = true; //for debug only
-        protected bool userControlledRotation = true; //for debug only
+        public bool userControlledPosition = true; //for debug only
+        public bool userControlledRotation = true; //for debug only
 
         public float tweenValue = 0.0f; //tweening
         /// <summary>
@@ -238,6 +238,7 @@ namespace DualPantoFramework
 
         protected void Update()
         {
+            //gameObject.transform.position = HandlePosition(gameObject.transform.position);
             tweenValue = Mathf.Min(1.0f, tweenValue + 0.04f);
             if (handledGameObject == null)
             {
