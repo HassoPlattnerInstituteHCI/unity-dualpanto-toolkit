@@ -460,11 +460,7 @@ namespace DualPantoFramework
 
         void OnStopApp()
         {
-#if UNITY_EDITOR
             EditorApplication.isPlaying = false;
-#else
-         Application.Quit();
-#endif
         }
 
     }
