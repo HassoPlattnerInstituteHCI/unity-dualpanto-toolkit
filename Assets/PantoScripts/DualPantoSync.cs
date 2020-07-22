@@ -40,12 +40,14 @@ namespace DualPantoFramework
         private ushort currentObstacleId = 0;
         private GameObject debugLowerObject;
         private GameObject debugUpperObject;
+#if UNITY_EDITOR
         private DebugValuesWindow debugValuesWindow;
+#endif
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
 #else
-    private const string plugin = "libserial";
+        private const string plugin = "libserial";
 #endif
 
         [DllImport(plugin)]
@@ -96,7 +98,9 @@ namespace DualPantoFramework
         private void HeartbeatHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received heartbeat");
+#if UNITY_EDITOR
             if (debugValuesWindow) debugValuesWindow.UpdateHeartbeatTimestamp();
+#endif
             SendHeartbeatAck(handle);
         }
 
@@ -141,7 +145,9 @@ namespace DualPantoFramework
 
             Debug.DrawLine(upperHandlePos + upper * Vector3.back * 0.5f, upperHandlePos + upper * Vector3.forward, Color.black);
             Debug.DrawLine(upperHandlePos + upper * Vector3.left * 0.5f, upperHandlePos + upper * Vector3.right * 0.5f, Color.black);
+#if UNITY_EDITOR
             if (debugValuesWindow) debugValuesWindow.UpdateValues(positions);
+#endif
         }
 
         private static ulong OpenPort(string port)
@@ -179,10 +185,12 @@ namespace DualPantoFramework
                 Handle = OpenPort(portName);
                 if (Handle == (ulong)0)
                 {
+#if UNITY_EDITOR
                     DebugPopUp window = ScriptableObject.CreateInstance<DebugPopUp>();
                     window.position = new Rect(Screen.width / 2, Screen.height / 2, 250, 150);
                     window.ShowPopup();
                     debug = true;
+#endif
                 }
             }
         }
@@ -225,7 +233,9 @@ namespace DualPantoFramework
             FreeHandle(true);
             FreeHandle(false);
             Close(Handle);
+#if UNITY_EDITOR
             if (debugValuesWindow) debugValuesWindow.Close();
+#endif
         }
 
         void Update()
@@ -252,10 +262,12 @@ namespace DualPantoFramework
             {
                 ToggleBlindMode();
             }
+#if UNITY_EDITOR
             if (debugValuesWindow)
             {
                 debugValuesWindow.Repaint();
             }
+#endif
         }
 
         private void ToggleBlindMode()
@@ -426,6 +438,7 @@ namespace DualPantoFramework
             }
         }
     }
+#if UNITY_EDITOR
     class DebugPopUp : EditorWindow
     {
         void OnGUI()
@@ -447,11 +460,7 @@ namespace DualPantoFramework
 
         void OnStopApp()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-         Application.Quit();
-#endif
+            EditorApplication.isPlaying = false;
         }
 
     }
@@ -523,4 +532,5 @@ namespace DualPantoFramework
             lastHeartBeat = DateTime.Now;
         }
     }
+#endif
 }
