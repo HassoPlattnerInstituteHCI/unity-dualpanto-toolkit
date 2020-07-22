@@ -365,11 +365,16 @@ namespace DualPantoFramework
 
         private Vector2 UnityToPanto(Vector2 point)
         {
-            return (point + new Vector2(transform.position.x, transform.position.y)) * 10;
+            float x = (point.x - transform.position.x) / transform.localScale.x * 10;
+            float y = (point.y - transform.position.z) / transform.localScale.z * 10;
+            return new Vector2(x, y);
         }
+
         private Vector2 PantoToUnity(Vector2 point)
         {
-            return (point / 10) - new Vector2(transform.position.x, transform.position.z);
+            float x = (point.x / 10) * transform.localScale.x + transform.position.x;
+            float y = (point.y / 10) * transform.localScale.z + transform.position.z;
+            return new Vector2(x, y);
         }
 
         private bool IsInBounds(Vector2 point)
