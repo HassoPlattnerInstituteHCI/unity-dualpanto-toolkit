@@ -164,6 +164,12 @@ namespace DualPantoFramework
             pantoSync.ApplyForce(isUpper, direction, strength);
         }
 
+        public void ApplyForce(Vector3 direction)
+        {
+            float defaultForce = 0.5f;
+            pantoSync.ApplyForce(isUpper, direction, defaultForce);
+        }
+
         /// <summary>
         /// Cancel forces applied to a handle.
         /// </summary>
