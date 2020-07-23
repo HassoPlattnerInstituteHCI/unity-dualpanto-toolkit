@@ -18,8 +18,8 @@ namespace DualPantoFramework
         private Vector3 position = handleDefaultPosition;
         private Vector3 startPosition; //tweening
         private Vector3? godObjectPosition;
-        public bool userControlledPosition = true; //for debug only
-        public bool userControlledRotation = true; //for debug only
+        protected bool userControlledPosition = true; //for debug only
+        protected bool userControlledRotation = true;
 
         public float tweenValue = 0.0f; //tweening
         /// <summary>
@@ -146,14 +146,7 @@ namespace DualPantoFramework
         /// </summary>
         public void FreeRotation()
         {
-            if (pantoSync.debug)
-            {
-                userControlledRotation = true;
-            }
-            else
-            {
-                //TODO
-            }
+            userControlledRotation = true;
         }
 
         /// <summary>
@@ -259,7 +252,8 @@ namespace DualPantoFramework
             if (distance > movementSpeed)
             {
                 Vector3 movement = startPosition + (goalPos - startPosition) * tweenValue;
-                GetPantoSync().UpdateHandlePosition(movement, handledGameObject.transform.eulerAngles.y, isUpper);
+                float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
+                GetPantoSync().UpdateHandlePosition(movement, rotation, isUpper);
             }
             else
             {
@@ -268,7 +262,8 @@ namespace DualPantoFramework
                     Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
                     inTransition = false;
                 }
-                GetPantoSync().UpdateHandlePosition(goalPos, handledGameObject.transform.eulerAngles.y, isUpper);
+                float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
+                GetPantoSync().UpdateHandlePosition(goalPos, rotation, isUpper);
             }
         }
     }
