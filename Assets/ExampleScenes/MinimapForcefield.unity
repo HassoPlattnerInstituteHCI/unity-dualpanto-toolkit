@@ -316,7 +316,7 @@ Transform:
   m_GameObject: {fileID: 390963390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.03, y: 0, z: -9.98}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 10, y: 0.1, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -335,8 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onUpper: 1
   onLower: 1
-  heightmap: {fileID: 2800000, guid: a277fedc724f046459b8b280259a3a68, type: 3}
-  size: {x: 100, y: 10, z: 100}
+  heightmap: {fileID: 2800000, guid: 43e3661277703664db07d0fa7e0cbee5, type: 3}
 --- !u!1 &503222450
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +578,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!1 &1452529005
 GameObject:
