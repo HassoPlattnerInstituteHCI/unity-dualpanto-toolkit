@@ -13,11 +13,14 @@ public class Link : LegendBehaviour
     bool dreaming = false;
     bool userControlled = false;
     int direction = 1;
+    bool dressed = false;
+    Manager manager;
 
     new void Awake()
     {
         base.Awake();
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+        manager = GameObject.Find("Game").GetComponent<Manager>();
     }
 
     public async Task Nightmare()
@@ -48,4 +51,22 @@ public class Link : LegendBehaviour
         if (userControlled) transform.position = upperHandle.HandlePosition(transform.position);
     }
 
+    public void GetDressed()
+    {
+        if (dressed) return;
+        dressed = true;
+        manager.OnGetDressed();
+    }
+
+    public void EnterDoor()
+    {
+        if (!dressed)
+        {
+            manager.OnTryExitUndressed();
+        }
+        else
+        {
+            manager.OnExitDoor();
+        }
+    }
 }

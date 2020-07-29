@@ -22,9 +22,11 @@ public class Manager : MonoBehaviour
         link.Activate();
     }
 
-    // Update is called once per frame
-    void Update()
+    public async void OnGetDressed()
     {
-
+        await navi.ShowToDoor();
     }
+
+    public async void OnTryExitUndressed() { await navi.BerateLink(); }
+    public async void OnExitDoor() { await navi.ShowToOldMan(); }
 }
