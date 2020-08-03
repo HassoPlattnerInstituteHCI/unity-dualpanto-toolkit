@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DualPantoFramework;
 using UnityEngine;
 
-public class Link : LegendBehaviour
+public class Link : MonoBehaviour
 {
     public AudioClip nightmareSoundLink1;
     public AudioClip nightmareSoundLink2;
@@ -14,22 +14,20 @@ public class Link : LegendBehaviour
     bool userControlled = false;
     int direction = 1;
     bool dressed = false;
-    Manager manager;
+    public Manager manager;
 
-    new void Awake()
+    void Awake()
     {
-        base.Awake();
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-        manager = GameObject.Find("Game").GetComponent<Manager>();
     }
 
     public async Task Nightmare()
     {
         await upperHandle.SwitchTo(gameObject, 0.3f);
         dreaming = true;
-        await playSound(nightmareLaughGanon);
-        await playSound(nightmareSoundLink1);
-        await playSound(nightmareSoundLink2);
+        await manager.playSound(nightmareLaughGanon);
+        await manager.playSound(nightmareSoundLink1);
+        await manager.playSound(nightmareSoundLink2);
         dreaming = false;
     }
 
