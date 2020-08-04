@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public class Door : LoPTriggerBehaviour
 {
-    void OnTriggerEnter(Collider other)
+    protected override void LinkEntered()
     {
-        if (other.tag == "Link")
-        {
-            other.GetComponent<Link>().EnterDoor();
-        }
+        if (manager.gameState == GameState.DOOR) manager.OnExitDoor();
+        else if (manager.gameState < GameState.DOOR) manager.OnTryExitUndressed();
     }
 }

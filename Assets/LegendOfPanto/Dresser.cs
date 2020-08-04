@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dresser : MonoBehaviour
+public class Dresser : LoPTriggerBehaviour
 {
-    void OnTriggerEnter(Collider other)
+    protected override void LinkEntered()
     {
-        Debug.Log(other);
-        if (other.tag == "Link")
-        {
-            other.GetComponent<Link>().GetDressed();
-        }
+        if (manager.gameState == GameState.DRESS) manager.DresserEntered();
     }
 }

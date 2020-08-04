@@ -43,6 +43,16 @@ public class Link : MonoBehaviour
         userControlled = true;
     }
 
+    public void Free()
+    {
+        upperHandle.Free();
+    }
+
+    public void Stop()
+    {
+        //upperHandle.StopMovement();
+    }
+
     void Update()
     {
         if (dreaming) TossAndTurn();
@@ -53,18 +63,5 @@ public class Link : MonoBehaviour
     {
         if (dressed) return;
         dressed = true;
-        manager.OnGetDressed();
-    }
-
-    public void EnterDoor()
-    {
-        if (!dressed)
-        {
-            manager.OnTryExitUndressed();
-        }
-        else
-        {
-            manager.OnExitDoor();
-        }
     }
 }

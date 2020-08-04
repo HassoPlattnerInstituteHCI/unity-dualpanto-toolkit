@@ -28,7 +28,7 @@ public class Manager : MonoBehaviour
     UpperHandle upperHandle;
     AudioSource source;
     SpeechOut speech;
-    public GameState gameState = GameState.DEFAULT;
+    public GameState gameState = GameState.INTRO;
 
     void Start()
     {
@@ -46,6 +46,16 @@ public class Manager : MonoBehaviour
         await Task.Delay(Mathf.RoundToInt(clip.length * 1000));
     }
 
+    public void FreeLink()
+    {
+        link.Free();
+    }
+
+    public void StopLink()
+    {
+        link.Stop();
+    }
+
     async public Task Speak(string text)
     {
         await speech.Speak(text);
@@ -58,6 +68,10 @@ public class Manager : MonoBehaviour
     {
         await speech.Speak(text);
     }
+    async public Task GanonSpeak(string text)
+    {
+        await speech.Speak(text);
+    }
 
 
     async void Intro()
@@ -65,13 +79,21 @@ public class Manager : MonoBehaviour
         await link.Nightmare();
         await navi.WakeLink();
         link.Activate();
+        gameState = GameState.DRESS;
     }
 
-    public async void OnGetDressed()
+    public async void DresserEntered()
     {
+        link.GetDressed();
+        gameState = GameState.DOOR;
         await navi.ShowToDoor();
     }
 
-    public async void OnTryExitUndressed() { await navi.BerateLink(); }
+    public async void OnTryExitUndressed()
+    {
+        StopLink();
+        await navi.BerateLink();
+        FreeLink();
+    }
     public async void OnExitDoor() { await navi.ShowToOldMan(); }
 }
