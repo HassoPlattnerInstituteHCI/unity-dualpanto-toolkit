@@ -72,7 +72,7 @@ This will work best if you disable environment lighting in the scene first: Open
 ### Updating Submodules
 if a function does not seem to exist (unity throws an error like "missing assembly reference") or if you try to use content that we released at a later stage than when the framework was released, try to update your submodules first before reaching out to us (we will always use the latest state of the submodules when we try to debug your code). 
 
-git submodule update --remote
+`git submodule update --remote`
 
 ### How do I turn my dualPanto device on?
 On the back of your dualPanto device is a power switch. Push so that it turns to **On** and make sure the battery is charged.
@@ -88,6 +88,13 @@ Have you turned the device on? For this see [How do I turn my dualPanto device o
 
 ### dualPanto works sometimes/Message _Skipping god object_ appears.
 Don't hold the handles too hard or push against the motors too hard.
+
+### Game objects do not collide with obstacles in debug mode.
+Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Assets/documentation/documentation.md) for more info on usage.
+
+
+### No input or output from the DualPanto is arriving, the Console is showing *Received sync*, but no *Received heartbeat*.  
+This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  
 
 ### Debugging
 If you keep having troubles, you can enable `show raw values` in the DualPantoSync component. A Popup will show you the raw position and rotation values Unity receives for each handle, how much time has passed since t last received a heartbeat from the device, the name of the port and the current protocol revision id.

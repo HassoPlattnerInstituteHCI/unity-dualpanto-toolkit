@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using DualPantoFramework;
 
 public class RotationIt : MonoBehaviour
 {
-    LowerHandle lowerHandle;
+    PantoHandle lowerHandle;
     async void Start()
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
@@ -13,6 +12,10 @@ public class RotationIt : MonoBehaviour
 
     void FixedUpdate()
     {
-       gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, 0.5f);
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            lowerHandle.FreeRotation();
+        }
+        gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, 0.5f);
     }
 }

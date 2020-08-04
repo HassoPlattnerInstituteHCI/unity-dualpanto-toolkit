@@ -8,8 +8,13 @@ There are two instances of this component attached to the Panto Prefab, the Uppe
 Position and rotation of the handles can either be controlled by the player or by the game.
 You can access each handle using `GameObject.Find("Panto").GetComponent<UpperHandle>()`. 
 
+* `HandlePosition(Vector3 currentPosition)`  
+Returns the position of the respective handle, taking obstacles into account, if in debug mode.
+If you want to have a game object follow the handle you should use this in your `Update()` method:  
+`transform.position = <Reference to a handle>.HandlePosition(transform.position)`
+
 * `GetPosition()`  
-Returns the current position of the respective handle.  
+Returns the current position of the respective handle, if in debug mode this will ignore obstacles, see `HandlePosition` instead.
 If in debug mode, there are two options: if the handle is attached to an object, it will return that game object positions, if the handle is user controlled it will return the mouse position instead.
 
 * `GetRotation()`  
@@ -60,8 +65,3 @@ Attach this to a cube and `CreateObstacle()` will create a box obstacle using th
 
 ### PantoCircularCollider
 Attach this to a sphere and `CreateObstacle()` will create a circular obstacle using the position and radius of the SphereCollider. The obstacle, however, will only be an approximation of a sphere using the number of corners defined, 8 by default.
-
-# Common Problems
-
-:question: No input or output from the DualPanto is arriving, the Console is showing `Received sync` logs, but no `Received heartbeat` .  
-:exclamation: This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  

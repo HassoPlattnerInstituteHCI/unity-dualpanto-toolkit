@@ -1,21 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PantoEnterableCollider : PantoBehaviour
+namespace DualPantoFramework
 {
-    [Range(0, 5)]
-    public float enterStrength;
-    [Range(0, 5)]
-    public float leaveStrength;
-
-    void Start()
+    public class PantoEnterableCollider : PantoBehaviour
     {
-        //PantoCollider pantoCollider = GetComponent<PantoCollider>();
-        //TODO get bounds, create Trigger that is enterStrength bigger (and smaller)
+        [Range(0, 5)]
+        public float enterStrength;
+        [Range(0, 5)]
+        public float leaveStrength;
 
-        //Get God Object Position
-        //When god object enters the inner one?? disable shortly so both can move inside
+        void Start()
+        {
+            //PantoCollider pantoCollider = GetComponent<PantoCollider>();
+            //TODO get bounds, create Trigger that is enterStrength bigger (and smaller)
 
+            //Get God Object Position
+            //When god object enters the inner one?? disable shortly so both can move inside
+
+        }
     }
 }
