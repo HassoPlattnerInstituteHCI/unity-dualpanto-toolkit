@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dresser : LoPTriggerBehaviour
+namespace LegendOfPanto
 {
-    protected override void LinkEntered()
+    public class Dresser : LoPTriggerBehaviour
     {
-        if (manager.gameState == GameState.DRESS) manager.DresserEntered();
+        protected override void LinkEntered()
+        {
+            if (manager.gameState == GameState.DRESS) manager.DresserEntered();
+        }
     }
 }

@@ -4,64 +4,67 @@ using System.Threading.Tasks;
 using DualPantoFramework;
 using UnityEngine;
 
-public class Link : MonoBehaviour
+namespace LegendOfPanto
 {
-    public AudioClip nightmareSoundLink1;
-    public AudioClip nightmareSoundLink2;
-    public AudioClip nightmareLaughGanon;
-    UpperHandle upperHandle;
-    bool dreaming = false;
-    bool userControlled = false;
-    int direction = 1;
-    bool dressed = false;
-    public Manager manager;
-
-    void Awake()
+    public class Link : MonoBehaviour
     {
-        upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-    }
+        public AudioClip nightmareSoundLink1;
+        public AudioClip nightmareSoundLink2;
+        public AudioClip nightmareLaughGanon;
+        UpperHandle upperHandle;
+        bool dreaming = false;
+        bool userControlled = false;
+        int direction = 1;
+        bool dressed = false;
+        public Manager manager;
 
-    public async Task Nightmare()
-    {
-        await upperHandle.SwitchTo(gameObject, 0.3f);
-        dreaming = true;
-        await manager.playSound(nightmareLaughGanon);
-        await manager.playSound(nightmareSoundLink1);
-        await manager.playSound(nightmareSoundLink2);
-        dreaming = false;
-    }
+        void Awake()
+        {
+            upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+        }
 
-    void TossAndTurn()
-    {
-        transform.RotateAround(transform.position, Vector3.up, 90 * Time.deltaTime * direction);
-        float rot = transform.rotation.eulerAngles.y;
-        if (rot > 40 && rot < 320) direction *= -1;
-    }
+        public async Task Nightmare()
+        {
+            await upperHandle.SwitchTo(gameObject, 0.3f);
+            dreaming = true;
+            await manager.playSound(nightmareLaughGanon);
+            await manager.playSound(nightmareSoundLink1);
+            await manager.playSound(nightmareSoundLink2);
+            dreaming = false;
+        }
 
-    public void Activate()
-    {
-        userControlled = true;
-    }
+        void TossAndTurn()
+        {
+            transform.RotateAround(transform.position, Vector3.up, 90 * Time.deltaTime * direction);
+            float rot = transform.rotation.eulerAngles.y;
+            if (rot > 40 && rot < 320) direction *= -1;
+        }
 
-    public void Free()
-    {
-        upperHandle.Free();
-    }
+        public void Activate()
+        {
+            userControlled = true;
+        }
 
-    public void Stop()
-    {
-        //upperHandle.StopMovement();
-    }
+        public void Free()
+        {
+            upperHandle.Free();
+        }
 
-    void Update()
-    {
-        if (dreaming) TossAndTurn();
-        if (userControlled) transform.position = upperHandle.HandlePosition(transform.position);
-    }
+        public void Stop()
+        {
+            //upperHandle.StopMovement();
+        }
 
-    public void GetDressed()
-    {
-        if (dressed) return;
-        dressed = true;
+        void Update()
+        {
+            if (dreaming) TossAndTurn();
+            if (userControlled) transform.position = upperHandle.HandlePosition(transform.position);
+        }
+
+        public void GetDressed()
+        {
+            if (dressed) return;
+            dressed = true;
+        }
     }
 }

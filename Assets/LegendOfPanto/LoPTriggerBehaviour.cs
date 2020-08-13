@@ -1,28 +1,31 @@
 using UnityEngine;
 
-abstract public class LoPTriggerBehaviour : MonoBehaviour
+namespace LegendOfPanto
 {
-    public Manager manager;
-    protected abstract void LinkEntered();
-    protected void LinkExited() { return; }
+    abstract public class LoPTriggerBehaviour : MonoBehaviour
+    {
+        public Manager manager;
+        protected abstract void LinkEntered();
+        protected void LinkExited() { return; }
 
-    void Awake()
-    {
-        manager = GameObject.Find("Game").GetComponent<Manager>();
-    }
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Link")
+        void Awake()
         {
-            LinkEntered();
+            manager = GameObject.Find("Game").GetComponent<Manager>();
         }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Link")
+        void OnTriggerEnter(Collider other)
         {
-            LinkExited();
+            if (other.tag == "Link")
+            {
+                LinkEntered();
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.tag == "Link")
+            {
+                LinkExited();
+            }
         }
     }
 }

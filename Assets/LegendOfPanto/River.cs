@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class River : LoPTriggerBehaviour
+namespace LegendOfPanto
 {
-    public AudioClip riverSound;
-    protected override void LinkEntered()
+    public class River : LoPTriggerBehaviour
     {
-        if (manager.gameState >= GameState.RIVER)
+        public AudioClip riverSound;
+        protected override void LinkEntered()
         {
-            manager.playSoundLooping(riverSound);
+            if (manager.gameState >= GameState.RIVER)
+            {
+                manager.playSoundLooping(riverSound);
+            }
         }
-    }
-    protected new void LinkExited()
-    {
-        manager.stopSoundLooping();
+        protected new void LinkExited()
+        {
+            manager.stopSoundLooping();
+        }
     }
 }

@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tree : LoPTriggerBehaviour
+namespace LegendOfPanto
 {
-    protected async override void LinkEntered()
+    public class Tree : LoPTriggerBehaviour
     {
-        if (manager.gameState == GameState.TARGET)
+        protected async override void LinkEntered()
         {
-            manager.StopLink();
-            await manager.NaviSpeak("That's too close.");
-            manager.FreeLink();
-        }
-        else if (manager.gameState < GameState.TARGET)
-        {
-            manager.StopLink();
-            await manager.NaviSpeak("That looks like a tree.");
-            manager.FreeLink();
+            if (manager.gameState == GameState.TARGET)
+            {
+                manager.StopLink();
+                await manager.NaviSpeak("That's too close.");
+                manager.FreeLink();
+            }
+            else if (manager.gameState < GameState.TARGET)
+            {
+                manager.StopLink();
+                await manager.NaviSpeak("That looks like a tree.");
+                manager.FreeLink();
+            }
         }
     }
 }

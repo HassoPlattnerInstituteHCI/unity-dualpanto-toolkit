@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : LoPTriggerBehaviour
+namespace LegendOfPanto
 {
-    protected override void LinkEntered()
+    public class Door : LoPTriggerBehaviour
     {
-        if (manager.gameState == GameState.DOOR) manager.OnExitDoor();
-        else if (manager.gameState < GameState.DOOR) manager.OnTryExitUndressed();
+        protected override void LinkEntered()
+        {
+            if (manager.gameState == GameState.DOOR) manager.OnExitDoor();
+            else if (manager.gameState < GameState.DOOR) manager.OnTryExitUndressed();
+        }
     }
 }
