@@ -614,7 +614,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 301287489}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -632,7 +632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad49ec559d69bf24b8e4e6e8a1b655f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closedLoop: 1
+  closedLoop: 0
   waypoints:
   - {fileID: 1965114391}
   - {fileID: 837492859}
@@ -658,7 +658,7 @@ MonoBehaviour:
       - {x: 1, y: 0, z: 0}
       - {x: 2, y: 0, z: 0}
       isClosed: 0
-      space: 2
+      space: 0
       controlMode: 3
       autoControlLength: 0.3
       boundsUpToDate: 0
@@ -687,7 +687,7 @@ MonoBehaviour:
     showPathOptions: 1
     showVertexPathDisplayOptions: 0
     showVertexPathOptions: 1
-    showNormals: 1
+    showNormals: 0
     showNormalsHelpInfo: 0
     tabIndex: 0
   initialized: 1
@@ -1570,6 +1570,7 @@ MonoBehaviour:
   pathCreator: {fileID: 0}
   endOfPathInstruction: 2
   speed: 3
+  following: 0
 --- !u!1 &802026998
 GameObject:
   m_ObjectHideFlags: 0

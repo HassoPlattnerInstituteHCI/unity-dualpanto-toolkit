@@ -46,14 +46,19 @@ namespace LegendOfPanto
         public async Task ShowToOldMan()
         {
             await manager.NaviSpeak("Come Link we have to talk to the old man. He lives in his house next door. Follow me.");
-            await lowerHandle.SwitchTo(GameObject.Find("OldMan"), 0.2f);
+            await lowerHandle.SwitchTo(gameObject, 0.2f);
+            await FollowPathToOldMan();
         }
 
-        public void FollowPathToOldMan()
+        public async Task FollowPathToOldMan()
         {
             PathFollower follower = GetComponent<PathFollower>();
             follower.pathCreator = GameObject.Find("DoorToOldMan").GetComponent<PathCreator>();
             follower.StartFollowing();
+            while (follower.following)
+            {
+                await Task.Delay(10);
+            }
         }
     }
 }
