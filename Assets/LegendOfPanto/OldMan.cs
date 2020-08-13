@@ -15,15 +15,21 @@ public class OldMan : LoPTriggerBehaviour
     async void oldManIntro()
     {
         await manager.OldManSpeak("Hello my young friend I am the old man. I heard you are going on an adventure. It's dangerous to go alone. I have hidden a surprise for you behind your house. But be careful about the river next it. Do you understand me?");
+        oldManIntroListeningLoop();
+    }
+
+    async void oldManIntroListeningLoop()
+    {
         string answer = await speechIn.Listen(new string[] { "yes", "no" });
         if (answer == "yes")
         {
             await manager.OldManSpeak("Ok great then follow navi.");
+            manager.ShowLinkToRiver();
         }
         else if (answer == "no")
         {
             await manager.OldManSpeak("On the right side of the house is a surprise for you. Do you understand me?");
-
+            oldManIntroListeningLoop();
         }
     }
 
@@ -55,6 +61,7 @@ public class OldMan : LoPTriggerBehaviour
 
     protected override void LinkEntered()
     {
+        Debug.Log(manager.gameState);
         if (manager.gameState == GameState.OLDMAN_INTRO)
         {
             oldManIntro();

@@ -39,9 +39,21 @@ public class Manager : MonoBehaviour
         Intro();
     }
 
+    public void playSoundLooping(AudioClip clip)
+    {
+        source.clip = clip;
+        source.loop = true;
+        source.Play();
+    }
+    public void stopSoundLooping()
+    {
+        source.Stop();
+    }
+
     public async Task playSound(AudioClip clip)
     {
         source.clip = clip;
+        source.loop = false;
         source.Play();
         await Task.Delay(Mathf.RoundToInt(clip.length * 1000));
     }
@@ -95,5 +107,15 @@ public class Manager : MonoBehaviour
         await navi.BerateLink();
         FreeLink();
     }
-    public async void OnExitDoor() { await navi.ShowToOldMan(); }
+    public async void OnExitDoor()
+    {
+        gameState = GameState.OLDMAN_INTRO;
+        await navi.ShowToOldMan();
+    }
+
+    public async void ShowLinkToRiver()
+    {
+        gameState = GameState.RIVER;
+        await NaviSpeak("Ok Link let's go! Come with me to the river.");
+    }
 }

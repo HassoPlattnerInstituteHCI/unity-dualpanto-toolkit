@@ -17,7 +17,7 @@ public class Navi : MonoBehaviour
 
     public async Task WakeLink()
     {
-        await Task.WhenAll(manager.playSound(flySound), lowerHandle.SwitchTo(GameObject.Find("DoorPosition"), 0.2f));
+        await Task.WhenAll(manager.playSound(flySound), lowerHandle.SwitchTo(GameObject.Find("Door"), 0.2f));
         await manager.NaviSpeak("I wonder if he's still sleeping.");
 
         await Task.WhenAll(
@@ -37,7 +37,7 @@ public class Navi : MonoBehaviour
     public async Task ShowToDoor()
     {
         await manager.NaviSpeak("Great you've got yourself dressed. Now we can go.");
-        await lowerHandle.SwitchTo(GameObject.Find("DoorPosition"), 0.2f);
+        await lowerHandle.SwitchTo(GameObject.Find("Door"), 0.2f);
     }
     public async Task ShowToOldMan()
     {
