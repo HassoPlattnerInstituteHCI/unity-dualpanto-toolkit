@@ -1,6 +1,7 @@
 using UnityEngine;
 using DualPantoFramework;
 using PathCreation.Examples;
+using System.Threading.Tasks;
 
 public class Follower : MonoBehaviour
 {
@@ -9,6 +10,17 @@ public class Follower : MonoBehaviour
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
         await lowerHandle.SwitchTo(gameObject, 0.2f);
-        GetComponent<PathFollower>().StartFollowing();
+        await follow();
+        lowerHandle.Free();
+    }
+
+    async Task follow()
+    {
+        PathFollower follower = GetComponent<PathFollower>();
+        follower.StartFollowing();
+        while (follower.following)
+        {
+            await Task.Delay(10);
+        }
     }
 }
