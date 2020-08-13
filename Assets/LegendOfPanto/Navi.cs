@@ -4,6 +4,8 @@ using UnityEngine;
 using SpeechIO;
 using DualPantoFramework;
 using System.Threading.Tasks;
+using PathCreation.Examples;
+using PathCreation;
 
 public class Navi : MonoBehaviour
 {
@@ -43,5 +45,12 @@ public class Navi : MonoBehaviour
     {
         await manager.NaviSpeak("Come Link we have to talk to the old man. He lives in his house next door. Follow me.");
         await lowerHandle.SwitchTo(GameObject.Find("OldMan"), 0.2f);
+    }
+
+    public void FollowPathToOldMan()
+    {
+        PathFollower follower = GetComponent<PathFollower>();
+        follower.pathCreator = GameObject.Find("DoorToOldMan").GetComponent<PathCreator>();
+        follower.StartFollowing();
     }
 }
