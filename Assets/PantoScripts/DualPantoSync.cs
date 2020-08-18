@@ -71,6 +71,8 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void SendMotor(ulong handle, byte controlMethod, byte pantoIndex, float positionX, float positionY, float rotation);
         [DllImport(plugin)]
+        private static extern void SetSpeed(ulong handle, byte pantoIndex, float speed);
+        [DllImport(plugin)]
         private static extern void FreeMotor(ulong handle, byte controlMethod, byte pantoIndex);
         [DllImport(plugin)]
         private static extern void SetPositionHandler(PositionDelegate func);
@@ -333,11 +335,11 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
-                {
-                    Debug.LogWarning("[DualPanto] Handle moving too fast: " + Vector3.Distance(currentPantoPoint, pantoPoint));
-                    return;
-                }
+                //if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
+                //{
+                //Debug.LogWarning("[DualPanto] Handle moving too fast: " + Vector3.Distance(currentPantoPoint, pantoPoint));
+                //return;
+                //}
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
@@ -345,6 +347,11 @@ namespace DualPantoFramework
             {
                 Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
             }
+        }
+
+        public void SetSpeed(bool isUpper, float speed)
+        {
+            SetSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
         }
 
         public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)
