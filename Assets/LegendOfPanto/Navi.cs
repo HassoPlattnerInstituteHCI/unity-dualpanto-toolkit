@@ -34,26 +34,13 @@ namespace LegendOfPanto
                 lowerHandle.SwitchTo(GameObject.Find("Dresser"), 0.2f)
             );
         }
-        public async Task BerateLink()
-        {
-            await manager.NaviSpeak("Hey you're still in your underwear! Get back here!");
-        }
-        public async Task ShowToDoor()
-        {
-            await manager.NaviSpeak("Great you've got yourself dressed. Now we can go.");
-            await lowerHandle.SwitchTo(GameObject.Find("Door"), 0.2f);
-        }
-        public async Task ShowToOldMan()
-        {
-            await manager.NaviSpeak("Come Link we have to talk to the old man. He lives in his house next door. Follow me.");
-            await lowerHandle.SwitchTo(gameObject, 0.2f);
-            await FollowPathToOldMan();
-        }
 
-        public async Task FollowPathToOldMan()
+        public async Task FollowPath(PathCreator path)
         {
+            gameObject.transform.position = path.bezierPath.GetPoint(0);
+            await lowerHandle.SwitchTo(gameObject, 0.2f);
             PathFollower follower = GetComponent<PathFollower>();
-            follower.pathCreator = GameObject.Find("DoorToOldMan").GetComponent<PathCreator>();
+            follower.pathCreator = path;
             follower.StartFollowing();
             while (follower.following)
             {

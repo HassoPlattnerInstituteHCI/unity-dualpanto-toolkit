@@ -37,6 +37,7 @@ namespace PathCreation.Examples
                 if (distanceTravelled >= pathCreator.path.length)
                 {
                     following = false;
+                    distanceTravelled = 0;
                 }
             }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DualPantoFramework;
+using PathCreation;
 using SpeechIO;
 using UnityEngine;
 namespace LegendOfPanto
@@ -26,18 +27,26 @@ namespace LegendOfPanto
     {
         Link link;
         Navi navi;
-        UpperHandle upperHandle;
+        LowerHandle lowerHandle;
         AudioSource source;
         SpeechOut speech;
         public GameState gameState = GameState.INTRO;
+        public AudioClip bossDie;
+        public AudioClip bossClear;
 
-        void Start()
+        SpeechIn speechIn;
+        void onRecognized(string result) { }
+        async void Start()
         {
             link = GameObject.Find("Link").GetComponent<Link>();
             navi = GameObject.Find("Navi").GetComponent<Navi>();
             speech = new SpeechOut();
+            speechIn = new SpeechIn(onRecognized);
             source = GetComponent<AudioSource>();
-            Intro();
+            lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
+            if (gameState == GameState.INTRO) Intro();
+            //link.Activate();
+            //if (gameState == GameState.TARGET) StartShootingLoop();
         }
 
         public void playSoundLooping(AudioClip clip)
@@ -86,7 +95,6 @@ namespace LegendOfPanto
             await speech.Speak(text);
         }
 
-
         async void Intro()
         {
             await link.Nightmare();
@@ -95,29 +103,40 @@ namespace LegendOfPanto
             gameState = GameState.DRESS;
         }
 
-        public async void DresserEntered()
+        public async Task NaviFollowPath(string name)
         {
-            link.GetDressed();
-            gameState = GameState.DOOR;
-            await navi.ShowToDoor();
+            await navi.FollowPath(GameObject.Find(name).GetComponent<PathCreator>());
         }
 
-        public async void OnTryExitUndressed()
+        public async Task NaviMoveTo(GameObject go)
         {
+            await lowerHandle.SwitchTo(go, 0.2f);
+        }
+
+        public async void WinBossFight()
+        {
+            //door.remove();
+            gameState = GameState.END;
+            //musicPlayer.stop();
+            await playSound(bossDie);
+            await playSound(bossClear);
+            await NaviSpeak("Oh Link thanks for saving me. That was pretty close. Come, let us go talk to the old man.");
             StopLink();
-            await navi.BerateLink();
+            await NaviFollowPath("CaveToOldMan");
             FreeLink();
         }
-        public async void OnExitDoor()
-        {
-            gameState = GameState.OLDMAN_INTRO;
-            await navi.ShowToOldMan();
-        }
 
-        public async void ShowLinkToRiver()
+        public async void StartShootingLoop()
         {
-            gameState = GameState.RIVER;
-            await NaviSpeak("Ok Link let's go! Come with me to the river.");
+            while (gameState == GameState.TARGET || gameState == GameState.MONSTER_FIGHT)
+            {
+                Dictionary<string, KeyCode> myDict = new Dictionary<string, KeyCode> { { "shoot", KeyCode.S } };
+                string msg = await speechIn.Listen(myDict);//(new string[] { "shoot" });
+                if (msg == "shoot")
+                {
+                    link.Shoot();
+                }
+            }
         }
     }
 }
