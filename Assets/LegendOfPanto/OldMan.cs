@@ -26,8 +26,8 @@ namespace LegendOfPanto
             string answer = await speechIn.Listen(new string[] { "yes", "no" });
             if (answer == "yes")
             {
-                await manager.OldManSpeak("Ok great then follow navi.");
                 manager.gameState = GameState.RIVER;
+                await manager.OldManSpeak("Ok great then follow navi.");
                 await manager.NaviSpeak("Ok Link let's go! Come with me to the river.");
                 await manager.NaviFollowPath("OldManToRiver");
             }
@@ -40,9 +40,9 @@ namespace LegendOfPanto
 
         async void oldManTarget()
         {
+            manager.gameState = GameState.TARGET;
             await manager.OldManSpeak("I see you found the bow. Go outside to the tree and practice shooting");
             await manager.NaviSpeak("You can fire the bow by saying fire. I will show you the way.");
-            manager.gameState = GameState.TARGET;
             await manager.NaviFollowPath("OldManToTarget");
             manager.StartShootingLoop();
         }

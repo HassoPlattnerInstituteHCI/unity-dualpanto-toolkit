@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Overcooked/Overcooked.unity
+    guid: 82508214157ed1d4f9d9a2d41c4e8480
   m_configObjects: {}

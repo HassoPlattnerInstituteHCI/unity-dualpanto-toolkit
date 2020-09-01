@@ -8,6 +8,7 @@ TagManager:
   - ItHandle
   - MeHandle
   - Link
+  - Target
   layers:
   - Default
   - TransparentFX

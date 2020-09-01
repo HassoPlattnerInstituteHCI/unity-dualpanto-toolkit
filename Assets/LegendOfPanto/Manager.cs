@@ -33,7 +33,7 @@ namespace LegendOfPanto
         public GameState gameState = GameState.INTRO;
         public AudioClip bossDie;
         public AudioClip bossClear;
-
+        int direction = 1;
         SpeechIn speechIn;
         void onRecognized(string result) { }
         async void Start()
@@ -78,6 +78,12 @@ namespace LegendOfPanto
             link.Stop();
         }
 
+        public void NaviStruggle()
+        {
+            transform.RotateAround(transform.position, Vector3.up, 90 * Time.deltaTime * direction);
+            float rot = transform.rotation.eulerAngles.y;
+            if (rot > 40 && rot < 320) direction *= -1;
+        }
         async public Task Speak(string text)
         {
             await speech.Speak(text);
@@ -131,7 +137,7 @@ namespace LegendOfPanto
             while (gameState == GameState.TARGET || gameState == GameState.MONSTER_FIGHT)
             {
                 Dictionary<string, KeyCode> myDict = new Dictionary<string, KeyCode> { { "shoot", KeyCode.S } };
-                string msg = await speechIn.Listen(myDict);//(new string[] { "shoot" });
+                string msg = await speechIn.Listen(myDict);
                 if (msg == "shoot")
                 {
                     link.Shoot();

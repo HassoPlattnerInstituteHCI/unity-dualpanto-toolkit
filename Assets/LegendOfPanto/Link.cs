@@ -50,12 +50,14 @@ namespace LegendOfPanto
 
         public void Free()
         {
+            userControlled = true;
             upperHandle.Free();
         }
 
         public void Stop()
         {
             //upperHandle.StopMovement();
+            userControlled = false;
         }
 
         void Update()
