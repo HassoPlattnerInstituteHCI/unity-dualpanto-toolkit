@@ -117,7 +117,6 @@ namespace DualPantoFramework
 
         private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
         {
-            //Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + "rot:" + positions[2] + ")");
             Vector2 unityPosUpper = PantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
             Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
