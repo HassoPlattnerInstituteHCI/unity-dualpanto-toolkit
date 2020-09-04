@@ -9,11 +9,6 @@ namespace DualPantoFramework
         public bool onUpper = true;
         public bool onLower = true;
 
-        public new void Awake()
-        {
-            base.Awake();
-            id = pantoSync.GetNextObstacleId();
-        }
         protected byte getPantoIndex()
         {
             if (onUpper && onLower) return 0xff;
@@ -52,9 +47,14 @@ namespace DualPantoFramework
         }
 
         /// <summary>
-        /// Registers the obstacle on the Panto, the shape depends on its type. Don't forget to call EnableSelf()
+        /// Registers the obstacle on the Panto, the shape depends on its type. Don't forget to call Enable()
         /// </summary>
         public abstract void CreateObstacle();
+
+        protected void UpdateId()
+        {
+            id = pantoSync.GetNextObstacleId();
+        }
 
         protected void CreateBoxObstacle()
         {
@@ -74,7 +74,6 @@ namespace DualPantoFramework
                 float angle = i * Mathf.PI * 2 / numberOfCorners;
                 float x = Mathf.Cos(angle) * radius.x;
                 float z = Mathf.Sin(angle) * radius.z;
-                Debug.DrawRay(center, new Vector3(x, 0, z), Color.red, 20);
                 corners[i] = new Vector2(x + transform.position.x, z + transform.position.z);
             }
             CreateFromCorners(corners);
@@ -110,11 +109,12 @@ namespace DualPantoFramework
         }
 
         /// <summar>
-        /// Removes the obstacle. This is not yet supported, use DisableSelf() instead.
+        /// Removes the obstacle.
         /// </summary>
         public void Remove()
         {
-            //GetPantoSync().RemoveObstacle(getPantoIndex(), id);
+            GetPantoSync().RemoveObstacle(getPantoIndex(), id);
+            pantoEnabled = false;
         }
 
         /// <summar>
