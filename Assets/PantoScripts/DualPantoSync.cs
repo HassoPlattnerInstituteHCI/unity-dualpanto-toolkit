@@ -67,7 +67,7 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void SendMotor(ulong handle, byte controlMethod, byte pantoIndex, float positionX, float positionY, float rotation);
         [DllImport(plugin)]
-        private static extern void SetSpeed(ulong handle, byte pantoIndex, float speed);
+        private static extern void SendSpeed(ulong handle, byte pantoIndex, float speed);
         [DllImport(plugin)]
         private static extern void FreeMotor(ulong handle, byte controlMethod, byte pantoIndex);
         [DllImport(plugin)]
@@ -371,7 +371,7 @@ namespace DualPantoFramework
 
         public void SetSpeed(bool isUpper, float speed)
         {
-            SetSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
+            SendSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
         }
 
         public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)
