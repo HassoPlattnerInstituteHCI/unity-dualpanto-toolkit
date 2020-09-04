@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DualPantoFramework
@@ -40,6 +41,33 @@ namespace DualPantoFramework
             center2 + v1 - v2,
         };
         }
+
+        protected Vector2[] RailPointsFromRotatedRectangle(Vector3 center, float angle, Vector2 dimensions)
+        {
+            angle *= -Mathf.Deg2Rad;
+
+            Vector2 v1 = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            Vector2 v2 = new Vector2(-v1.y, v1.x);
+            v1 *= (dimensions.x / 2);
+            v2 *= (dimensions.y / 2);
+
+            Vector2 center2 = new Vector2(center.x, center.z);
+            // the rail is in the middle of the longer side of the rectangle 
+            if (dimensions.x > dimensions.y)
+            {
+                return new Vector2[] {
+                    center2 + v1,
+                    center2 - v1
+                };
+            } else
+            {
+                return new Vector2[] {
+                    center2 + v2,
+                    center2 - v2
+                };
+            }
+        }
+
 
         protected Vector2[] CornersFromBounds(Bounds bounds)
         {
@@ -100,6 +128,21 @@ namespace DualPantoFramework
                 pantoSync.AddToObstacle(index, id, corners[i], corners[i + 1]);
             }
             pantoSync.AddToObstacle(index, id, corners[corners.Length - 1], corners[0]);
+        }
+
+        public void CreateRail()
+        {
+            BoxCollider collider = GetComponent<BoxCollider>();
+            Vector2 size = new Vector2(collider.size.x * transform.localScale.x, collider.size.z * transform.localScale.z);
+            float displacement = Math.Min(size.x, size.y) / 2;
+            Vector2[] points = RailPointsFromRotatedRectangle(transform.position, transform.eulerAngles.y, size);
+            byte index = getPantoIndex();
+            if (index == 2)
+            {
+                Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
+            }
+            pantoSync.CreateRail(index, id, points[0], points[1], displacement);
+
         }
 
         /// <summar>

@@ -79,6 +79,8 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void CreatePassableObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
+        private static extern void CreateRail(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y, float displacement);
+        [DllImport(plugin)]
         private static extern void AddToObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
         private static extern void RemoveObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
@@ -335,11 +337,7 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
-                {
-                    Debug.LogWarning("[DualPanto] Handle moving too fast: " + Vector3.Distance(currentPantoPoint, pantoPoint));
-                    return;
-                }
+                
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
@@ -419,6 +417,17 @@ namespace DualPantoFramework
                 Vector2 pantoStartPoint = UnityToPanto(startPoint);
                 Vector2 pantoEndPoint = UnityToPanto(endPoint);
                 CreatePassableObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+            }
+        }
+
+        public void CreateRail(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint, float displacement)
+        {
+            if (!debug)
+            {
+                Vector2 pantoStartPoint = UnityToPanto(startPoint);
+                Vector2 pantoEndPoint = UnityToPanto(endPoint);
+                float displacementPanto = displacement * 10;
+                CreateRail(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y, displacementPanto);
             }
         }
 
