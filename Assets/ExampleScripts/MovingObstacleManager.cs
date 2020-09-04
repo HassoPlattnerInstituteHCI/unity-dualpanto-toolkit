@@ -13,7 +13,7 @@ public class MovingObstacleManager : MonoBehaviour
     async void Start()
     {
         obstacle = GameObject.Find("Obstacle");
-        pantoCollider = obstacle.GetComponent<PantoCollider>();
+        pantoCollider = obstacle.GetComponent<PantoCircularCollider>();
         await Task.Delay(1000);
 
         pantoCollider.CreateObstacle();
@@ -25,7 +25,7 @@ public class MovingObstacleManager : MonoBehaviour
             {
                 direction = direction * -1;
             }
-            MoveObstacle(newPos);
+            await MoveObstacle(newPos);
         }
     }
 
@@ -43,8 +43,8 @@ public class MovingObstacleManager : MonoBehaviour
         // first enable the new collider before removing the old one to make sure the user is not accidentally getting into the obstacle
         collider.CreateObstacle();
         collider.Enable();
-        await Task.Delay(20); 
-        oldCollider.Remove();
         await Task.Delay(20);
+        oldCollider.Remove();
+        await Task.Delay(2000);
     }
 }
