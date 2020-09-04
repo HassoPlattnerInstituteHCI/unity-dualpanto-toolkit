@@ -294,17 +294,6 @@ namespace DualPantoFramework
         {
             if (!debug)
             {
-                if (isBlindModeOn)
-                {
-                    Camera.main.farClipPlane = 1;
-                }
-                else
-                {
-                    Camera.main.farClipPlane = 1000;
-                }
-            }
-            else
-            {
                 Light[] lights = GameObject.FindObjectsOfType<Light>();
                 foreach (Light light in lights)
                 {

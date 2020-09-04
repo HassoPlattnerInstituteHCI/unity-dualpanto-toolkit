@@ -17,6 +17,7 @@ namespace DualPantoFramework
         public Text currentUpperHandle;
         public Text currentLowerHandle;
         DateTime lastHeartbeat;
+        public GameObject blindPanel;
         void Start()
         {
             lastHeartbeat = DateTime.Now;
@@ -34,6 +35,15 @@ namespace DualPantoFramework
             TimeSpan ts = (DateTime.Now - lastHeartbeat);
             currentHeartbeat.text = ((int)ts.TotalMilliseconds).ToString();
             currentHeartbeat.color = ts.TotalMilliseconds > 1000 ? Color.red : Color.green;
+
+            if (Input.GetKey(KeyCode.LeftAlt))
+            {
+                blindPanel.SetActive(false);
+            }
+            else
+            {
+                blindPanel.SetActive(true);
+            }
         }
         public void ShowDebugValuesWindow()
         {
