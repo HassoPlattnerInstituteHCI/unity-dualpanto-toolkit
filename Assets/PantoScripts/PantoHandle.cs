@@ -167,7 +167,7 @@ namespace DualPantoFramework
 
         float MaxMovementSpeed()
         {
-            return 0.5f;
+            return 20f;
         }
 
         public void OverlayScriptedMotion(ScriptedMotion motion)
