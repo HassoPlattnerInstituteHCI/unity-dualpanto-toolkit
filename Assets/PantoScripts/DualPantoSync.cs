@@ -176,8 +176,34 @@ namespace DualPantoFramework
             }
         }
 
+        void ParseCommandLineArguments()
+        {
+            string[] arguments = Environment.GetCommandLineArgs();
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                string arg = arguments[i];
+                if (arg == "--debug" || arg == "-d")
+                {
+                    debug = true;
+                }
+                if (arg == "--portName")
+                {
+                    if (arguments.Length < i + 1)
+                    {
+                        Debug.LogError("Not enough arguments");
+                    }
+                    else
+                    {
+                        portName = arguments[i + 1];
+                    }
+                }
+            }
+        }
+
         void Awake()
         {
+            ParseCommandLineArguments();
+
             Vector3 handleDefaultPosition = transform.position + new Vector3(0, 0, 3);
             upperHandlePos = handleDefaultPosition;
             lowerHandlePos = handleDefaultPosition;
@@ -257,6 +283,10 @@ namespace DualPantoFramework
             if (Input.GetKeyDown(toggleVisionKey))
             {
                 ToggleBlindMode();
+            }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Application.Quit();
             }
         }
 
