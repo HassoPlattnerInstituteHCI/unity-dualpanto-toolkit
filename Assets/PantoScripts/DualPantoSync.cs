@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEditor;
 
 namespace DualPantoFramework
 {
@@ -14,13 +13,13 @@ namespace DualPantoFramework
         public delegate void HeartbeatDelegate(ulong handle);
         public delegate void LoggingDelegate(IntPtr msg);
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
-
+        public UIManager uiManager;
         public string portName = "//.//COM3";
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
         public KeyCode toggleVisionKey = KeyCode.B;
-        public bool showRawValues = false;
+        public bool showRawValues = true;
         protected ulong Handle;
         private static LowerHandle lowerHandle;
         private static UpperHandle upperHandle;
@@ -40,12 +39,11 @@ namespace DualPantoFramework
         private ushort currentObstacleId = 0;
         private GameObject debugLowerObject;
         private GameObject debugUpperObject;
-        private DebugValuesWindow debugValuesWindow;
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
 #else
-    private const string plugin = "libserial";
+        private const string plugin = "libserial";
 #endif
 
         [DllImport(plugin)]
@@ -98,7 +96,7 @@ namespace DualPantoFramework
         private void HeartbeatHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received heartbeat");
-            if (debugValuesWindow) debugValuesWindow.UpdateHeartbeatTimestamp();
+            if (showRawValues) uiManager.UpdateHeartbeat();
             SendHeartbeatAck(handle);
         }
 
@@ -121,7 +119,6 @@ namespace DualPantoFramework
 
         private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
         {
-            //Debug.Log("Received positions: (" + positions[0] + "|" + positions[1] + "rot:" + positions[2] + ")");
             Vector2 unityPosUpper = PantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
             Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
@@ -143,7 +140,7 @@ namespace DualPantoFramework
 
             Debug.DrawLine(upperHandlePos + upper * Vector3.back * 0.5f, upperHandlePos + upper * Vector3.forward, Color.black);
             Debug.DrawLine(upperHandlePos + upper * Vector3.left * 0.5f, upperHandlePos + upper * Vector3.right * 0.5f, Color.black);
-            if (debugValuesWindow) debugValuesWindow.UpdateValues(positions);
+            if (showRawValues) uiManager.UpdateValues(positions);
         }
 
         private static ulong OpenPort(string port)
@@ -163,8 +160,52 @@ namespace DualPantoFramework
             }
         }
 
+        public void StartInDebug()
+        {
+            debug = true;
+            uiManager.ShowPortWindow(false);
+        }
+
+        public void SetPort(string name)
+        {
+            portName = name;
+            uiManager.UpdatePort(portName);
+            uiManager.ShowPortWindow(false);
+            Handle = OpenPort(portName);
+            if (Handle == (ulong)0)
+            {
+                uiManager.ShowPortWindow(true);
+            }
+        }
+
+        void ParseCommandLineArguments()
+        {
+            string[] arguments = Environment.GetCommandLineArgs();
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                string arg = arguments[i];
+                if (arg == "--debug" || arg == "-d")
+                {
+                    debug = true;
+                }
+                if (arg == "--portName")
+                {
+                    if (arguments.Length < i + 1)
+                    {
+                        Debug.LogError("Not enough arguments");
+                    }
+                    else
+                    {
+                        portName = arguments[i + 1];
+                    }
+                }
+            }
+        }
+
         void Awake()
         {
+            ParseCommandLineArguments();
+
             Vector3 handleDefaultPosition = transform.position + new Vector3(0, 0, 3);
             upperHandlePos = handleDefaultPosition;
             lowerHandlePos = handleDefaultPosition;
@@ -177,27 +218,19 @@ namespace DualPantoFramework
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
-                // should be discovered automatically
-                Handle = OpenPort(portName);
-                if (Handle == (ulong)0)
-                {
-                    DebugPopUp window = ScriptableObject.CreateInstance<DebugPopUp>();
-                    window.position = new Rect(Screen.width / 2, Screen.height / 2, 250, 150);
-                    window.ShowPopup();
-                    debug = true;
-                }
+                SetPort(portName);
+            }
+            else
+            {
+                StartInDebug();
             }
         }
 
         void SetUpDebugValuesWindow()
         {
-#if UNITY_EDITOR
-            debugValuesWindow = ScriptableObject.CreateInstance<DebugValuesWindow>();
-            debugValuesWindow.position = new Rect(Screen.width / 4, Screen.height / 4, 500, 150);
-            debugValuesWindow.ShowPopup();
-            debugValuesWindow.SetSerialVersion((int)GetRevision());
-            debugValuesWindow.SetPortName(portName);
-#endif
+            uiManager.UpdateRevisionID((int)GetRevision());
+            uiManager.UpdatePort(portName);
+            uiManager.ShowDebugValuesWindow();
         }
 
         static DualPantoSync globalSync;
@@ -227,7 +260,6 @@ namespace DualPantoFramework
             FreeHandle(true);
             FreeHandle(false);
             Close(Handle);
-            if (debugValuesWindow) debugValuesWindow.Close();
         }
 
         void Update()
@@ -254,9 +286,9 @@ namespace DualPantoFramework
             {
                 ToggleBlindMode();
             }
-            if (debugValuesWindow)
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-                debugValuesWindow.Repaint();
+                Application.Quit();
             }
         }
 
@@ -297,9 +329,10 @@ namespace DualPantoFramework
             return wantedPosition;
         }
 
-        public void ApplyForce(bool isUpper, Vector3 direction)
+        public void ApplyForce(bool isUpper, Vector3 direction, float strength)
         {
-            direction = direction.normalized;
+            strength = Mathf.Min(strength, 1);
+            direction = direction.normalized * strength;
             if (!debug)
             {
                 SendMotor(Handle, (byte)1, isUpper ? (byte)0 : (byte)1, direction.x, direction.z, 0);
@@ -360,11 +393,16 @@ namespace DualPantoFramework
 
         private Vector2 UnityToPanto(Vector2 point)
         {
-            return (point + new Vector2(transform.position.x, transform.position.y)) * 10;
+            float x = (point.x - transform.position.x) / transform.localScale.x * 10;
+            float y = (point.y - transform.position.z) / transform.localScale.z * 10;
+            return new Vector2(x, y);
         }
+
         private Vector2 PantoToUnity(Vector2 point)
         {
-            return (point / 10) - new Vector2(transform.position.x, transform.position.z);
+            float x = (point.x / 10) * transform.localScale.x + transform.position.x;
+            float y = (point.y / 10) * transform.localScale.z + transform.position.z;
+            return new Vector2(x, y);
         }
 
         private bool IsInBounds(Vector2 point)
@@ -431,103 +469,6 @@ namespace DualPantoFramework
             {
                 RemoveObstacle(Handle, pantoIndex, obstacleId);
             }
-        }
-    }
-    class DebugPopUp : EditorWindow
-    {
-        void OnGUI()
-        {
-            EditorGUILayout.LabelField("No Panto was found. Run in Debug Mode instead?", EditorStyles.wordWrappedLabel);
-            GUILayout.Space(40);
-            if (GUILayout.Button("Run in Debug"))
-            {
-                Close();
-                GUIUtility.ExitGUI();
-            }
-            if (GUILayout.Button("Close App"))
-            {
-                OnStopApp();
-                Close();
-                GUIUtility.ExitGUI();
-            }
-        }
-
-        void OnStopApp()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-         Application.Quit();
-#endif
-        }
-
-    }
-
-    class DebugValuesWindow : EditorWindow
-    {
-        double rawMePosX;
-        double rawMePosY;
-        double rawMeRot;
-        double rawItPosX;
-        double rawItPosY;
-        double rawItRot;
-        int serialVersion;
-        string portName;
-        DateTime lastHeartBeat;
-
-        void Awake()
-        {
-            lastHeartBeat = DateTime.Now;
-            serialVersion = -1;
-        }
-
-        void OnGUI()
-        {
-            buildLabel("Port", portName);
-            buildHeartbeatLabel();
-            buildLabel("Serial Revision Id", serialVersion.ToString());
-            buildLabel("Upper Handle Position", rawMePosX.ToString("F4") + " @ " + rawMePosY.ToString("F4"));
-            buildLabel("Upper Handle Rotation", rawMeRot.ToString("F4"));
-            buildLabel("Lower Handle Position", rawItPosX.ToString("F4") + " @ " + rawItPosY.ToString("F4"));
-            buildLabel("Lower Handle Rotation", rawItRot.ToString("F4"));
-        }
-
-        private void buildHeartbeatLabel()
-        {
-            TimeSpan ts = (DateTime.Now - lastHeartBeat);
-            GUIStyle s = new GUIStyle(EditorStyles.boldLabel);
-            s.normal.textColor = ts.TotalMilliseconds > 1000 ? Color.red : Color.green;
-            EditorGUILayout.LabelField("Ms Since Last Heartbeat", ts.TotalMilliseconds.ToString(), s);
-        }
-
-        private void buildLabel(string title, string value)
-        {
-            EditorGUILayout.LabelField(title, value, EditorStyles.boldLabel);
-        }
-
-        public void SetSerialVersion(int version)
-        {
-            serialVersion = version;
-        }
-
-        public void SetPortName(string name)
-        {
-            portName = name;
-        }
-
-        public void UpdateValues(double[] values)
-        {
-            rawMePosX = values[0];
-            rawMePosY = values[1];
-            rawMeRot = values[2];
-            rawItPosX = values[5];
-            rawItPosY = values[6];
-            rawItRot = values[7];
-        }
-
-        public void UpdateHeartbeatTimestamp()
-        {
-            lastHeartBeat = DateTime.Now;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace DualPantoFramework
         private Vector3 position = handleDefaultPosition;
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
-        protected bool userControlledRotation = true; //for debug only
+        protected bool userControlledRotation = true;
 
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
@@ -123,22 +123,21 @@ namespace DualPantoFramework
         /// </summary>
         public void FreeRotation()
         {
-            if (pantoSync.debug)
-            {
-                userControlledRotation = true;
-            }
-            else
-            {
-                //TODO
-            }
+            userControlledRotation = true;
         }
 
         /// <summary>
         /// Apply a force to the handle.
         /// </summary>
+        public void ApplyForce(Vector3 direction, float strength)
+        {
+            pantoSync.ApplyForce(isUpper, direction, strength);
+        }
+
         public void ApplyForce(Vector3 direction)
         {
-            pantoSync.ApplyForce(isUpper, direction);
+            float defaultForce = 0.5f;
+            pantoSync.ApplyForce(isUpper, direction, defaultForce);
         }
 
         /// <summary>
@@ -146,7 +145,7 @@ namespace DualPantoFramework
         /// </summary>
         public void StopApplyingForce()
         {
-            pantoSync.ApplyForce(isUpper, new Vector3(0, 0, 0));
+            pantoSync.ApplyForce(isUpper, new Vector3(0, 0, 0), 0f);
         }
 
         /// <summary>
@@ -232,6 +231,7 @@ namespace DualPantoFramework
             }
             if (!inTransition)
             {
+                float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
                 GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
             }
         }

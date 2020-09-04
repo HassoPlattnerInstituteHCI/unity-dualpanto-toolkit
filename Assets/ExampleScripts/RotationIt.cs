@@ -3,7 +3,7 @@ using DualPantoFramework;
 
 public class RotationIt : MonoBehaviour
 {
-    LowerHandle lowerHandle;
+    PantoHandle lowerHandle;
     async void Start()
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
@@ -12,6 +12,10 @@ public class RotationIt : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            lowerHandle.FreeRotation();
+        }
         gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, 0.5f);
     }
 }
