@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using DualPantoFramework;
 using System.Threading.Tasks;
+using DualPantoFramework;
 
 public class GenerateObstacles : MonoBehaviour
 {
