@@ -22,6 +22,7 @@ cd path/to/repo
 cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
 ```
+You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
 
 ## Creating a Panto Application in Unity
 ### Adding the right components

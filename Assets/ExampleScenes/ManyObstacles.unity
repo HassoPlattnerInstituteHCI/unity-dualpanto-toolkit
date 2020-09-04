@@ -193,7 +193,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 5.7e-43, y: -1.5897547e-11, z: 5.7e-43, w: -1.3150959e+33}
+  m_BoundingSphereOverride: {x: 7.22e-43, y: NaN, z: 7.22e-43, w: -0.0061669946}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -629,16 +629,16 @@ PrefabInstance:
       propertyPath: portName
       value: //.//COM3
       objectReference: {fileID: 0}
-    - target: {fileID: 8373185769348013176, guid: f08d327e9fb42f94d97ba9d1d226d418,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f2fecced13b050b418bb4d305b0ec4fd, type: 2}
     - target: {fileID: 2307693089428900514, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 8373185769348013176, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f2fecced13b050b418bb4d305b0ec4fd, type: 2}
     - target: {fileID: 5330993574101415308, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}
       propertyPath: m_Enabled
