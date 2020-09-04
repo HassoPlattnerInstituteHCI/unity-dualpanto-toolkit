@@ -20,7 +20,6 @@ public class MovingObstacleManager : MonoBehaviour
         pantoCollider.Enable();
         while (true)
         {
-            await Task.Delay(4000);
             Vector3 newPos = obstacle.transform.position + direction;
             if (Math.Abs(obstacle.transform.position.x) <= 5 && Math.Abs(newPos.x) > 5)
             {
@@ -30,11 +29,22 @@ public class MovingObstacleManager : MonoBehaviour
         }
     }
 
-    void MoveObstacle(Vector3 position)
+    async Task MoveObstacle(Vector3 position)
     {
-        pantoCollider.Remove();
+        PantoCollider oldCollider = obstacle.GetComponent<PantoCollider>();
+
+        //clone obstacle to make sure we don't overwrite the reference to the old collider
+        GameObject newObs = Instantiate(obstacle);
+        Destroy(obstacle);
+        obstacle = newObs;
         obstacle.transform.position = position;
-        pantoCollider.CreateObstacle();
-        pantoCollider.Enable();
+        PantoCollider collider = obstacle.GetComponent<PantoCollider>();
+
+        // first enable the new collider before removing the old one to make sure the user is not accidentally getting into the obstacle
+        collider.CreateObstacle();
+        collider.Enable();
+        await Task.Delay(20); 
+        oldCollider.Remove();
+        await Task.Delay(20);
     }
 }
