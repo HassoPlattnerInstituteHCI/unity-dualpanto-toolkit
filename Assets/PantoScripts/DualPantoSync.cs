@@ -46,6 +46,8 @@ namespace DualPantoFramework
         private const string plugin = "libserial";
 #endif
 
+        private static bool connected = false;
+
         [DllImport(plugin)]
         private static extern uint GetRevision();
         [DllImport(plugin)]
@@ -90,6 +92,7 @@ namespace DualPantoFramework
         private static void SyncHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received sync");
+            connected = true;
             SendSyncAck(handle);
         }
 
@@ -219,6 +222,13 @@ namespace DualPantoFramework
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
                 SetPort(portName);
+
+                // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
+                // only then everyone else can start sending their own stuff
+                while (!connected)
+                {
+                    Poll(Handle);
+                }
             }
             else
             {
