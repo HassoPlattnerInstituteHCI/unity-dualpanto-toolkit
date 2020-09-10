@@ -13,6 +13,7 @@ namespace DualPantoFramework
     {
         AudioSource audioSource;
         SpeechOut speechOut = new SpeechOut();
+        float speed;
         protected override void Awake()
         {
             base.Awake();
@@ -21,20 +22,21 @@ namespace DualPantoFramework
         /// <summary>
         /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
         /// </summary>
-        async public Task PlayIntroduction()
+        async public Task PlayIntroduction(float introductionSpeed = 10f, int msDelayBetweenObjects = 200)
         {
+            speed = introductionSpeed;
             ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
             Array.Sort(gos, ((go1, go2) => go2.priority.CompareTo(go1.priority)));
 
             for (int index = 0; index < gos.Length; index++)
             {
-                await IntroduceObject(gos[index]);
+                await IntroduceObject(gos[index], msDelayBetweenObjects);
             }
             GetPantoGameObject().GetComponent<LowerHandle>().Free();
             GetPantoGameObject().GetComponent<UpperHandle>().Free();
         }
 
-        async private Task IntroduceObject(ObjectOfInterest objectOfInterest)
+        async private Task IntroduceObject(ObjectOfInterest objectOfInterest, int msDelay)
         {
             Task[] tasks = new Task[2];
             tasks[0] = speechOut.Speak(objectOfInterest.description);
@@ -51,14 +53,14 @@ namespace DualPantoFramework
                     children.Add(child.gameObject);
                 }
                 children.Sort((GameObject g1, GameObject g2) => g1.name.CompareTo(g2.name));
-                tasks[1] = pantoHandle.TraceObjectByPoints(children, 0.2f);
+                tasks[1] = pantoHandle.TraceObjectByPoints(children, speed);
             }
             else
             {
-                tasks[1] = pantoHandle.SwitchTo(objectOfInterest.gameObject, 0.2f);
+                tasks[1] = pantoHandle.SwitchTo(objectOfInterest.gameObject, speed);
             }
             await Task.WhenAll(tasks);
-            await Task.Delay(500);
+            await Task.Delay(msDelay);
         }
     }
 }
