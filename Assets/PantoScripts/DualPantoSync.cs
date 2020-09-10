@@ -365,11 +365,6 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                //if (Vector2.Distance(currentPantoPoint, pantoPoint) > 120f)
-                //{
-                //Debug.LogWarning("[DualPanto] Handle moving too fast: " + Vector3.Distance(currentPantoPoint, pantoPoint));
-                //return;
-                //}
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
