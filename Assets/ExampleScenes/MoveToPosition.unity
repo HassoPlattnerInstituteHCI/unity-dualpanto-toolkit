@@ -245,6 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUpper: 0
   shouldFreeHandle: 0
+  speed: 10
 --- !u!65 &832737046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -509,6 +510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUpper: 1
   shouldFreeHandle: 1
+  speed: 10
 --- !u!65 &2143583167
 BoxCollider:
   m_ObjectHideFlags: 0

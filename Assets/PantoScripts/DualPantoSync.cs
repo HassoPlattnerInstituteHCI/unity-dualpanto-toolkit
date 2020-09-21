@@ -46,6 +46,8 @@ namespace DualPantoFramework
         private const string plugin = "libserial";
 #endif
 
+        private static bool connected = false;
+
         [DllImport(plugin)]
         private static extern uint GetRevision();
         [DllImport(plugin)]
@@ -66,6 +68,8 @@ namespace DualPantoFramework
         private static extern void SendHeartbeatAck(ulong handle);
         [DllImport(plugin)]
         private static extern void SendMotor(ulong handle, byte controlMethod, byte pantoIndex, float positionX, float positionY, float rotation);
+        [DllImport(plugin)]
+        private static extern void SendSpeed(ulong handle, byte pantoIndex, float speed);
         [DllImport(plugin)]
         private static extern void FreeMotor(ulong handle, byte controlMethod, byte pantoIndex);
         [DllImport(plugin)]
@@ -92,6 +96,7 @@ namespace DualPantoFramework
         private static void SyncHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received sync");
+            connected = true;
             SendSyncAck(handle);
         }
 
@@ -221,6 +226,13 @@ namespace DualPantoFramework
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
                 SetPort(portName);
+
+                // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
+                // only then everyone else can start sending their own stuff
+                while (!connected)
+                {
+                    Poll(Handle);
+                }
             }
             else
             {
@@ -346,7 +358,6 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
@@ -354,6 +365,11 @@ namespace DualPantoFramework
             {
                 Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
             }
+        }
+
+        public void SetSpeed(bool isUpper, float speed)
+        {
+            SendSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
         }
 
         public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)

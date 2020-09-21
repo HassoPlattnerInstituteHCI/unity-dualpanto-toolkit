@@ -9,6 +9,7 @@ public class Tutorial : MonoBehaviour
     int currentTutorialStep = -1;
     private PantoHandle lowerHandle;
     int awaitedIndex = 0;
+    float handleSpeed = 10f;
     Game game;
     string[][] awaitedAreaNames = {
         //new string[] {},
@@ -24,8 +25,8 @@ public class Tutorial : MonoBehaviour
     async void Start()
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
-        await lowerHandle.MoveToPosition(new Vector3(0, 0, -10), 0.2f);
-        await GameObject.Find("Panto").GetComponent<UpperHandle>().MoveToPosition(new Vector3(0, 0, -10), 0.2f);
+        await lowerHandle.MoveToPosition(new Vector3(0, 0, -10), 10f);
+        await GameObject.Find("Panto").GetComponent<UpperHandle>().MoveToPosition(new Vector3(0, 0, -10), handleSpeed);
         game = GetComponent<Game>();
         if (!shouldPlayTutorial)
         {
@@ -34,7 +35,7 @@ public class Tutorial : MonoBehaviour
         }
         currentTutorialStep = 0;
         await game.playSound(tutorialSteps[currentTutorialStep]);
-        await lowerHandle.SwitchTo(GameObject.Find(awaitedAreaNames[currentTutorialStep][awaitedIndex]), 0.2f);
+        await lowerHandle.SwitchTo(GameObject.Find(awaitedAreaNames[currentTutorialStep][awaitedIndex]), handleSpeed);
     }
 
     async void endTutorial()
@@ -56,7 +57,7 @@ public class Tutorial : MonoBehaviour
         await game.playSound(tutorialSteps[currentTutorialStep]);
         if (Array.IndexOf(new int[] { 3, 6, 7 }, currentTutorialStep) <= -1)
         {
-            await lowerHandle.SwitchTo(GameObject.Find(awaitedAreaNames[currentTutorialStep][awaitedIndex]), 0.2f);
+            await lowerHandle.SwitchTo(GameObject.Find(awaitedAreaNames[currentTutorialStep][awaitedIndex]), handleSpeed);
         }
         else
         {
