@@ -13,8 +13,10 @@ public class ObstacleManager : MonoBehaviour
         pantoColliders = GameObject.FindObjectsOfType<PantoCollider>();
         foreach (PantoCollider collider in pantoColliders)
         {
+            Debug.Log("Enabling obstacle");
             collider.CreateObstacle();
             collider.Enable();
+            await Task.Delay(100);
         }
     }
 
