@@ -74,3 +74,5 @@ crashlytics-build.properties
 # Panto Log Files
 dumpheader.bin
 dumppacket.bin
+
+**/.DS_Store
