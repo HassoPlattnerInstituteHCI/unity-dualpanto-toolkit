@@ -37,8 +37,10 @@ namespace DualPantoFramework
 
         private bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
-        private GameObject debugLowerObject;
-        private GameObject debugUpperObject;
+        private GameObject debugLowerHandle;
+        private GameObject debugUpperHandle;
+        private GameObject debugLowerGodObject;
+        private GameObject debugUpperGodObject;
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
@@ -159,12 +161,25 @@ namespace DualPantoFramework
         {
             if (isUpper)
             {
-                return debugUpperObject;
+                return debugUpperHandle;
             }
             else
             {
-                return debugLowerObject;
+                return debugLowerHandle;
             }
+        }
+
+        public GameObject GetDebugGodObject(bool isUpper)
+        {
+            if (isUpper)
+            {
+                return debugUpperGodObject;
+            }
+            else
+            {
+                return debugLowerGodObject;
+            }
+            
         }
 
         public void StartInDebug()
@@ -261,12 +276,19 @@ namespace DualPantoFramework
         private void CreateDebugObjects(Vector3 position)
         {
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
-            debugLowerObject = Instantiate(prefab) as GameObject;
-            debugLowerObject.transform.position = position;
+            debugLowerHandle = Instantiate(prefab) as GameObject;
+            debugLowerHandle.transform.position = position;
 
             prefab = Resources.Load("MeHandlePrefab");
-            debugUpperObject = Instantiate(prefab) as GameObject;
-            debugUpperObject.transform.position = position;
+            debugUpperHandle = Instantiate(prefab) as GameObject;
+            debugUpperHandle.transform.position = position;
+
+            debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugUpperGodObject.transform.position = position;
+            debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugLowerGodObject.transform.position = position;
+            debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
         void OnDestroy()
@@ -287,11 +309,11 @@ namespace DualPantoFramework
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
                 Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                float r = debugUpperObject.transform.eulerAngles.y + mouseRotation;
+                float r = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
                 upperHandlePos = position;
                 upperHandle.SetPositions(upperHandlePos, r, null);
 
-                lowerHandleRot = debugLowerObject.transform.eulerAngles.y + mouseRotation;
+                lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
                 lowerHandlePos = position;
                 lowerHandle.SetPositions(lowerHandlePos, r, null);
             }
@@ -347,7 +369,9 @@ namespace DualPantoFramework
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
-                //TODO make it so position can be null
+                //TODO: make it so position can be null
+
+                //TODO: also update the GodObject
                 if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
                 if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
