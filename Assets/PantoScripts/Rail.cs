@@ -9,6 +9,7 @@
 
         public override void CreateObstacle()
         {
+            UpdateId();
             CreateRail();
         }
     }
