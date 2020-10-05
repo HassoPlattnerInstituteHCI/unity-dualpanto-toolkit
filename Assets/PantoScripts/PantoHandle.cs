@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -25,6 +25,7 @@ namespace DualPantoFramework
         /// </summary>
         async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
         {
+
             GameObject go = new GameObject();
             go.transform.position = position;
             await SwitchTo(go, newSpeed);
@@ -34,6 +35,7 @@ namespace DualPantoFramework
                 Free();
             }
         }
+
 
         /// <summary>
         /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
@@ -192,6 +194,11 @@ namespace DualPantoFramework
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
                 debugObject.transform.position = position;
+                GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
+                if (newGodObjectPosition != null)
+                {
+                    debugGodObject.transform.position = newGodObjectPosition.Value;
+                }
             }
             position = newPosition;
             rotation = newRotation;
@@ -221,8 +228,9 @@ namespace DualPantoFramework
             }
             Vector3 currentPos = GetPosition();
             Vector3 goalPos = handledGameObject.transform.position;
-
+            
             float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
+
             //todo fixvalue
             if (distance < 0.2 && inTransition)
             {
