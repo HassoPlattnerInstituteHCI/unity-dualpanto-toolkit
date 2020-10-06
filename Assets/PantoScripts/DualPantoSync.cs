@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -79,6 +79,10 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void CreateObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
+        private static extern void CreatePassableObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
+        [DllImport(plugin)]
+        private static extern void CreateRail(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y, float displacement);
+        [DllImport(plugin)]
         private static extern void AddToObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
         private static extern void RemoveObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
@@ -108,11 +112,11 @@ namespace DualPantoFramework
         private static void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
-            if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
+            /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
             {
                 return;
-            }
-            else if (message.Contains("disconnected"))
+            }*/
+            if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
             }
@@ -452,6 +456,27 @@ namespace DualPantoFramework
                 Vector2 pantoStartPoint = UnityToPanto(startPoint);
                 Vector2 pantoEndPoint = UnityToPanto(endPoint);
                 CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+            }
+        }
+        
+        public void CreatePassableObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
+        {
+            if (!debug)
+            {
+                Vector2 pantoStartPoint = UnityToPanto(startPoint);
+                Vector2 pantoEndPoint = UnityToPanto(endPoint);
+                CreatePassableObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
+            }
+        }
+
+        public void CreateRail(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint, float displacement)
+        {
+            if (!debug)
+            {
+                Vector2 pantoStartPoint = UnityToPanto(startPoint);
+                Vector2 pantoEndPoint = UnityToPanto(endPoint);
+                float displacementPanto = displacement * 10;
+                CreateRail(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y, displacementPanto);
             }
         }
 
