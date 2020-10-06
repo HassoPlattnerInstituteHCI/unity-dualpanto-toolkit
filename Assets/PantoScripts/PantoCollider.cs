@@ -56,6 +56,15 @@ namespace DualPantoFramework
             id = pantoSync.GetNextObstacleId();
         }
 
+        protected void CreateLineObstacle(Vector2 start, Vector2 end)
+        {
+            byte index = getPantoIndex();
+            if (index == 2)
+            {
+                Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
+            }
+            pantoSync.CreateObstacle(index, id, start, end);
+        }
         protected void CreateBoxObstacle()
         {
             BoxCollider collider = GetComponent<BoxCollider>();

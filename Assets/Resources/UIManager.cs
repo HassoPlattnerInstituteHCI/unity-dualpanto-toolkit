@@ -8,7 +8,7 @@ namespace DualPantoFramework
     {
         public InputField portInput;
         string DefaultWindowsPort = "//.//COM3";
-        string DefaultMacPort = "";
+        string DefaultMacPort = "/dev/cu.SLAB_USBtoUART";
         public GameObject debugValuesWindow;
         public GameObject portWindow;
         public Text currentPort;
@@ -18,6 +18,7 @@ namespace DualPantoFramework
         public Text currentLowerHandle;
         DateTime lastHeartbeat;
         public GameObject blindPanel;
+        public bool blindPanelEnabled = true;
         void Start()
         {
             lastHeartbeat = DateTime.Now;
@@ -29,6 +30,10 @@ namespace DualPantoFramework
             {
                 portInput.text = DefaultMacPort;
             }
+            if (!blindPanelEnabled)
+            {
+                blindPanel.SetActive(false);
+            }
         }
         void Update()
         {
@@ -36,13 +41,17 @@ namespace DualPantoFramework
             currentHeartbeat.text = ((int)ts.TotalMilliseconds).ToString();
             currentHeartbeat.color = ts.TotalMilliseconds > 1000 ? Color.red : Color.green;
 
-            if (Input.GetKey(KeyCode.LeftAlt))
+            if (blindPanelEnabled)
             {
-                blindPanel.SetActive(false);
-            }
-            else
-            {
-                blindPanel.SetActive(true);
+
+                if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    blindPanel.SetActive(false);
+                }
+                else
+                {
+                    blindPanel.SetActive(true);
+                }
             }
         }
         public void ShowDebugValuesWindow()
