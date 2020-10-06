@@ -167,6 +167,14 @@ namespace DualPantoFramework
             }
         }
 
+        /// <summary>
+        /// Freezes the position of the handle to the current position.
+        /// </summary>
+        public async void Freeze()
+        {
+            await MoveToPosition(GetPosition(), 10.0f, false);
+        }
+
         float MaxMovementSpeed()
         {
             return 20f;
@@ -228,7 +236,7 @@ namespace DualPantoFramework
             }
             Vector3 currentPos = GetPosition();
             Vector3 goalPos = handledGameObject.transform.position;
-            
+
             float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
 
             //todo fixvalue
