@@ -240,7 +240,7 @@ namespace DualPantoFramework
             float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
 
             //todo fixvalue
-            if (distance < 0.2 && inTransition)
+            if (distance < 1 && inTransition)
             {
                 Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
                 inTransition = false;
@@ -248,7 +248,7 @@ namespace DualPantoFramework
             if (!inTransition)
             {
                 float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, rotation, isUpper);
             }
         }
     }
