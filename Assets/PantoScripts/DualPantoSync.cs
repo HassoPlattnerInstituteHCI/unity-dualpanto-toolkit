@@ -25,8 +25,8 @@ namespace DualPantoFramework
         private static UpperHandle upperHandle;
 
         // bounds are defined by center and extent
-        //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
-        private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
+        private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
+        //private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
         private static Vector2[] unityBounds;
         private Vector3 upperHandlePos;
         private Vector3 lowerHandlePos;
@@ -382,7 +382,7 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
+                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
             else

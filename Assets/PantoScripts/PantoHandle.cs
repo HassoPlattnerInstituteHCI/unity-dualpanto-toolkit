@@ -51,7 +51,7 @@ namespace DualPantoFramework
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
             pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
-            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
             inTransition = true;
 
             while (inTransition)
