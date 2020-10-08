@@ -172,7 +172,7 @@ namespace DualPantoFramework
         /// </summary>
         public async void Freeze()
         {
-            await MoveToPosition(GetPosition(), 10.0f, false);
+            await MoveToPosition(GetPosition(), 0f, false);
         }
 
         float MaxMovementSpeed()
@@ -247,8 +247,9 @@ namespace DualPantoFramework
             }
             if (!inTransition)
             {
+                // if the handle already arrived at the position of the game object but is frozen
                 float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, rotation, isUpper);
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, float.NaN, isUpper);
             }
         }
     }
