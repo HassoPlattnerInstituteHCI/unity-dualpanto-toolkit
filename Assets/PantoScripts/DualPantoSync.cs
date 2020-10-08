@@ -25,8 +25,8 @@ namespace DualPantoFramework
         private static UpperHandle upperHandle;
 
         // bounds are defined by center and extent
-        private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
-        //private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
+        //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
+        private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
         private static Vector2[] unityBounds;
         private Vector3 upperHandlePos;
         private Vector3 lowerHandlePos;
