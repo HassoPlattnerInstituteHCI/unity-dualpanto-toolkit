@@ -133,14 +133,16 @@ namespace DualPantoFramework
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
             upperHandleRot = PantoToUnityRotation(positions[2]);
             upperGodObject = new Vector3(unityGodUpper.x, 0, unityGodUpper.y);
-            upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
+            if (upperHandle)
+                upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
 
             Vector2 unityPosLower = PantoToUnity(new Vector2((float)positions[5], (float)positions[6]));
             Vector2 unityGodLower = PantoToUnity(new Vector2((float)positions[8], (float)positions[9]));
             lowerHandlePos = new Vector3(unityPosLower.x, 0, unityPosLower.y);
             lowerHandleRot = PantoToUnityRotation(positions[7]);
             lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
-            lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
+            if (lowerHandle)
+                lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
 
             Quaternion lower = Quaternion.Euler(0, lowerHandleRot, 0);
             Quaternion upper = Quaternion.Euler(0, upperHandleRot, 0);
