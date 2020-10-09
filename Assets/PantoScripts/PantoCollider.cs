@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 
 namespace DualPantoFramework
 {
@@ -8,7 +9,18 @@ namespace DualPantoFramework
         protected bool pantoEnabled = false;
         public bool onUpper = true;
         public bool onLower = true;
+        public bool isPassable = false;
+        private bool registered = false;
 
+        public ushort GetId()
+        {
+            return id;
+        }
+
+        public bool IsEnabled()
+        {
+            return pantoEnabled;
+        }
         protected byte getPantoIndex()
         {
             if (onUpper && onLower) return 0xff;
@@ -54,6 +66,11 @@ namespace DualPantoFramework
         protected void UpdateId()
         {
             id = pantoSync.GetNextObstacleId();
+            if (!registered)
+            {
+                registered = true;
+                ColliderRegistry.AddCollider(this);
+            }
         }
 
         protected void CreateBoxObstacle()
@@ -99,11 +116,6 @@ namespace DualPantoFramework
         /// </summary>
         public void Disable()
         {
-            if (!pantoEnabled)
-            {
-                Debug.Log("[DualPanto] Obstacle already disabled");
-                return;
-            }
             pantoEnabled = false;
             GetPantoSync().DisableObstacle(getPantoIndex(), id);
         }
@@ -122,11 +134,6 @@ namespace DualPantoFramework
         /// </summary>
         public void Enable()
         {
-            if (pantoEnabled)
-            {
-                Debug.Log("[DualPanto] Obstacle already enabled");
-                return;
-            }
             pantoEnabled = true;
             GetPantoSync().EnableObstacle(getPantoIndex(), id);
         }

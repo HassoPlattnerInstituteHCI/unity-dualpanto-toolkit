@@ -103,7 +103,7 @@ namespace DualPantoFramework
             SendHeartbeatAck(handle);
         }
 
-        private static void LogHandler(IntPtr msg)
+        private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
             if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
@@ -114,10 +114,25 @@ namespace DualPantoFramework
             {
                 Debug.LogError("[DualPanto] " + message);
             }
+            else if (message.Contains("START"))
+            {
+                Debug.Log("[DualPanto] " + message);
+                OnPantoStarted();
+            }
             else
             {
                 Debug.Log("[DualPanto] " + message);
             }
+        }
+
+        private void OnPantoStarted()
+        {
+            connected = false;
+            while (!connected)
+            {
+                Poll(Handle);
+            }
+            ColliderRegistry.RegisterObstacles();
         }
 
         private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
@@ -217,7 +232,7 @@ namespace DualPantoFramework
             {
                 if (showRawValues) SetUpDebugValuesWindow();
                 globalSync = this;
-                SetLoggingHandler(LogHandler);
+                SetLoggingHandler(StaticLogHandler);
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
@@ -252,6 +267,11 @@ namespace DualPantoFramework
         static void StaticHeartbeatHandler(ulong handle)
         {
             globalSync.HeartbeatHandler(handle);
+        }
+
+        static void StaticLogHandler(IntPtr message)
+        {
+            globalSync.LogHandler(message);
         }
 
         private void CreateDebugObjects(Vector3 position)
