@@ -10,7 +10,17 @@ namespace DualPantoFramework
         public bool onUpper = true;
         public bool onLower = true;
         public bool isPassable = false;
+        private bool registered = false;
 
+        public ushort GetId()
+        {
+            return id;
+        }
+
+        public bool IsEnabled()
+        {
+            return pantoEnabled;
+        }
         protected byte getPantoIndex()
         {
             if (onUpper && onLower) return 0xff;
@@ -84,6 +94,11 @@ namespace DualPantoFramework
         protected void UpdateId()
         {
             id = pantoSync.GetNextObstacleId();
+            if (!registered)
+            {
+                registered = true;
+                ColliderRegistry.AddCollider(this);
+            }
         }
 
         protected void CreateLineObstacle(Vector2 start, Vector2 end)
@@ -170,11 +185,6 @@ namespace DualPantoFramework
         /// </summary>
         public void Disable()
         {
-            if (!pantoEnabled)
-            {
-                Debug.Log("[DualPanto] Obstacle already disabled");
-                return;
-            }
             pantoEnabled = false;
             GetPantoSync().DisableObstacle(getPantoIndex(), id);
         }
@@ -193,11 +203,6 @@ namespace DualPantoFramework
         /// </summary>
         public void Enable()
         {
-            if (pantoEnabled)
-            {
-                Debug.Log("[DualPanto] Obstacle already enabled");
-                return;
-            }
             pantoEnabled = true;
             GetPantoSync().EnableObstacle(getPantoIndex(), id);
         }
