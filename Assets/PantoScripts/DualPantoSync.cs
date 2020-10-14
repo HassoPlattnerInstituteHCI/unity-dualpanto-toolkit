@@ -118,7 +118,19 @@ namespace DualPantoFramework
             {
                 return;
             }*/
-            if (message.Contains("disconnected"))
+            if (message.Contains("Transition ended"))
+            {
+                Debug.Log("[DualPanto] " + message);
+                int handle = Int32.Parse(message.Substring(message.Length - 1));
+                if (handle == 0)
+                {
+                    upperHandle.TweeningEnded();
+                } else
+                {
+                    lowerHandle.TweeningEnded();
+                }
+            }
+            else if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
             }

@@ -33,6 +33,9 @@ namespace DualPantoFramework
             if (shouldFreeHandle)
             {
                 Free();
+            } else
+            {
+                Freeze();
             }
         }
 
@@ -172,7 +175,7 @@ namespace DualPantoFramework
         /// </summary>
         public async void Freeze()
         {
-            await MoveToPosition(GetPosition(), 0f, false);
+            pantoSync.FreezeHandle(isUpper);
         }
 
         float MaxMovementSpeed()
@@ -227,6 +230,12 @@ namespace DualPantoFramework
             await SwitchTo(cornerObjects[0], speed);
         }
 
+        public void TweeningEnded()
+        {
+            handledGameObject = null;
+            inTransition = false;
+        }
+
         protected void FixedUpdate()
         {
             if (handledGameObject == null)
@@ -240,6 +249,7 @@ namespace DualPantoFramework
             float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
 
             //todo fixvalue
+            /*
             if (distance < 1 && inTransition)
             {
                 Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
@@ -250,7 +260,7 @@ namespace DualPantoFramework
                 // if the handle already arrived at the position of the game object but is frozen
                 float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
                 GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, float.NaN, isUpper);
-            }
+            }*/
         }
     }
 }
