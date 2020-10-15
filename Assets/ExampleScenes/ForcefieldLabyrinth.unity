@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 8973514027780274606, guid: b0bd68f1e36884b08886896b580989ea,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.03
+      value: -4.33
       objectReference: {fileID: 0}
     - target: {fileID: 8973514027780274606, guid: b0bd68f1e36884b08886896b580989ea,
         type: 3}
@@ -203,6 +203,11 @@ PrefabInstance:
     - target: {fileID: 8973514027780274642, guid: b0bd68f1e36884b08886896b580989ea,
         type: 3}
       propertyPath: m_Name
+      value: ForceField
+      objectReference: {fileID: 0}
+    - target: {fileID: 8973514027780274642, guid: b0bd68f1e36884b08886896b580989ea,
+        type: 3}
+      propertyPath: m_TagString
       value: ForceField
       objectReference: {fileID: 0}
     m_RemovedComponents: []
