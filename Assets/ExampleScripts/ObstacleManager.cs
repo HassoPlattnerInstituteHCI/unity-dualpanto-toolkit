@@ -11,7 +11,7 @@ public class ObstacleManager : MonoBehaviour
             Debug.Log("Enabling obstacle");
             collider.CreateObstacle();
             collider.Enable();
-            await Task.Delay(100);
+            //await Task.Delay(100);
         }
     }
 
