@@ -13,6 +13,7 @@ namespace DualPantoFramework
         public delegate void HeartbeatDelegate(ulong handle);
         public delegate void LoggingDelegate(IntPtr msg);
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
+        public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
         public string portName = "//.//COM3";
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
@@ -37,14 +38,18 @@ namespace DualPantoFramework
 
         private bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
-        private GameObject debugLowerObject;
-        private GameObject debugUpperObject;
+        private GameObject debugLowerHandle;
+        private GameObject debugUpperHandle;
+        private GameObject debugLowerGodObject;
+        private GameObject debugUpperGodObject;
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
 #else
         private const string plugin = "libserial";
 #endif
+
+        private static bool connected = false;
 
         [DllImport(plugin)]
         private static extern uint GetRevision();
@@ -67,9 +72,15 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void SendMotor(ulong handle, byte controlMethod, byte pantoIndex, float positionX, float positionY, float rotation);
         [DllImport(plugin)]
-        private static extern void FreeMotor(ulong handle, byte controlMethod, byte pantoIndex);
+        private static extern void SendSpeed(ulong handle, byte pantoIndex, float speed);
+        [DllImport(plugin)]
+        private static extern void FreeMotor(ulong handle, byte pantoIndex);
+        [DllImport(plugin)]
+        private static extern void FreezeMotor(ulong handle, byte pantoIndex);
         [DllImport(plugin)]
         private static extern void SetPositionHandler(PositionDelegate func);
+        [DllImport(plugin)]
+        private static extern void SetTransitionHandler(TransitionDelegate func);
         [DllImport(plugin)]
         private static extern void CreateObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
@@ -92,6 +103,7 @@ namespace DualPantoFramework
         private static void SyncHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received sync");
+            connected = true;
             SendSyncAck(handle);
         }
 
@@ -102,7 +114,20 @@ namespace DualPantoFramework
             SendHeartbeatAck(handle);
         }
 
-        private static void LogHandler(IntPtr msg)
+        private void TransitionHandler(byte pantoIndex)
+        {
+            Debug.Log("[DualPanto] Transition ended " + pantoIndex);
+            if (pantoIndex == 0)
+            {
+                upperHandle.TweeningEnded();
+            }
+            else
+            {
+                lowerHandle.TweeningEnded();
+            }
+        }
+
+        private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
             /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
@@ -113,10 +138,25 @@ namespace DualPantoFramework
             {
                 Debug.LogError("[DualPanto] " + message);
             }
+            else if (message.Contains("START"))
+            {
+                Debug.Log("[DualPanto] " + message);
+                OnPantoStarted();
+            }
             else
             {
                 Debug.Log("[DualPanto] " + message);
             }
+        }
+
+        private void OnPantoStarted()
+        {
+            connected = false;
+            while (!connected)
+            {
+                Poll(Handle);
+            }
+            ColliderRegistry.RegisterObstacles();
         }
 
         private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
@@ -126,14 +166,16 @@ namespace DualPantoFramework
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
             upperHandleRot = PantoToUnityRotation(positions[2]);
             upperGodObject = new Vector3(unityGodUpper.x, 0, unityGodUpper.y);
-            upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
+            if (upperHandle)
+                upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
 
             Vector2 unityPosLower = PantoToUnity(new Vector2((float)positions[5], (float)positions[6]));
             Vector2 unityGodLower = PantoToUnity(new Vector2((float)positions[8], (float)positions[9]));
             lowerHandlePos = new Vector3(unityPosLower.x, 0, unityPosLower.y);
             lowerHandleRot = PantoToUnityRotation(positions[7]);
             lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
-            lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
+            if (lowerHandle)
+                lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
 
             Quaternion lower = Quaternion.Euler(0, lowerHandleRot, 0);
             Quaternion upper = Quaternion.Euler(0, upperHandleRot, 0);
@@ -154,12 +196,25 @@ namespace DualPantoFramework
         {
             if (isUpper)
             {
-                return debugUpperObject;
+                return debugUpperHandle;
             }
             else
             {
-                return debugLowerObject;
+                return debugLowerHandle;
             }
+        }
+
+        public GameObject GetDebugGodObject(bool isUpper)
+        {
+            if (isUpper)
+            {
+                return debugUpperGodObject;
+            }
+            else
+            {
+                return debugLowerGodObject;
+            }
+            
         }
 
         public void StartInDebug()
@@ -216,11 +271,19 @@ namespace DualPantoFramework
             {
                 if (showRawValues) SetUpDebugValuesWindow();
                 globalSync = this;
-                SetLoggingHandler(LogHandler);
+                SetLoggingHandler(StaticLogHandler);
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
+                SetTransitionHandler(StaticTransitionHandler);
                 SetPort(portName);
+
+                // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
+                // only then everyone else can start sending their own stuff
+                while (!connected)
+                {
+                    Poll(Handle);
+                }
             }
             else
             {
@@ -241,20 +304,37 @@ namespace DualPantoFramework
             globalSync.PositionHandler(handle, positions);
         }
 
+        static void StaticTransitionHandler(byte pantoIndex)
+        {
+            globalSync.TransitionHandler(pantoIndex);
+        }
+
         static void StaticHeartbeatHandler(ulong handle)
         {
             globalSync.HeartbeatHandler(handle);
         }
 
+        static void StaticLogHandler(IntPtr message)
+        {
+            globalSync.LogHandler(message);
+        }
+
         private void CreateDebugObjects(Vector3 position)
         {
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
-            debugLowerObject = Instantiate(prefab) as GameObject;
-            debugLowerObject.transform.position = position;
+            debugLowerHandle = Instantiate(prefab) as GameObject;
+            debugLowerHandle.transform.position = position;
 
             prefab = Resources.Load("MeHandlePrefab");
-            debugUpperObject = Instantiate(prefab) as GameObject;
-            debugUpperObject.transform.position = position;
+            debugUpperHandle = Instantiate(prefab) as GameObject;
+            debugUpperHandle.transform.position = position;
+
+            debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugUpperGodObject.transform.position = position;
+            debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugLowerGodObject.transform.position = position;
+            debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
         void OnDestroy()
@@ -275,11 +355,11 @@ namespace DualPantoFramework
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
                 Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                float r = debugUpperObject.transform.eulerAngles.y + mouseRotation;
+                float r = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
                 upperHandlePos = position;
                 upperHandle.SetPositions(upperHandlePos, r, null);
 
-                lowerHandleRot = debugLowerObject.transform.eulerAngles.y + mouseRotation;
+                lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
                 lowerHandlePos = position;
                 lowerHandle.SetPositions(lowerHandlePos, r, null);
             }
@@ -311,7 +391,15 @@ namespace DualPantoFramework
         {
             if (!debug)
             {
-                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
+                FreeMotor(Handle, isUpper ? (byte)0 : (byte)1);
+            }
+        }
+
+        public void FreezeHandle(bool isUpper)
+        {
+            if (!debug)
+            {
+                FreezeMotor(Handle, isUpper ? (byte)0 : (byte)1);
             }
         }
 
@@ -335,7 +423,9 @@ namespace DualPantoFramework
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
-                //TODO make it so position can be null
+                //TODO: make it so position can be null
+
+                //TODO: also update the GodObject
                 if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
                 if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
@@ -346,14 +436,18 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                
-                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
+                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
             else
             {
                 Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
             }
+        }
+
+        public void SetSpeed(bool isUpper, float speed)
+        {
+            SendSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
         }
 
         public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)

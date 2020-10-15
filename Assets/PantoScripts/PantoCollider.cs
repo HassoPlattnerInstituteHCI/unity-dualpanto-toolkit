@@ -10,7 +10,17 @@ namespace DualPantoFramework
         public bool onUpper = true;
         public bool onLower = true;
         public bool isPassable = false;
+        private bool registered = false;
 
+        public ushort GetId()
+        {
+            return id;
+        }
+
+        public bool IsEnabled()
+        {
+            return pantoEnabled;
+        }
         protected byte getPantoIndex()
         {
             if (onUpper && onLower) return 0xff;
@@ -54,7 +64,8 @@ namespace DualPantoFramework
                     center2 + v1,
                     center2 - v1
                 };
-            } else
+            }
+            else
             {
                 return new Vector2[] {
                     center2 + v2,
@@ -83,8 +94,22 @@ namespace DualPantoFramework
         protected void UpdateId()
         {
             id = pantoSync.GetNextObstacleId();
+            if (!registered)
+            {
+                registered = true;
+                ColliderRegistry.AddCollider(this);
+            }
         }
 
+        protected void CreateLineObstacle(Vector2 start, Vector2 end)
+        {
+            byte index = getPantoIndex();
+            if (index == 2)
+            {
+                Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
+            }
+            pantoSync.CreateObstacle(index, id, start, end);
+        }
         protected void CreateBoxObstacle()
         {
             BoxCollider collider = GetComponent<BoxCollider>();
@@ -118,7 +143,8 @@ namespace DualPantoFramework
             if (this.isPassable)
             {
                 pantoSync.CreatePassableObstacle(index, id, corners[0], corners[1]);
-            } else
+            }
+            else
             {
                 pantoSync.CreateObstacle(index, id, corners[0], corners[1]);
             }
@@ -127,6 +153,16 @@ namespace DualPantoFramework
                 pantoSync.AddToObstacle(index, id, corners[i], corners[i + 1]);
             }
             pantoSync.AddToObstacle(index, id, corners[corners.Length - 1], corners[0]);
+        }
+
+        public void CreateRailForLine(Vector2 start, Vector2 end, float displacement)
+        {
+            byte index = getPantoIndex();
+            if (index == 2)
+            {
+                Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
+            }
+            pantoSync.CreateRail(index, id, start, end, displacement);
         }
 
         public void CreateRail()
@@ -149,11 +185,6 @@ namespace DualPantoFramework
         /// </summary>
         public void Disable()
         {
-            if (!pantoEnabled)
-            {
-                Debug.Log("[DualPanto] Obstacle already disabled");
-                return;
-            }
             pantoEnabled = false;
             GetPantoSync().DisableObstacle(getPantoIndex(), id);
         }
@@ -172,11 +203,6 @@ namespace DualPantoFramework
         /// </summary>
         public void Enable()
         {
-            if (pantoEnabled)
-            {
-                Debug.Log("[DualPanto] Obstacle already enabled");
-                return;
-            }
             pantoEnabled = true;
             GetPantoSync().EnableObstacle(getPantoIndex(), id);
         }

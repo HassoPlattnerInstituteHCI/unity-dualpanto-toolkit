@@ -16,42 +16,27 @@ namespace DualPantoFramework
         private float rotation;
         static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
         private Vector3 position = handleDefaultPosition;
-        private Vector3 startPosition; //tweening
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
         protected bool userControlledRotation = true;
 
-        public float tweenValue = 0.0f; //tweening
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
         /// </summary>
         async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
         {
-            userControlledPosition = false;
-            userControlledRotation = false;
-            if (inTransition)
-            {
-                Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject" + gameObject);
-            }
-            Debug.Log("[DualPanto] Switching to:" + position);
-            
+
             GameObject go = new GameObject();
             go.transform.position = position;
-            handledGameObject = go;
-            
-            speed = newSpeed;
-            inTransition = true;
-            GetPantoSync().UpdateHandlePosition(position, handledGameObject.transform.eulerAngles.y, isUpper);
-            
-            while (inTransition)
-            {
-                await Task.Delay(10);
-            }
+            await SwitchTo(go, newSpeed);
+            Destroy(go);
             if (shouldFreeHandle)
             {
                 Free();
+            } else
+            {
+                Freeze();
             }
-            Destroy(go);
         }
 
 
@@ -68,19 +53,14 @@ namespace DualPantoFramework
             }
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
-            speed = newSpeed;
+            pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
+            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
             inTransition = true;
-
-            tweenValue = 0;
-            startPosition = GetPosition();
 
             while (inTransition)
             {
                 await Task.Delay(10);
             }
-            //tweenValue = 0;
-            //startPosition = getPosition();
-            //Debug.Log("startPosition" + startPosition);
         }
 
         /// <summary>
@@ -190,9 +170,17 @@ namespace DualPantoFramework
             }
         }
 
+        /// <summary>
+        /// Freezes the position of the handle to the current position.
+        /// </summary>
+        public async void Freeze()
+        {
+            pantoSync.FreezeHandle(isUpper);
+        }
+
         float MaxMovementSpeed()
         {
-            return 0.5f;
+            return 20f;
         }
 
         public void OverlayScriptedMotion(ScriptedMotion motion)
@@ -217,6 +205,11 @@ namespace DualPantoFramework
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
                 debugObject.transform.position = position;
+                GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
+                if (newGodObjectPosition != null)
+                {
+                    debugGodObject.transform.position = newGodObjectPosition.Value;
+                }
             }
             position = newPosition;
             rotation = newRotation;
@@ -237,25 +230,10 @@ namespace DualPantoFramework
             await SwitchTo(cornerObjects[0], speed);
         }
 
-        protected void Update()
+        public void TweeningEnded()
         {
-            if (handledGameObject == null)
-            {
-                inTransition = false;
-                return;
-            }
-            
-            float movementSpeed = Mathf.Min(MaxMovementSpeed(), speed);
-            Vector3 currentPos = GetPosition();
-            Vector3 goalPos = handledGameObject.transform.position;
-            
-            float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
-            
-            if (inTransition && distance < 0.2)
-            {
-                Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
-                inTransition = false;
-            }
+            handledGameObject = null;
+            inTransition = false;
         }
     }
 }
