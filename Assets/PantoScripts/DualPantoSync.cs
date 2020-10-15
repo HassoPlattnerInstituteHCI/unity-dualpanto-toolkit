@@ -13,6 +13,7 @@ namespace DualPantoFramework
         public delegate void HeartbeatDelegate(ulong handle);
         public delegate void LoggingDelegate(IntPtr msg);
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
+        public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
         public string portName = "//.//COM3";
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
@@ -79,6 +80,8 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void SetPositionHandler(PositionDelegate func);
         [DllImport(plugin)]
+        private static extern void SetTransitionHandler(TransitionDelegate func);
+        [DllImport(plugin)]
         private static extern void CreateObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
         private static extern void CreatePassableObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
@@ -111,6 +114,19 @@ namespace DualPantoFramework
             SendHeartbeatAck(handle);
         }
 
+        private void TransitionHandler(byte pantoIndex)
+        {
+            Debug.Log("[DualPanto] Transition ended " + pantoIndex);
+            if (pantoIndex == 0)
+            {
+                upperHandle.TweeningEnded();
+            }
+            else
+            {
+                lowerHandle.TweeningEnded();
+            }
+        }
+
         private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
@@ -118,19 +134,7 @@ namespace DualPantoFramework
             {
                 return;
             }*/
-            if (message.Contains("Transition ended"))
-            {
-                Debug.Log("[DualPanto] " + message);
-                int handle = Int32.Parse(message.Substring(message.Length - 1));
-                if (handle == 0)
-                {
-                    upperHandle.TweeningEnded();
-                } else
-                {
-                    lowerHandle.TweeningEnded();
-                }
-            }
-            else if (message.Contains("disconnected"))
+            if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
             }
@@ -271,6 +275,7 @@ namespace DualPantoFramework
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
+                SetTransitionHandler(StaticTransitionHandler);
                 SetPort(portName);
 
                 // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
@@ -297,6 +302,11 @@ namespace DualPantoFramework
         static void StaticPositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
         {
             globalSync.PositionHandler(handle, positions);
+        }
+
+        static void StaticTransitionHandler(byte pantoIndex)
+        {
+            globalSync.TransitionHandler(pantoIndex);
         }
 
         static void StaticHeartbeatHandler(ulong handle)

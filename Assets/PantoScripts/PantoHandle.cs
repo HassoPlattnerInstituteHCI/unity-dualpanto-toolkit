@@ -235,32 +235,5 @@ namespace DualPantoFramework
             handledGameObject = null;
             inTransition = false;
         }
-
-        protected void FixedUpdate()
-        {
-            if (handledGameObject == null)
-            {
-                inTransition = false;
-                return;
-            }
-            Vector3 currentPos = GetPosition();
-            Vector3 goalPos = handledGameObject.transform.position;
-
-            float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
-
-            //todo fixvalue
-            /*
-            if (distance < 1 && inTransition)
-            {
-                Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
-                inTransition = false;
-            }
-            if (!inTransition)
-            {
-                // if the handle already arrived at the position of the game object but is frozen
-                float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, float.NaN, isUpper);
-            }*/
-        }
     }
 }
