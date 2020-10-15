@@ -50,6 +50,10 @@ namespace DualPantoFramework
             {
                 Free();
             }
+            else
+            {
+                Freeze();
+            }
             Destroy(go);
         }
 
