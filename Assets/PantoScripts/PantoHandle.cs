@@ -33,7 +33,8 @@ namespace DualPantoFramework
             if (shouldFreeHandle)
             {
                 Free();
-            } else
+            }
+            else
             {
                 Freeze();
             }
@@ -173,9 +174,17 @@ namespace DualPantoFramework
         /// <summary>
         /// Freezes the position of the handle to the current position.
         /// </summary>
-        public async void Freeze()
+        public void Freeze()
         {
-            pantoSync.FreezeHandle(isUpper);
+            if (pantoSync.debug)
+            {
+                userControlledPosition = false;
+                userControlledRotation = false;
+            }
+            else
+            {
+                pantoSync.FreezeHandle(isUpper);
+            }
         }
 
         float MaxMovementSpeed()
