@@ -25,10 +25,10 @@ namespace DualPantoFramework
         /// </summary>
         async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
         {
-
             GameObject go = new GameObject();
             go.transform.position = position;
             await SwitchTo(go, newSpeed);
+            handledGameObject = null;
             Destroy(go);
             if (shouldFreeHandle)
             {
@@ -39,7 +39,6 @@ namespace DualPantoFramework
                 Freeze();
             }
         }
-
 
         /// <summary>
         /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
@@ -239,9 +238,20 @@ namespace DualPantoFramework
             await SwitchTo(cornerObjects[0], speed);
         }
 
+        void Update()
+        {
+            if (pantoSync.debug && handledGameObject != null && Vector3.Distance(handledGameObject.transform.position, position) < 0.4f)
+            {
+                inTransition = false;
+            }
+            if (handledGameObject != null && !inTransition)// reached gameobject initially 
+            {
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
+            }
+        }
+
         public void TweeningEnded()
         {
-            handledGameObject = null;
             inTransition = false;
         }
     }
