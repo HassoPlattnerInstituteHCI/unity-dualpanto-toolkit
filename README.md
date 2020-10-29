@@ -21,6 +21,7 @@ Add this framework as a submodule into the Assets folder:
 cd path/to/repo
 cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
+ git submodule update --init --recursive
 ```
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
 
