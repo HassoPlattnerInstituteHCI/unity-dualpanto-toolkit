@@ -109,7 +109,7 @@ namespace DualPantoFramework
             SendHeartbeatAck(handle);
         }
 
-        private static void LogHandler(IntPtr msg)
+        private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
             /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
@@ -120,10 +120,25 @@ namespace DualPantoFramework
             {
                 Debug.LogError("[DualPanto] " + message);
             }
+            else if (message.Contains("START"))
+            {
+                Debug.Log("[DualPanto] " + message);
+                OnPantoStarted();
+            }
             else
             {
                 Debug.Log("[DualPanto] " + message);
             }
+        }
+
+        private void OnPantoStarted()
+        {
+            connected = false;
+            while (!connected)
+            {
+                Poll(Handle);
+            }
+            ColliderRegistry.RegisterObstacles();
         }
 
         private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
@@ -133,14 +148,16 @@ namespace DualPantoFramework
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
             upperHandleRot = PantoToUnityRotation(positions[2]);
             upperGodObject = new Vector3(unityGodUpper.x, 0, unityGodUpper.y);
-            upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
+            if (upperHandle)
+                upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
 
             Vector2 unityPosLower = PantoToUnity(new Vector2((float)positions[5], (float)positions[6]));
             Vector2 unityGodLower = PantoToUnity(new Vector2((float)positions[8], (float)positions[9]));
             lowerHandlePos = new Vector3(unityPosLower.x, 0, unityPosLower.y);
             lowerHandleRot = PantoToUnityRotation(positions[7]);
             lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
-            lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
+            if (lowerHandle)
+                lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
 
             Quaternion lower = Quaternion.Euler(0, lowerHandleRot, 0);
             Quaternion upper = Quaternion.Euler(0, upperHandleRot, 0);
@@ -236,7 +253,7 @@ namespace DualPantoFramework
             {
                 if (showRawValues) SetUpDebugValuesWindow();
                 globalSync = this;
-                SetLoggingHandler(LogHandler);
+                SetLoggingHandler(StaticLogHandler);
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
@@ -271,6 +288,11 @@ namespace DualPantoFramework
         static void StaticHeartbeatHandler(ulong handle)
         {
             globalSync.HeartbeatHandler(handle);
+        }
+
+        static void StaticLogHandler(IntPtr message)
+        {
+            globalSync.LogHandler(message);
         }
 
         private void CreateDebugObjects(Vector3 position)
