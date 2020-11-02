@@ -11,7 +11,7 @@ namespace DualPantoFramework
     {
         protected bool isUpper = true;
         private GameObject handledGameObject;
-        private float speed;
+        private float speed = 5.0f;
         private bool inTransition = false;
         private float rotation;
         static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
@@ -25,7 +25,6 @@ namespace DualPantoFramework
         /// </summary>
         async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
         {
-
             GameObject go = new GameObject();
             go.transform.position = position;
             await SwitchTo(go, newSpeed);
@@ -50,8 +49,11 @@ namespace DualPantoFramework
             }
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
-            pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
-            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+            if (!pantoSync.debug)
+            {
+                pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+            }
             inTransition = true;
 
             while (inTransition)
@@ -180,11 +182,6 @@ namespace DualPantoFramework
             return 20f;
         }
 
-        public void OverlayScriptedMotion(ScriptedMotion motion)
-        {
-
-        }
-
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
             if (pantoSync.debug && userControlledRotation)
@@ -238,17 +235,22 @@ namespace DualPantoFramework
             Vector3 goalPos = handledGameObject.transform.position;
 
             float distance = Vector2.Distance(new Vector2(currentPos.x, currentPos.z), new Vector2(goalPos.x, goalPos.z));
-
-            //todo fixvalue
-            if (distance < 0.2 && inTransition)
+            if (distance < 0.4 && inTransition)
             {
                 Debug.Log("[DualPanto] Reached: " + handledGameObject.name);
                 inTransition = false;
             }
-            if (!inTransition)
+            if (pantoSync.debug)
             {
-                float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+                pantoSync.UpdateHandlePosition(currentPos + (goalPos - currentPos).normalized * 0.1f * speed, handledGameObject.transform.eulerAngles.y, isUpper);
+            }
+            else
+            {
+                if (!inTransition)
+                {
+                    float rotation = userControlledRotation ? float.NaN : handledGameObject.transform.eulerAngles.y;
+                    GetPantoSync().UpdateHandlePosition(goalPos, handledGameObject.transform.eulerAngles.y, isUpper);
+                }
             }
         }
     }
