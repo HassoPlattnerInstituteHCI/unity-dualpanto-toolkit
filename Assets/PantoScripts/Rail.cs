@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+using SpeechIO;
+using UnityEngine;
 
 namespace DualPantoFramework
 {
     public class Rail : PantoBoxCollider
     {
+        public string text;
+        
         public Rail()
         {
             isPassable = true;
@@ -18,6 +21,17 @@ namespace DualPantoFramework
         {
             UpdateId();
             CreateRailForLine(start, end, displacement);
+        }
+
+        void OnCollisionEnter(Collision col)
+        {
+            // When target is hit
+            if (col.gameObject.name == "MeHandle")
+            {
+                PantoManager pantoManager = GameObject.Find("PantoManager").GetComponent<PantoManager>();
+                pantoManager.speechOut.Speak(text);
+
+            }
         }
     }
 }

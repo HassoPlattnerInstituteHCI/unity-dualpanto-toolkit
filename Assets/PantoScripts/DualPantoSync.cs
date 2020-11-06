@@ -13,6 +13,7 @@ namespace DualPantoFramework
         public delegate void HeartbeatDelegate(ulong handle);
         public delegate void LoggingDelegate(IntPtr msg);
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
+        public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
         public string portName = "//.//COM3";
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
@@ -73,9 +74,13 @@ namespace DualPantoFramework
         [DllImport(plugin)]
         private static extern void SendSpeed(ulong handle, byte pantoIndex, float speed);
         [DllImport(plugin)]
-        private static extern void FreeMotor(ulong handle, byte controlMethod, byte pantoIndex);
+        private static extern void FreeMotor(ulong handle, byte pantoIndex);
+        [DllImport(plugin)]
+        private static extern void FreezeMotor(ulong handle, byte pantoIndex);
         [DllImport(plugin)]
         private static extern void SetPositionHandler(PositionDelegate func);
+        [DllImport(plugin)]
+        private static extern void SetTransitionHandler(TransitionDelegate func);
         [DllImport(plugin)]
         private static extern void CreateObstacle(ulong handle, byte pantoIndex, ushort obstacleId, float vector1x, float vector1y, float vector2x, float vector2y);
         [DllImport(plugin)]
@@ -107,6 +112,19 @@ namespace DualPantoFramework
             Debug.Log("[DualPanto] Received heartbeat");
             if (showRawValues) uiManager.UpdateHeartbeat();
             SendHeartbeatAck(handle);
+        }
+
+        private void TransitionHandler(byte pantoIndex)
+        {
+            Debug.Log("[DualPanto] Transition ended " + pantoIndex);
+            if (pantoIndex == 0)
+            {
+                upperHandle.TweeningEnded();
+            }
+            else
+            {
+                lowerHandle.TweeningEnded();
+            }
         }
 
         private void LogHandler(IntPtr msg)
@@ -257,6 +275,7 @@ namespace DualPantoFramework
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
+                SetTransitionHandler(StaticTransitionHandler);
                 SetPort(portName);
 
                 // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
@@ -285,6 +304,11 @@ namespace DualPantoFramework
             globalSync.PositionHandler(handle, positions);
         }
 
+        static void StaticTransitionHandler(byte pantoIndex)
+        {
+            globalSync.TransitionHandler(pantoIndex);
+        }
+
         static void StaticHeartbeatHandler(ulong handle)
         {
             globalSync.HeartbeatHandler(handle);
@@ -301,11 +325,24 @@ namespace DualPantoFramework
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
             debugLowerHandle.transform.localScale = transform.localScale;
+            debugLowerHandle.name = "ItHandle";
+            debugLowerHandle.AddComponent<Rigidbody>();
+            debugLowerHandle.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
             debugUpperHandle.transform.localScale = transform.localScale;
+            debugUpperHandle.name = "MeHandle";
+            debugUpperHandle.AddComponent<Rigidbody>();
+            debugUpperHandle.AddComponent<SphereCollider>();
+
+            debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugUpperGodObject.transform.position = position;
+            debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugLowerGodObject.transform.position = position;
+            debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
         void OnDestroy()
@@ -362,7 +399,15 @@ namespace DualPantoFramework
         {
             if (!debug)
             {
-                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, float.NaN, float.NaN, float.NaN);
+                FreeMotor(Handle, isUpper ? (byte)0 : (byte)1);
+            }
+        }
+
+        public void FreezeHandle(bool isUpper)
+        {
+            if (!debug)
+            {
+                FreezeMotor(Handle, isUpper ? (byte)0 : (byte)1);
             }
         }
 
@@ -399,7 +444,7 @@ namespace DualPantoFramework
                 Vector2 currentPantoPoint = new Vector2();
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : 0;
+                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
             else
@@ -475,7 +520,7 @@ namespace DualPantoFramework
                 CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
             }
         }
-
+        
         public void CreatePassableObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
             if (!debug)
