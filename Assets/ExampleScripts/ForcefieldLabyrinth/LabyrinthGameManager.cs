@@ -95,7 +95,7 @@ public class LabyrinthGameManager : MonoBehaviour
         lower = GameObject.FindGameObjectWithTag("ItHandle");
         isRunning = true;
         speech = new SpeechOut();
-        
+        Debug.Log("Starting game");
         StartLevel();
     }
 
@@ -130,7 +130,9 @@ public class LabyrinthGameManager : MonoBehaviour
         DisableForceFields();
         await Task.Delay(100);
         handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-        await handle.MoveToPosition(startPos, 0.0005f, true);
+        Debug.Log("Moving to start");
+        await handle.MoveToPosition(startPos, 10f, true);
+        Debug.Log("Moved to start");
         await speech.Speak("Level: " + currentLevel, 1);
         //spawn force fields according to level
         SpawnForceFields();
