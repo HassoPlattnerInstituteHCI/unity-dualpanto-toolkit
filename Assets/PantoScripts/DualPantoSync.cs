@@ -196,7 +196,7 @@ namespace DualPantoFramework
             {
                 return debugLowerGodObject;
             }
-            
+
         }
 
         public void StartInDebug()
@@ -300,17 +300,12 @@ namespace DualPantoFramework
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
+            debugLowerHandle.transform.localScale = transform.localScale;
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
-
-            debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            debugUpperGodObject.transform.position = position;
-            debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
-            debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            debugLowerGodObject.transform.position = position;
-            debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugUpperHandle.transform.localScale = transform.localScale;
         }
 
         void OnDestroy()
@@ -480,7 +475,7 @@ namespace DualPantoFramework
                 CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
             }
         }
-        
+
         public void CreatePassableObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
             if (!debug)
