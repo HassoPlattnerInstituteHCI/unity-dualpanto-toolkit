@@ -17,7 +17,7 @@ Contains a cube that is moved via a script. The lower handle will move towards i
 Contains two cubes, each handle will move to one cube, one handle will be freed afterwards.
 
 ### Movement
-Contains two spheres, each can be contained by one handle.
+Contains two spheres, each can be controlled by one handle. Pressing `F` will toggle the handles freezing in place.
 
 ### Many Obstacles
 A scene with a large amount of obstacles that vary in size.

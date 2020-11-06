@@ -324,7 +324,7 @@ namespace DualPantoFramework
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
-            debugLowerHandle.transform.localScale = transform.localScale;
+            //debugLowerHandle.transform.localScale = transform.localScale;
             debugLowerHandle.name = "ItHandle";
             debugLowerHandle.AddComponent<Rigidbody>();
             debugLowerHandle.AddComponent<SphereCollider>();
@@ -332,7 +332,7 @@ namespace DualPantoFramework
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
-            debugUpperHandle.transform.localScale = transform.localScale;
+            //debugUpperHandle.transform.localScale = transform.localScale;
             debugUpperHandle.name = "MeHandle";
             debugUpperHandle.AddComponent<Rigidbody>();
             debugUpperHandle.AddComponent<SphereCollider>();
