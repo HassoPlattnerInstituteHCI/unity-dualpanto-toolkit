@@ -11,7 +11,7 @@ namespace DualPantoFramework
     {
         protected bool isUpper = true;
         private GameObject handledGameObject;
-        private float speed;
+        private float speed = 5.0f;
         private bool inTransition = false;
         private float rotation;
         static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
@@ -53,8 +53,11 @@ namespace DualPantoFramework
             }
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
-            pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
-            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
+            if (!pantoSync.debug)
+            {
+                pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+            }
             inTransition = true;
 
             while (inTransition)
@@ -191,11 +194,6 @@ namespace DualPantoFramework
             return 20f;
         }
 
-        public void OverlayScriptedMotion(ScriptedMotion motion)
-        {
-
-        }
-
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
             if (pantoSync.debug && userControlledRotation)
@@ -238,7 +236,7 @@ namespace DualPantoFramework
             await SwitchTo(cornerObjects[0], speed);
         }
 
-        void Update()
+        protected void FixedUpdate()
         {
             if (pantoSync.debug && handledGameObject != null && Vector3.Distance(handledGameObject.transform.position, position) < 0.4f)
             {
