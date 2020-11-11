@@ -95,6 +95,8 @@ namespace DualPantoFramework
         private static extern void EnableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
         [DllImport(plugin)]
         private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
+        [DllImport(plugin)]
+        private static extern void SetSpeedControl(ulong handle, byte tethered, float tetherFactor, float tetherInnerRadius, float tetherOuterRadius, byte tetherStrategy, byte pockEnabled);
 
         void Start()
         {
@@ -456,6 +458,24 @@ namespace DualPantoFramework
         public void SetSpeed(bool isUpper, float speed)
         {
             SendSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
+        }
+
+        public void SetSpeedControl(bool tethered, float tetherFactor, float tetherInnerRadius, float tetherOuterRadius, SpeedControlStrategy strategy, bool pockEnabled)
+        {
+            byte tetherStrategy = 0;
+            switch (strategy)
+            {
+                case SpeedControlStrategy.MAX_SPEED:
+                    tetherStrategy = 0;
+                    break;
+                case SpeedControlStrategy.EXPLORATION:
+                    tetherStrategy = 1;
+                    break;
+                case SpeedControlStrategy.LEASH:
+                    tetherStrategy = 2;
+                    break;
+            }
+            SetSpeedControl(Handle, Convert.ToByte(tethered), tetherFactor, tetherInnerRadius, tetherOuterRadius, tetherStrategy, Convert.ToByte(pockEnabled));
         }
 
         public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)

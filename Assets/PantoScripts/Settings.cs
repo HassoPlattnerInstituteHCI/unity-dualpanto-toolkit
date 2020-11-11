@@ -2,18 +2,20 @@ using UnityEngine;
 
 namespace DualPantoFramework
 {
-    public enum SpeedControlOption
+    public enum SpeedControlStrategy
     {
-        PENALIZATION,
+        MAX_SPEED,
         EXPLORATION,
         LEASH
     }
     public class Settings : PantoBehaviour
     {
+        public bool tetheringEnabled;
         public float tetherFactor;
         public float innerRadius;
         public float outerRadius;
-        public SpeedControlOption speedControlOption;
+        public SpeedControlStrategy speedControlOption;
+        public bool pockEnabled;
         void SetTetherFactor(float newTetherFactor)
         {
             if (newTetherFactor > 1.0f || newTetherFactor < 0.0f)
@@ -33,7 +35,7 @@ namespace DualPantoFramework
             innerRadius = newRadius;
             UpdateSettings();
         }
-        void SetSpeedControlOption(SpeedControlOption option)
+        void SetSpeedControlOption(SpeedControlStrategy option)
         {
             speedControlOption = option;
             UpdateSettings();
@@ -43,8 +45,15 @@ namespace DualPantoFramework
         {
             if (!pantoSync.debug)
             {
+                Debug.Log("updating settings");
+                pantoSync.SetSpeedControl(tetheringEnabled, tetherFactor, innerRadius, outerRadius, speedControlOption, pockEnabled);
                 //SyncSettings(tetherFactor, innerRadius, outerRadius, speedControlOption);
             }
+        }
+
+        void Start()
+        {
+            UpdateSettings();
         }
     }
 }
