@@ -329,24 +329,28 @@ namespace DualPantoFramework
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
             //debugLowerHandle.transform.localScale = transform.localScale;
-            debugLowerHandle.name = "ItHandle";
-            debugLowerHandle.AddComponent<Rigidbody>();
-            debugLowerHandle.AddComponent<SphereCollider>();
+
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
             //debugUpperHandle.transform.localScale = transform.localScale;
-            debugUpperHandle.name = "MeHandle";
-            debugUpperHandle.AddComponent<Rigidbody>();
-            debugUpperHandle.AddComponent<SphereCollider>();
-
+            
             debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugUpperGodObject.name = "MeHandle";
+            debugUpperGodObject.tag = "MeHandle";
+            debugUpperGodObject.AddComponent<Rigidbody>();
+            //debugUpperGodObject.AddComponent<SphereCollider>();
+
             debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugLowerGodObject.transform.position = position;
             debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugLowerGodObject.name = "ItHandle";
+            debugLowerGodObject.tag = "ItHandle";
+            debugLowerGodObject.AddComponent<Rigidbody>();
+            //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
         void OnDestroy()
