@@ -15,7 +15,11 @@ namespace DualPantoFramework
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
         public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         public string portName = "//.//COM3";
+#else
+        public string portName = "/dev/cu.SLAB_USBtoUART";
+#endif
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
