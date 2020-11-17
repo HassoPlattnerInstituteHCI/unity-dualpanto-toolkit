@@ -15,7 +15,11 @@ namespace DualPantoFramework
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
         public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         public string portName = "//.//COM3";
+#else
+        public string portName = "/dev/cu.SLAB_USBtoUART";
+#endif
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
@@ -327,24 +331,28 @@ namespace DualPantoFramework
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
             //debugLowerHandle.transform.localScale = transform.localScale;
-            debugLowerHandle.name = "ItHandle";
-            debugLowerHandle.AddComponent<Rigidbody>();
-            debugLowerHandle.AddComponent<SphereCollider>();
+
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
             //debugUpperHandle.transform.localScale = transform.localScale;
-            debugUpperHandle.name = "MeHandle";
-            debugUpperHandle.AddComponent<Rigidbody>();
-            debugUpperHandle.AddComponent<SphereCollider>();
-
+            
             debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugUpperGodObject.name = "MeHandle";
+            debugUpperGodObject.tag = "MeHandle";
+            debugUpperGodObject.AddComponent<Rigidbody>();
+            //debugUpperGodObject.AddComponent<SphereCollider>();
+
             debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugLowerGodObject.transform.position = position;
             debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugLowerGodObject.name = "ItHandle";
+            debugLowerGodObject.tag = "ItHandle";
+            debugLowerGodObject.AddComponent<Rigidbody>();
+            //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
         void OnDestroy()

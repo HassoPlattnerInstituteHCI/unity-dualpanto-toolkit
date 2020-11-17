@@ -15,6 +15,7 @@ namespace DualPantoFramework
 
         void OnTriggerStay(Collider other)
         {
+            
             if (other.tag == "MeHandle" && onUpper)
             {
                 GameObject.Find("Panto").GetComponent<UpperHandle>().ApplyForce(GetCurrentForce(other), GetCurrentStrength(other));
