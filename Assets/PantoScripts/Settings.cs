@@ -14,8 +14,8 @@ namespace DualPantoFramework
         public float tetherFactor;
         public float innerRadius;
         public float outerRadius;
-        public SpeedControlStrategy speedControlOption;
         public bool pockEnabled;
+        public SpeedControlStrategy speedControlOption;
         void SetTetherFactor(float newTetherFactor)
         {
             if (newTetherFactor > 1.0f || newTetherFactor < 0.0f)
