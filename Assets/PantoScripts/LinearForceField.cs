@@ -20,7 +20,7 @@ namespace DualPantoFramework
 
         protected override Vector3 GetCurrentForce(Collider other)
         {
-            return direction.normalized;
+            return (gameObject.transform.rotation * direction).normalized;
         }
     }
 }
