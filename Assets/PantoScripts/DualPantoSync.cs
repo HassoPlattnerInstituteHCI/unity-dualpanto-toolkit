@@ -136,10 +136,10 @@ namespace DualPantoFramework
         private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
-            /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
-            {
-                return;
-            }*/
+            //if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
+            //{
+            //return;
+            //}
             if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
@@ -330,14 +330,20 @@ namespace DualPantoFramework
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
-            //debugLowerHandle.transform.localScale = transform.localScale;
 
+            debugLowerHandle.transform.localScale = transform.localScale;
+            debugLowerHandle.name = "ItHandle";
+            //debugLowerHandle.AddComponent<Rigidbody>();
+            //debugLowerHandle.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
-            //debugUpperHandle.transform.localScale = transform.localScale;
-            
+            debugUpperHandle.transform.localScale = transform.localScale;
+            debugUpperHandle.name = "MeHandle";
+            //debugUpperHandle.AddComponent<Rigidbody>();
+            //debugUpperHandle.AddComponent<SphereCollider>();
+
             debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
@@ -548,7 +554,7 @@ namespace DualPantoFramework
                 CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
             }
         }
-        
+
         public void CreatePassableObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
             if (!debug)
