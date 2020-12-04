@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace DualPantoFramework
@@ -136,11 +137,24 @@ namespace DualPantoFramework
         private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
-            //if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
-            //{
-            //return;
-            //}
-            if (message.Contains("disconnected"))
+            if (message.Contains("Free heap"))
+            {
+                string data = Regex.Match(message, @"\(.*\)").Value;
+                data.Remove(data.Length - 1, 1);
+                data.Remove(0, 1);
+                uiManager.UpdateFreeHeap(data);
+            }
+            else if (message.Contains("Task \"Physics\""))
+            {
+                string data = Regex.Match(message, @"\d+").Value;
+                uiManager.UpdatePhysicsFps(data);
+            }
+            else if (message.Contains("Task \"I/O\""))
+            {
+                string data = Regex.Match(message, @"\d+").Value;
+                uiManager.UpdateIOFps(data);
+            }
+            else if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
             }
@@ -149,6 +163,7 @@ namespace DualPantoFramework
                 Debug.Log("[DualPanto] " + message);
                 OnPantoStarted();
             }
+            else if (message.Contains("hearbeat")) return;
             else
             {
                 Debug.Log("[DualPanto] " + message);
