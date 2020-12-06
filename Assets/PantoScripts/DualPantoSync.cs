@@ -137,6 +137,7 @@ namespace DualPantoFramework
         private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
+
             if (message.Contains("Free heap"))
             {
                 string data = Regex.Match(message, @"\(.*\)").Value;
