@@ -15,6 +15,9 @@ namespace DualPantoFramework
         public Text currentRevisionID;
         public Text currentHeartbeat;
         public Text currentUpperHandle;
+        public Text currentFreeHeap;
+        public Text currentIOFps;
+        public Text currentPhysicsFps;
         public Text currentLowerHandle;
         DateTime lastHeartbeat;
         public GameObject blindPanel;
@@ -84,6 +87,18 @@ namespace DualPantoFramework
                 rawItPosY.ToString("F4") +
                 "; r: " +
                 rawItRot.ToString("F4");
+        }
+        public void UpdateFreeHeap(string memoryUsage)
+        {
+            currentFreeHeap.text = memoryUsage;
+        }
+        public void UpdatePhysicsFps(string newFps)
+        {
+            currentPhysicsFps.text = newFps;
+        }
+        public void UpdateIOFps(string newFps)
+        {
+            currentIOFps.text = newFps;
         }
         public void UpdateHeartbeat()
         {

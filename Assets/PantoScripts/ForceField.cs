@@ -15,7 +15,7 @@ namespace DualPantoFramework
 
         void OnTriggerStay(Collider other)
         {
-            
+
             if (other.tag == "MeHandle" && onUpper)
             {
                 GameObject.Find("Panto").GetComponent<UpperHandle>().ApplyForce(GetCurrentForce(other), GetCurrentStrength(other));
@@ -32,11 +32,13 @@ namespace DualPantoFramework
         {
             if (other.tag == "MeHandle" && onUpper)
             {
-                GameObject.Find("Panto").GetComponent<UpperHandle>().StopApplyingForce();
+                //GameObject.Find("Panto").GetComponent<UpperHandle>().StopApplyingForce();
+                GameObject.Find("Panto").GetComponent<UpperHandle>().Free();
             }
             else if (other.tag == "ItHandle" && onLower)
             {
-                GameObject.Find("Panto").GetComponent<LowerHandle>().StopApplyingForce();
+                //GameObject.Find("Panto").GetComponent<LowerHandle>().StopApplyingForce();
+                GameObject.Find("Panto").GetComponent<LowerHandle>().Free();
             }
         }
     }
