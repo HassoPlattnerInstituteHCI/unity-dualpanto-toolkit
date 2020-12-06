@@ -9,6 +9,7 @@ namespace DualPantoFramework
     /// </summary>
     public class DualPantoSync : MonoBehaviour
     {
+        public AnimationCurve plot = new AnimationCurve();
         public delegate void SyncDelegate(ulong handle);
         public delegate void HeartbeatDelegate(ulong handle);
         public delegate void LoggingDelegate(IntPtr msg);
@@ -136,10 +137,15 @@ namespace DualPantoFramework
         private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
-            /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
+            if (message.Contains("Cellcount"))
+            {
+                int cellCount = Int32.Parse(message.Split(' ')[1]);
+                plot.AddKey(Time.realtimeSinceStartup, cellCount);
+            }
+            if (message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI") || message.Contains("Received sync"))
             {
                 return;
-            }*/
+            }
             if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
@@ -337,7 +343,7 @@ namespace DualPantoFramework
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
             //debugUpperHandle.transform.localScale = transform.localScale;
-            
+
             debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
@@ -548,7 +554,7 @@ namespace DualPantoFramework
                 CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
             }
         }
-        
+
         public void CreatePassableObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
             if (!debug)
