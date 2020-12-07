@@ -45,6 +45,7 @@ namespace DualPantoFramework
         /// </summary>
         async public Task SwitchTo(GameObject newHandle, float newSpeed)
         {
+            int time = 0;
             userControlledPosition = false;
             userControlledRotation = false;
             if (inTransition)
@@ -62,7 +63,13 @@ namespace DualPantoFramework
 
             while (inTransition)
             {
+                if (time > 5000)
+                {
+                    Debug.Log("Abandoning gameobject that couldn't be reached: " + handledGameObject.name);
+                    return;
+                }
                 await Task.Delay(10);
+                time += 10;
             }
         }
 
