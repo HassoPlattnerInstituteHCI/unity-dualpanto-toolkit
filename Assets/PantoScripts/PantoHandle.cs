@@ -23,7 +23,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
         /// </summary>
-        async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
+        async public Task MoveToPosition(Vector3 position, float newSpeed = 5.0f, bool shouldFreeHandle = true)
         {
             GameObject go = new GameObject();
             go.transform.position = position;
@@ -43,7 +43,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
         /// </summary>
-        async public Task SwitchTo(GameObject newHandle, float newSpeed)
+        async public Task SwitchTo(GameObject newHandle, float newSpeed = 5.0f)
         {
             int time = 0;
             userControlledPosition = false;
@@ -245,7 +245,7 @@ namespace DualPantoFramework
 
         protected void FixedUpdate()
         {
-            if (pantoSync.debug && handledGameObject != null && Vector3.Distance(handledGameObject.transform.position, position) < 0.4f)
+            if (pantoSync.debug && handledGameObject != null && Vector3.Distance(handledGameObject.transform.position, position) < 0.1f)
             {
                 inTransition = false;
             }
