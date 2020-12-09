@@ -63,7 +63,7 @@ namespace DualPantoFramework
 
             while (inTransition)
             {
-                if (time > 5000)
+                if (time > 3000)
                 {
                     Debug.Log("Abandoning gameobject that couldn't be reached: " + handledGameObject.name);
                     return;
