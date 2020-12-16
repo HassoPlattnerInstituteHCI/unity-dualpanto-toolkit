@@ -23,13 +23,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
         /// </summary>
-<<<<<<< HEAD
-        async public Task MoveToPosition(Vector3 position, float newSpeed = 10.0f, bool shouldFreeHandle = true)
-||||||| merged common ancestors
-        async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
-=======
         async public Task MoveToPosition(Vector3 position, float newSpeed = 5.0f, bool shouldFreeHandle = true)
->>>>>>> e209fef0bb1e9821f28aa0bc641a1622d8b1803c
         {
             GameObject go = new GameObject();
             go.transform.position = position;
@@ -49,13 +43,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
         /// </summary>
-<<<<<<< HEAD
-        async public Task SwitchTo(GameObject newHandle, float newSpeed = 3.0f)
-||||||| merged common ancestors
-        async public Task SwitchTo(GameObject newHandle, float newSpeed)
-=======
         async public Task SwitchTo(GameObject newHandle, float newSpeed = 5.0f)
->>>>>>> e209fef0bb1e9821f28aa0bc641a1622d8b1803c
         {
             int time = 0;
             userControlledPosition = false;
