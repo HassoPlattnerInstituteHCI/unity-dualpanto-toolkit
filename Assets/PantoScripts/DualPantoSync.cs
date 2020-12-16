@@ -300,10 +300,9 @@ namespace DualPantoFramework
                 SetPositionHandler(StaticPositionHandler);
                 SetTransitionHandler(StaticTransitionHandler);
                 SetPort(portName);
-
                 // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
                 // only then everyone else can start sending their own stuff
-                while (!connected)
+                while (!connected && Handle != 0)
                 {
                     Poll(Handle);
                 }
