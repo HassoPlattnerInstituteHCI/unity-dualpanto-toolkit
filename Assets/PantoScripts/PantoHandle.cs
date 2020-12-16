@@ -23,7 +23,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
         /// </summary>
-        async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
+        async public Task MoveToPosition(Vector3 position, float newSpeed = 10.0f, bool shouldFreeHandle = true)
         {
             GameObject go = new GameObject();
             go.transform.position = position;
@@ -43,7 +43,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
         /// </summary>
-        async public Task SwitchTo(GameObject newHandle, float newSpeed)
+        async public Task SwitchTo(GameObject newHandle, float newSpeed = 3.0f)
         {
             userControlledPosition = false;
             userControlledRotation = false;
@@ -196,6 +196,12 @@ namespace DualPantoFramework
 
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
+            if (pantoSync.uiManager.blindPanelEnabled)
+            {
+                float y = GameObject.Find("Blind Panel GO").transform.position.y;
+                newPosition.y = y + 1;
+                position.y = y + 1;
+            }
             if (pantoSync.debug && userControlledRotation)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
