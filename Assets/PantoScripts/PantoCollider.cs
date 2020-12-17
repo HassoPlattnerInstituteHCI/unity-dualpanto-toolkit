@@ -11,6 +11,7 @@ namespace DualPantoFramework
         public bool onLower = true;
         public bool isPassable = false;
         private bool registered = false;
+        public bool showOutline = false;
 
         public ushort GetId()
         {
@@ -132,6 +133,17 @@ namespace DualPantoFramework
             }
             CreateFromCorners(corners);
         }
+        protected void CreatePolygonObstacle()
+        {
+            Vector2[] points = GetComponent<PolygonCollider2D>().points;
+            Vector2[] newPoints = new Vector2[points.Length];
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector3 newPoint = transform.TransformPoint(points[i].x, points[i].y, 0);
+                newPoints[i] = new Vector2(newPoint.x, newPoint.z);
+            }
+            CreateFromCorners(newPoints);
+        }
 
         public void CreateFromCorners(Vector2[] corners)
         {
@@ -147,12 +159,20 @@ namespace DualPantoFramework
             else
             {
                 pantoSync.CreateObstacle(index, id, corners[0], corners[1]);
+                DrawLine(corners[0], corners[1]);
             }
             for (int i = 1; i < corners.Length - 1; i++)
             {
                 pantoSync.AddToObstacle(index, id, corners[i], corners[i + 1]);
+                DrawLine(corners[i], corners[i + 1]);
             }
             pantoSync.AddToObstacle(index, id, corners[corners.Length - 1], corners[0]);
+            DrawLine(corners[corners.Length - 1], corners[0]);
+        }
+
+        void DrawLine(Vector2 start, Vector2 end)
+        {
+            if (showOutline) Debug.DrawLine(new Vector3(start.x, 0, start.y), new Vector3(end.x, 0, end.y), Color.red, float.PositiveInfinity);
         }
 
         public void CreateRailForLine(Vector2 start, Vector2 end, float displacement)
