@@ -24,6 +24,7 @@ namespace DualPantoFramework
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
+        private bool debugHandleMeActive = true; // is the me handle or the it handle currently controlled using the mouse
         public KeyCode toggleVisionKey = KeyCode.B;
         public bool showRawValues = true;
         protected ulong Handle;
@@ -345,7 +346,6 @@ namespace DualPantoFramework
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
-
             debugLowerHandle.transform.localScale = transform.localScale;
             debugLowerHandle.name = "ItHandle";
             //debugLowerHandle.AddComponent<Rigidbody>();
@@ -391,16 +391,29 @@ namespace DualPantoFramework
             }
             else
             {
-                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
-                Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                float r = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
-                upperHandlePos = position;
-                upperHandle.SetPositions(upperHandlePos, r, null);
 
-                lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
-                lowerHandlePos = position;
-                lowerHandle.SetPositions(lowerHandlePos, r, null);
+                if (Input.GetMouseButtonUp(0))
+                    debugHandleMeActive = !debugHandleMeActive;
+
+                if (Input.GetMouseButton(0))
+                {
+
+                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
+                    Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
+                    if (debugHandleMeActive)
+                    {
+                        upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
+                        upperHandlePos = position;
+                        upperHandle.SetPositions(upperHandlePos, upperHandleRot, null);
+                    }
+                    else
+                    {
+                        lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
+                        lowerHandlePos = position;
+                        lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, null);
+                    }
+                }
             }
 
             if (Input.GetKeyDown(toggleVisionKey))
@@ -476,6 +489,7 @@ namespace DualPantoFramework
                 if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
+                //if (!isUpper)
                 SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
             }
             else

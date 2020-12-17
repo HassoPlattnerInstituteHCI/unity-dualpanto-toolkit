@@ -204,6 +204,12 @@ namespace DualPantoFramework
 
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
+            if (pantoSync.uiManager.blindPanelEnabled)
+            {
+                float y = GameObject.Find("Blind Panel GO").transform.position.y;
+                newPosition.y = y + 1;
+                position.y = y + 1;
+            }
             if (pantoSync.debug && userControlledRotation)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);

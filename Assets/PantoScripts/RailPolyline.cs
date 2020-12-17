@@ -1,35 +1,27 @@
-using UnityEngine;
+using DualPantoFramework;
+namespace UnityEngine {
 
-namespace DualPantoFramework
-{
-    public class RailPolyline : MonoBehaviour
+
+    public class RailPolyline : ColliderPolyline
     {
-        public Vector2[] points;
         public string[] texts;
         public float displacement = 0.3f;
+        public RailPolyline(){
 
-        public void CreateRails()
-        {
-            for (int i = 0; i < points.Length - 1; i++)
-            {
-                Rail r = this.gameObject.AddComponent<Rail>();
-                if (i < texts.Length)
-                {
-                    r.text = texts[i];
-                }
-
-                r.CreateObstacle(points[i], points[i + 1], displacement);
-                r.Enable();
-            }
+            this.gizmoColor = Color.cyan;
         }
-        void OnDrawGizmos()
+        private void CreateObstacle(int i)
         {
-            Gizmos.color = Color.cyan;
-            for (int i = 0; i < points.Length - 1; i++)
+            Rail r = this.gameObject.AddComponent<Rail>();
+            if (i < texts.Length)
             {
-                Gizmos.DrawLine(new Vector3(points[i].x, 5, points[i].y), new Vector3(points[i + 1].x, 5, points[i + 1].y));
+                r.text = texts[i];
             }
 
+            r.CreateObstacle(points[i], points[i + 1], displacement);
+            r.Enable();
         }
+
     }
+
 }
