@@ -50,7 +50,8 @@ namespace DualPantoFramework
             userControlledRotation = false;
             if (inTransition)
             {
-                Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject: " + handledGameObject.name);
+                if (handledGameObject != null) Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject: " + handledGameObject.name);
+                else Debug.LogWarning("[DualPanto] Discarding not yet reached position or gameObject");
             }
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
