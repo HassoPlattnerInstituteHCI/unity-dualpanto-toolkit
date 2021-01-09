@@ -12,7 +12,7 @@ namespace DualPantoFramework
 
         void OnDrawGizmos()
         {
-            Gizmos.color = Color.blue;
+            Gizmos.color = Color.black;
             Vector2[] points = GetComponent<PolygonCollider2D>().points;
             Transform parent = this.transform.parent;
             for (int i = 0; i < points.Length - 1; i++)
