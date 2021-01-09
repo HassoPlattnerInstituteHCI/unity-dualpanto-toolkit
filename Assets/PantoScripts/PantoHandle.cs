@@ -19,7 +19,11 @@ namespace DualPantoFramework
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
         protected bool userControlledRotation = true;
-
+        private AudioListener listener; // needed to register spatial audio
+        void Start()
+        {
+            listener = new AudioListener();
+        }
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
         /// </summary>
@@ -206,9 +210,14 @@ namespace DualPantoFramework
         {
             if (pantoSync.uiManager.blindPanelEnabled)
             {
-                float y = GameObject.Find("Blind Panel GO").transform.position.y;
-                newPosition.y = y + 1;
-                position.y = y + 1;
+                GameObject blindPanel = GameObject.Find("Blind Panel GO");
+                if (blindPanel != null)
+                {
+
+                    float y = blindPanel.transform.position.y;
+                    newPosition.y = y + 1;
+                    position.y = y + 1;
+                }
             }
             if (pantoSync.debug && userControlledRotation)
             {
