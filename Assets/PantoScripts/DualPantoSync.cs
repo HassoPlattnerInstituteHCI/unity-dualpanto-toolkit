@@ -362,17 +362,21 @@ namespace DualPantoFramework
             debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
-            debugUpperGodObject.name = "MeHandle";
-            debugUpperGodObject.tag = "MeHandle";
-            debugUpperGodObject.AddComponent<Rigidbody>();
+            debugUpperGodObject.name = "MeHandleGodObject";
+            debugUpperGodObject.tag = "MeHandleGodObject";
+            Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
+            rUpper.useGravity = false;
+            rUpper.constraints = RigidbodyConstraints.FreezeRotation;
             //debugUpperGodObject.AddComponent<SphereCollider>();
 
             debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugLowerGodObject.transform.position = position;
             debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
-            debugLowerGodObject.name = "ItHandle";
-            debugLowerGodObject.tag = "ItHandle";
-            debugLowerGodObject.AddComponent<Rigidbody>();
+            debugLowerGodObject.name = "ItHandleGodObject";
+            debugLowerGodObject.tag = "ItHandleGodObject";
+            Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
+            rLower.useGravity = false;
+            rLower.constraints = RigidbodyConstraints.FreezeRotation;
             //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
