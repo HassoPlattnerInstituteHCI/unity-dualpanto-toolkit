@@ -42,7 +42,7 @@ namespace DualPantoFramework
         private float lowerHandleRot = 0f;
         private float upperHandleRot = 0f;
 
-        private bool isBlindModeOn = false;
+        public bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
         private GameObject debugLowerHandle;
         private GameObject debugUpperHandle;
