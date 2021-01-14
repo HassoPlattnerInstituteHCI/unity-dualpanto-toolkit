@@ -363,7 +363,7 @@ namespace DualPantoFramework
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
             debugUpperGodObject.name = "MeHandleGodObject";
-            debugUpperGodObject.tag = "MeHandleGodObject";
+            debugUpperGodObject.tag = "MeHandle";
             Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
             rUpper.useGravity = false;
             rUpper.constraints = RigidbodyConstraints.FreezeRotation;
@@ -373,7 +373,7 @@ namespace DualPantoFramework
             debugLowerGodObject.transform.position = position;
             debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
             debugLowerGodObject.name = "ItHandleGodObject";
-            debugLowerGodObject.tag = "ItHandleGodObject";
+            debugLowerGodObject.tag = "ItHandle";
             Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
             rLower.useGravity = false;
             rLower.constraints = RigidbodyConstraints.FreezeRotation;
