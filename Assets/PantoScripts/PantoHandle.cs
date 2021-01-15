@@ -203,7 +203,7 @@ namespace DualPantoFramework
 
         float MaxMovementSpeed()
         {
-            return 1f;
+            return 1.5f;
         }
 
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
