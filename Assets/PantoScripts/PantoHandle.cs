@@ -238,6 +238,7 @@ namespace DualPantoFramework
                 if (newGodObjectPosition != null)
                 {
                     debugGodObject.transform.position = newGodObjectPosition.Value;
+                    debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, newRotation, debugGodObject.transform.eulerAngles.z);
                 }
             }
             position = newPosition;
