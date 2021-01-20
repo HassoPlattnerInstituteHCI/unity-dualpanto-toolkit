@@ -7,7 +7,7 @@ public class RotationIt : MonoBehaviour
     async void Start()
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
-        //await lowerHandle.SwitchTo(gameObject, 10f);
+        await lowerHandle.MoveToPosition(transform.position, 1.0f);
     }
 
     void FixedUpdate()
