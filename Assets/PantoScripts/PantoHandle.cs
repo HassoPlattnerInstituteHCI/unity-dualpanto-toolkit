@@ -206,6 +206,11 @@ namespace DualPantoFramework
             return 20f;
         }
 
+        public void Rotate(float rotation)
+        {
+            pantoSync.UpdateHandlePosition(null, rotation, isUpper);
+        }
+
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
             if (pantoSync.uiManager.blindPanelEnabled)

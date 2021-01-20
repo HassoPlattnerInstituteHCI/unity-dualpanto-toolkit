@@ -31,9 +31,9 @@ namespace DualPantoFramework
         async void OnTriggerEnter(Collider collider)
         {
             // When target is hit
-            if (collider.tag != "Player") return;
-            PantoManager pantoManager = GameObject.Find("PantoManager").GetComponent<PantoManager>();
-            if (pantoManager != null)
+            //if (collider.tag != "Player") return;
+            //PantoManager pantoManager = GameObject.Find("PantoManager").GetComponent<PantoManager>();
+            //if (pantoManager != null)
             {
 
                 //if (pantoManager.hasEncounteredRail)

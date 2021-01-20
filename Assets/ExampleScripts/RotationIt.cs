@@ -7,7 +7,7 @@ public class RotationIt : MonoBehaviour
     async void Start()
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
-        await lowerHandle.SwitchTo(gameObject, 10f);
+        //await lowerHandle.SwitchTo(gameObject, 10f);
     }
 
     void FixedUpdate()
@@ -16,6 +16,7 @@ public class RotationIt : MonoBehaviour
         {
             lowerHandle.FreeRotation();
         }
-        gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, 0.5f);
+        transform.RotateAround(transform.position, Vector3.up, 0.5f);
+        lowerHandle.Rotate(transform.eulerAngles.y);
     }
 }

@@ -474,32 +474,37 @@ namespace DualPantoFramework
             }
         }
 
-        public void UpdateHandlePosition(Vector3 position, float? rotation, bool isUpper)
+        public void UpdateHandlePosition(Vector3? position, float? rotation, bool isUpper)
         {
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
-                //TODO: make it so position can be null
-
                 //TODO: also update the GodObject
                 if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
                 if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
             }
-            Vector2 pantoPoint = UnityToPanto(new Vector2(position.x, position.z));
-            if (IsInBounds(pantoPoint))
+            float pantoX = float.NaN;
+            float pantoY = float.NaN;
+            if (position != null)
             {
-                Vector2 currentPantoPoint = new Vector2();
-                if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
-                else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
+                Vector3 definitePosition = (Vector3)position;
+                Vector2 pantoPoint = UnityToPanto(new Vector2(definitePosition.x, definitePosition.z));
+                pantoX = pantoPoint.x;
+                pantoY = pantoPoint.y;
+            }
+            //if (IsInBounds(pantoPoint))
+            {
+                //Vector2 currentPantoPoint = new Vector2();
+                //if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
+                //else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
-                //if (!isUpper)
-                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
+                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoX, pantoY, pantoRotation);
             }
-            else
-            {
-                Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
-            }
+            //else
+            //{
+            //Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
+            //}
         }
 
         public void SetSpeed(bool isUpper, float speed)
