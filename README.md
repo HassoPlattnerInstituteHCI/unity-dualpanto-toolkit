@@ -21,13 +21,9 @@ Add this framework as a submodule into the Assets folder:
 cd path/to/repo
 cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
+git submodule update --init --recursive
 ```
-You will also need the [UnitySpeechIO Project](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity).
-```
-cd path/to/repo
-cd Assets
-git submodule add https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity
-```
+You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
 
 ## Creating a Panto Application in Unity
 ### Adding the right components
@@ -56,12 +52,14 @@ Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ o
 
 
 ### Your first Panto demo
-In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `Player` component to this cube. It should now follow the movement of the Upper Panto Handle.
-You can find more sample scenes to get insprired by [here](https://github.com/HassoPlattnerInstituteHCI/SampleDualPantoScenes).
+In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `MeHandle` component to this cube. It should now follow the movement of the Upper Panto Handle.
+![Adding the player script to the cube](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/adding_script_to_object.png)
+  
+**You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
 ### Testing your app
 There are two ways to test your app:
-* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, they will follow the mouse. You emulate rotation input with `a` and `d`.
+* Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, both will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer. If you have no device connect, it will fall back to the emulator mode.
 ![First App](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/first_app.gif)
 
@@ -70,3 +68,35 @@ To get a better sense of what your game will feel to blind people, there is a sm
 If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
 This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
 ![Blind mode emulator](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/blind_mode.png)
+
+## Troubleshooting
+
+### Updating Submodules
+if a function does not seem to exist (unity throws an error like "missing assembly reference") or if you try to use content that we released at a later stage than when the framework was released, try to update your submodules first before reaching out to us (we will always use the latest state of the submodules when we try to debug your code). 
+
+`git submodule update --remote`
+
+### How do I turn my dualPanto device on?
+On the back of your dualPanto device is a power switch. Push so that it turns to **On** and make sure the battery is charged.
+
+### How do I reset my dualPanto device?
+On the back of your dualPanto device is a button next to the cable connection. Move the linkages back in the closing position, turn the handles so they point to the right, press the button and wait 3 seconds.
+
+### dualPanto handles not moving inside the game/Message _Revision id not matching. Try resetting the panto._ appears.
+Try to reset the dualPanto device using the button on the back. For this see _How do I reset my dualPanto device._
+
+### dualPanto handles not moving physically.
+Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on)
+
+### dualPanto works sometimes/Message _Skipping god object_ appears.
+Don't hold the handles too hard or push against the motors too hard.
+
+### Game objects do not collide with obstacles in debug mode.
+Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Assets/documentation/documentation.md) for more info on usage.
+
+
+### No input or output from the DualPanto is arriving, the Console is showing *Received sync*, but no *Received heartbeat*.  
+This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  
+
+### Debugging
+If you keep having troubles, you can enable `show raw values` in the DualPantoSync component. A Popup will show you the raw position and rotation values Unity receives for each handle, how much time has passed since t last received a heartbeat from the device, the name of the port and the current protocol revision id.
