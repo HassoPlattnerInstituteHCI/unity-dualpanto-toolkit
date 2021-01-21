@@ -8,8 +8,7 @@ using UnityEngine;
 public class LabyrinthGameManager : MonoBehaviour
 {
     GameObject[] forceFields;
-    GameObject forceFieldPrefab;
-
+    public GameObject forceFieldPrefab;
     GameObject upper;
     GameObject lower;
     private SpeechOut speech;
@@ -85,17 +84,17 @@ public class LabyrinthGameManager : MonoBehaviour
         },
     };
 
-    void Start()
+    async void Start()
     {
         // get forcefields
         forceFields = GameObject.FindGameObjectsWithTag("ForceField");
-        forceFieldPrefab = GameObject.Find("ForceField");
         forceFieldPrefab.SetActive(false);
         upper = GameObject.FindGameObjectWithTag("MeHandle");
         lower = GameObject.FindGameObjectWithTag("ItHandle");
         isRunning = true;
         speech = new SpeechOut();
         Debug.Log("Starting game");
+        await speech.Speak("Reach the bottom without getting pulled into the forcefields.");
         StartLevel();
     }
 
@@ -103,13 +102,12 @@ public class LabyrinthGameManager : MonoBehaviour
     {
         List<(Vector3, int)> currentForceFields = forceFieldPositions[currentLevel];
         List<GameObject> ffs = new List<GameObject>();
-        for (int i=0;i< currentForceFields.Count;i++)
+        for (int i = 0; i < currentForceFields.Count; i++)
         {
-            //clone default force field
             GameObject ff = Instantiate(forceFieldPrefab);
             ff.transform.position = currentForceFields[i].Item1;
             int scale = currentForceFields[i].Item2;
-            ff.transform.localScale = new Vector3(scale,scale,scale);
+            ff.transform.localScale = new Vector3(scale, scale, scale);
             ff.SetActive(true);
             ffs.Add(ff);
         }
@@ -118,9 +116,9 @@ public class LabyrinthGameManager : MonoBehaviour
 
     private void DisableForceFields()
     {
-        foreach(GameObject ff in forceFields)
+        foreach (GameObject ff in forceFields)
         {
-            ff.SetActive(false);
+            Destroy(ff);
         }
     }
 
@@ -130,11 +128,8 @@ public class LabyrinthGameManager : MonoBehaviour
         DisableForceFields();
         await Task.Delay(100);
         handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-        Debug.Log("Moving to start");
-        await handle.MoveToPosition(startPos, 10f, true);
-        Debug.Log("Moved to start");
+        await handle.MoveToPosition(startPos, 1f, true);
         await speech.Speak("Level: " + currentLevel, 1);
-        //spawn force fields according to level
         SpawnForceFields();
         isRunning = true;
     }
@@ -155,18 +150,21 @@ public class LabyrinthGameManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    async void RestartLevel()
+    {
+        isRunning = false;
+        await speech.Speak("You lost. Restarting Level");
+        StartLevel();
+    }
+
     void Update()
     {
         // if player position distance to center of any force field is too short -> lose
-        foreach(GameObject ff in forceFields)
+        foreach (GameObject ff in forceFields)
         {
             if (isRunning && (Vector3.Distance(ff.transform.position, upper.transform.position) < 0.4 || Vector3.Distance(ff.transform.position, lower.transform.position) < 0.4))
             {
-
-                Debug.Log("Game over");
-                StartLevel();
-                Debug.Log("New game, new luck! :)");
+                RestartLevel();
             }
         }
     }
