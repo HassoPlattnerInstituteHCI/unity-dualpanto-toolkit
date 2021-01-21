@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DualPantoFramework
@@ -7,10 +8,11 @@ namespace DualPantoFramework
     {
         static List<PantoCollider> ColliderList = new List<PantoCollider>();
 
-        public static void RegisterObstacles()
+        public async static void RegisterObstacles()
         {
             foreach (PantoCollider collider in ColliderList)
             {
+                await Task.Delay(10);
                 collider.CreateObstacle();
                 if (collider.IsEnabled()) collider.Enable();
             }

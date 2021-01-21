@@ -11,7 +11,7 @@ namespace DualPantoFramework
     {
         protected bool isUpper = true;
         private GameObject handledGameObject;
-        private float speed;
+        private float speed = 5.0f;
         private bool inTransition = false;
         private float rotation;
         static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
@@ -19,47 +19,62 @@ namespace DualPantoFramework
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
         protected bool userControlledRotation = true;
-
+        private AudioListener listener; // needed to register spatial audio
+        void Start()
+        {
+            listener = new AudioListener();
+        }
         /// <summary>
         /// Moves the handle to the given position at the given speed. The handle will then be freed.
         /// </summary>
-        async public Task MoveToPosition(Vector3 position, float newSpeed, bool shouldFreeHandle = true)
+        async public Task MoveToPosition(Vector3 position, float newSpeed = 5.0f, bool shouldFreeHandle = true)
         {
-
             GameObject go = new GameObject();
             go.transform.position = position;
             await SwitchTo(go, newSpeed);
+            handledGameObject = null;
             Destroy(go);
             if (shouldFreeHandle)
             {
                 Free();
-            } else
+            }
+            else
             {
                 Freeze();
             }
         }
 
-
         /// <summary>
         /// Moves the handle to the given GameObject at the given speed. The handle will follow this object, until Free() is called or the handle is switched to another object.
         /// </summary>
-        async public Task SwitchTo(GameObject newHandle, float newSpeed)
+        async public Task SwitchTo(GameObject newHandle, float newSpeed = 5.0f)
         {
+            int time = 0;
             userControlledPosition = false;
             userControlledRotation = false;
             if (inTransition)
             {
-                Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject: " + handledGameObject.name);
+                if (handledGameObject != null) Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject: " + handledGameObject.name);
+                else Debug.LogWarning("[DualPanto] Discarding not yet reached position or gameObject");
             }
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
-            pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
-            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
+            if (!pantoSync.debug)
+            {
+                pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+            }
             inTransition = true;
 
             while (inTransition)
             {
+                if (time > 3000)
+                {
+                    Debug.Log("Abandoning gameobject that couldn't be reached: " + handledGameObject.name);
+                    return;
+                }
                 await Task.Delay(10);
+                time += 10;
             }
         }
 
@@ -173,9 +188,17 @@ namespace DualPantoFramework
         /// <summary>
         /// Freezes the position of the handle to the current position.
         /// </summary>
-        public async void Freeze()
+        public void Freeze()
         {
-            pantoSync.FreezeHandle(isUpper);
+            if (pantoSync.debug)
+            {
+                userControlledPosition = false;
+                userControlledRotation = false;
+            }
+            else
+            {
+                pantoSync.FreezeHandle(isUpper);
+            }
         }
 
         float MaxMovementSpeed()
@@ -183,13 +206,24 @@ namespace DualPantoFramework
             return 20f;
         }
 
-        public void OverlayScriptedMotion(ScriptedMotion motion)
+        public void Rotate(float rotation)
         {
-
+            pantoSync.UpdateHandlePosition(null, rotation, isUpper);
         }
 
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
+            if (pantoSync.uiManager.blindPanelEnabled)
+            {
+                GameObject blindPanel = GameObject.Find("Blind Panel GO");
+                if (blindPanel != null)
+                {
+
+                    float y = blindPanel.transform.position.y;
+                    newPosition.y = y + 1;
+                    position.y = y + 1;
+                }
+            }
             if (pantoSync.debug && userControlledRotation)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
@@ -230,9 +264,20 @@ namespace DualPantoFramework
             await SwitchTo(cornerObjects[0], speed);
         }
 
+        protected void FixedUpdate()
+        {
+            if (pantoSync.debug && handledGameObject != null && Vector3.Distance(handledGameObject.transform.position, position) < 0.1f)
+            {
+                inTransition = false;
+            }
+            if (handledGameObject != null && !inTransition)// reached gameobject initially 
+            {
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
+            }
+        }
+
         public void TweeningEnded()
         {
-            handledGameObject = null;
             inTransition = false;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace DualPantoFramework
@@ -15,10 +16,15 @@ namespace DualPantoFramework
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
         public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         public string portName = "//.//COM3";
+#else
+        public string portName = "/dev/cu.SLAB_USBtoUART";
+#endif
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
+        private bool debugHandleMeActive = true; // is the me handle or the it handle currently controlled using the mouse
         public KeyCode toggleVisionKey = KeyCode.B;
         public bool showRawValues = true;
         protected ulong Handle;
@@ -36,7 +42,7 @@ namespace DualPantoFramework
         private float lowerHandleRot = 0f;
         private float upperHandleRot = 0f;
 
-        private bool isBlindModeOn = false;
+        public bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
         private GameObject debugLowerHandle;
         private GameObject debugUpperHandle;
@@ -95,6 +101,8 @@ namespace DualPantoFramework
         private static extern void EnableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
         [DllImport(plugin)]
         private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
+        [DllImport(plugin)]
+        private static extern void SetSpeedControl(ulong handle, byte tethered, float tetherFactor, float tetherInnerRadius, float tetherOuterRadius, byte tetherStrategy, byte pockEnabled);
 
         void Start()
         {
@@ -130,11 +138,25 @@ namespace DualPantoFramework
         private void LogHandler(IntPtr msg)
         {
             String message = Marshal.PtrToStringAnsi(msg);
-            /*if (message.Contains("Free heap") || message.Contains("Task \"Physics\"") || message.Contains("Task \"I/O\"") || message.Contains("Encoder") || message.Contains("SPI"))
+
+            if (message.Contains("Free heap"))
             {
-                return;
-            }*/
-            if (message.Contains("disconnected"))
+                string data = Regex.Match(message, @"\(.*\)").Value;
+                data.Remove(data.Length - 1, 1);
+                data.Remove(0, 1);
+                uiManager.UpdateFreeHeap(data);
+            }
+            else if (message.Contains("Task \"Physics\""))
+            {
+                string data = Regex.Match(message, @"\d+").Value;
+                uiManager.UpdatePhysicsFps(data);
+            }
+            else if (message.Contains("Task \"I/O\""))
+            {
+                string data = Regex.Match(message, @"\d+").Value;
+                uiManager.UpdateIOFps(data);
+            }
+            else if (message.Contains("disconnected"))
             {
                 Debug.LogError("[DualPanto] " + message);
             }
@@ -143,6 +165,7 @@ namespace DualPantoFramework
                 Debug.Log("[DualPanto] " + message);
                 OnPantoStarted();
             }
+            else if (message.Contains("hearbeat")) return;
             else
             {
                 Debug.Log("[DualPanto] " + message);
@@ -214,7 +237,7 @@ namespace DualPantoFramework
             {
                 return debugLowerGodObject;
             }
-            
+
         }
 
         public void StartInDebug()
@@ -277,10 +300,9 @@ namespace DualPantoFramework
                 SetPositionHandler(StaticPositionHandler);
                 SetTransitionHandler(StaticTransitionHandler);
                 SetPort(portName);
-
                 // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
                 // only then everyone else can start sending their own stuff
-                while (!connected)
+                while (!connected && Handle != 0)
                 {
                     Poll(Handle);
                 }
@@ -324,17 +346,38 @@ namespace DualPantoFramework
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
+            debugLowerHandle.transform.localScale = transform.localScale;
+            debugLowerHandle.name = "ItHandle";
+            //debugLowerHandle.AddComponent<Rigidbody>();
+            //debugLowerHandle.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
+            debugUpperHandle.transform.localScale = transform.localScale;
+            debugUpperHandle.name = "MeHandle";
+            //debugUpperHandle.AddComponent<Rigidbody>();
+            //debugUpperHandle.AddComponent<SphereCollider>();
 
             debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugUpperGodObject.name = "MeHandleGodObject";
+            debugUpperGodObject.tag = "MeHandle";
+            Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
+            rUpper.useGravity = false;
+            rUpper.constraints = RigidbodyConstraints.FreezeRotation;
+            //debugUpperGodObject.AddComponent<SphereCollider>();
+
             debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             debugLowerGodObject.transform.position = position;
             debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
+            debugLowerGodObject.name = "ItHandleGodObject";
+            debugLowerGodObject.tag = "ItHandle";
+            Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
+            rLower.useGravity = false;
+            rLower.constraints = RigidbodyConstraints.FreezeRotation;
+            //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
         void OnDestroy()
@@ -352,16 +395,29 @@ namespace DualPantoFramework
             }
             else
             {
-                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
-                Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                float r = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
-                upperHandlePos = position;
-                upperHandle.SetPositions(upperHandlePos, r, null);
 
-                lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
-                lowerHandlePos = position;
-                lowerHandle.SetPositions(lowerHandlePos, r, null);
+                if (Input.GetMouseButtonUp(0))
+                    debugHandleMeActive = !debugHandleMeActive;
+
+                if (Input.GetMouseButton(0))
+                {
+
+                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
+                    Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
+                    if (debugHandleMeActive)
+                    {
+                        upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
+                        upperHandlePos = position;
+                        upperHandle.SetPositions(upperHandlePos, upperHandleRot, null);
+                    }
+                    else
+                    {
+                        lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
+                        lowerHandlePos = position;
+                        lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, null);
+                    }
+                }
             }
 
             if (Input.GetKeyDown(toggleVisionKey))
@@ -418,36 +474,60 @@ namespace DualPantoFramework
             }
         }
 
-        public void UpdateHandlePosition(Vector3 position, float? rotation, bool isUpper)
+        public void UpdateHandlePosition(Vector3? position, float? rotation, bool isUpper)
         {
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
-                //TODO: make it so position can be null
-
                 //TODO: also update the GodObject
                 if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
                 if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
             }
-            Vector2 pantoPoint = UnityToPanto(new Vector2(position.x, position.z));
-            if (IsInBounds(pantoPoint))
+            float pantoX = float.NaN;
+            float pantoY = float.NaN;
+            if (position != null)
             {
-                Vector2 currentPantoPoint = new Vector2();
-                if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
-                else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
+                Vector3 definitePosition = (Vector3)position;
+                Vector2 pantoPoint = UnityToPanto(new Vector2(definitePosition.x, definitePosition.z));
+                pantoX = pantoPoint.x;
+                pantoY = pantoPoint.y;
+            }
+            //if (IsInBounds(pantoPoint))
+            {
+                //Vector2 currentPantoPoint = new Vector2();
+                //if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
+                //else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
                 float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
-                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoPoint.x, pantoPoint.y, pantoRotation);
+                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoX, pantoY, pantoRotation);
             }
-            else
-            {
-                Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
-            }
+            //else
+            //{
+            //Debug.LogWarning("[DualPanto] Position not in bounds: " + pantoPoint);
+            //}
         }
 
         public void SetSpeed(bool isUpper, float speed)
         {
             SendSpeed(Handle, isUpper ? (byte)0 : (byte)1, speed);
+        }
+
+        public void SetSpeedControl(bool tethered, float tetherFactor, float tetherInnerRadius, float tetherOuterRadius, SpeedControlStrategy strategy, bool pockEnabled)
+        {
+            byte tetherStrategy = 0;
+            switch (strategy)
+            {
+                case SpeedControlStrategy.MAX_SPEED:
+                    tetherStrategy = 0;
+                    break;
+                case SpeedControlStrategy.EXPLORATION:
+                    tetherStrategy = 1;
+                    break;
+                case SpeedControlStrategy.LEASH:
+                    tetherStrategy = 2;
+                    break;
+            }
+            SetSpeedControl(Handle, Convert.ToByte(tethered), tetherFactor, tetherInnerRadius, tetherOuterRadius, tetherStrategy, Convert.ToByte(pockEnabled));
         }
 
         public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)
@@ -512,7 +592,7 @@ namespace DualPantoFramework
                 CreateObstacle(Handle, pantoIndex, obstacleId, pantoStartPoint.x, pantoStartPoint.y, pantoEndPoint.x, pantoEndPoint.y);
             }
         }
-        
+
         public void CreatePassableObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
             if (!debug)

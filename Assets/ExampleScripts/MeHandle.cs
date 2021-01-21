@@ -3,6 +3,7 @@ using DualPantoFramework;
 
 public class MeHandle : MonoBehaviour
 {
+    bool free = true;
     PantoHandle upperHandle;
     void Start()
     {
@@ -12,5 +13,21 @@ public class MeHandle : MonoBehaviour
     void FixedUpdate()
     {
         transform.position = (upperHandle.HandlePosition(transform.position));
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (free)
+            {
+                upperHandle.Freeze();
+            }
+            else
+            {
+                upperHandle.Free();
+            }
+            free = !free;
+        }
     }
 }
