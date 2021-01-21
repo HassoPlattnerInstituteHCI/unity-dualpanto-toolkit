@@ -1,4 +1,3 @@
-using SpeechIO;
 using UnityEngine;
 
 namespace DualPantoFramework
