@@ -361,8 +361,8 @@ namespace DualPantoFramework
             debugUpperGodObject.name = "MeHandleGodObject";
             debugUpperGodObject.tag = "MeHandle";
             Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
-            rUpper.useGravity = false;
-            rUpper.constraints = RigidbodyConstraints.FreezeRotation;
+            // rUpper.useGravity = false;
+            // rUpper.constraints = RigidbodyConstraints.FreezeRotation;
             //debugUpperGodObject.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("ItHandleGodObject");
@@ -371,8 +371,8 @@ namespace DualPantoFramework
             debugLowerGodObject.name = "ItHandleGodObject";
             debugLowerGodObject.tag = "ItHandle";
             Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
-            rLower.useGravity = false;
-            rLower.constraints = RigidbodyConstraints.FreezeRotation;
+            // rLower.useGravity = false;
+            // rLower.constraints = RigidbodyConstraints.FreezeRotation;
             //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
