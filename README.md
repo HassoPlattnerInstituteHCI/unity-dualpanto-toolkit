@@ -28,15 +28,15 @@ You can find the installation instructions for SpeechIO [here](https://github.co
 ## Creating a Panto Application in Unity
 ### Adding the right components
 Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-framework -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a child component: the Panto Working Area. This is the area the DualPanto can reach.
-![Panto Prefab in Scene](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/panto_prefab_with_highlights.png)
+![Panto Prefab in Scene](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/panto_prefab_with_highlights.png)
 
 ### Setting up the camera
 Prepare your scene by making sure the camera is facing straight down onto your scene. `Main Camera -> Projection` should be `orthographic`. Rotate it to `90` on the x axis, so it's facing downwards. Adjust the position, height and size so that you can see the entire area of the level.
-![Camera Settings](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/camera_with_highlights.png)
+![Camera Settings](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/camera_with_highlights.png)
 
 ### Reducing the rendering quality
 It is good practice to reduce the rendering quality of your application, you can do this via `Edit -> Project Settings -> Quality`. Select `Very Low` in the `Default` dropdown.
-![Reduce Rendering Quality](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/quality_highlights.png)
+![Reduce Rendering Quality](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/quality_highlights.png)
 
 ### Find out the serial port of your device 
 At this point we still need to manually update the serial port of our panto before running the application.
@@ -48,12 +48,12 @@ The _Port Name_ in your Panto Object would hence after updating be "//.//COM6".
 On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
 To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
 Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ on the Panto Object.
-![Setting Port Name](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/portname_with_highlight.png)
+![Setting Port Name](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/portname_with_highlight.png)
 
 
 ### Your first Panto demo
 In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `MeHandle` component to this cube. It should now follow the movement of the Upper Panto Handle.
-![Adding the player script to the cube](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/adding_script_to_object.png)
+![Adding the player script to the cube](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/adding_script_to_object.png)
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
@@ -61,13 +61,13 @@ In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach 
 There are two ways to test your app:
 * Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, both will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer. If you have no device connect, it will fall back to the emulator mode.
-![First App](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/first_app.gif)
+![First App](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/first_app.gif)
 
 ### Using the Blind emulator
 To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. By default, pressing `b` during game play will toggle this mode.
 If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
 This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
-![Blind mode emulator](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/readme_with_images/readme_images/blind_mode.png)
+![Blind mode emulator](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/blind_mode.png)
 
 ## Troubleshooting
 
