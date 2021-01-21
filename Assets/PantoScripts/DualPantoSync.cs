@@ -355,15 +355,26 @@ namespace DualPantoFramework
             debugUpperHandle.transform.localScale = transform.localScale;
             debugUpperHandle.name = "MeHandle";
 
+
             prefab = Resources.Load("MeHandleGodObject");
             debugUpperGodObject = Instantiate(prefab) as GameObject;
             debugUpperGodObject.transform.position = position;
             debugUpperGodObject.name = "MeHandleGodObject";
+            debugUpperGodObject.tag = "MeHandle";
+            Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
+            // rUpper.useGravity = false;
+            //rUpper.constraints = RigidbodyConstraints.FreezeRotation;
+            //debugUpperGodObject.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("ItHandleGodObject");
             debugLowerGodObject = Instantiate(prefab) as GameObject;
             debugLowerGodObject.transform.position = position;
             debugLowerGodObject.name = "ItHandleGodObject";
+            debugLowerGodObject.tag = "ItHandle";
+            Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
+            // rLower.useGravity = false;
+            //rLower.constraints = RigidbodyConstraints.FreezeRotation;
+            //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
         void OnDestroy()
