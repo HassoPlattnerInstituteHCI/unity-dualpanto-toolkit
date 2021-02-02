@@ -40,14 +40,14 @@ namespace DualPantoFramework
             if (onUpper)
             {
                 await Task.WhenAll(
-                    upper.MoveToPosition(position, 5f, false),
+                    upper.MoveToPosition(position, 5f, true),
                     speechOut.Speak(text)
                 );
             }
             else
             {
                 await Task.WhenAll(
-                    lower.MoveToPosition(position, 5f, false),
+                    lower.MoveToPosition(position, 5f, true),
                     speechOut.Speak(text)
                 );
             }
@@ -111,7 +111,7 @@ namespace DualPantoFramework
             foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Guard"))
             {
                 if (enemy.name.StartsWith(roomName))
-                    await MoveAndSpeak(enemy.gameObject.transform.position, enemy.name.Substring(roomName.Length+1), onUpper);
+                    await MoveAndSpeak(enemy.gameObject.transform.position, enemy.name.Substring(roomName.Length + 1), onUpper);
             }
         }
     }

@@ -1,20 +1,21 @@
 using UnityEngine;
-
+using System.Threading.Tasks;
 namespace DualPantoFramework
 {
     public class ColliderPolyline : MonoBehaviour
     {
         public Vector2[] points;
         protected Color gizmoColor = Color.green;
-        public void CreateObstacles()
+        async public void CreateObstacles()
         {
             for (int i = 0; i < points.Length - 1; i++)
             {
                 CreateObstacle(i);
+                await Task.Delay(20);
             }
         }
 
-        private void CreateObstacle(int i)
+        protected virtual void CreateObstacle(int i)
         {
             PantoLineCollider lc = this.gameObject.AddComponent<PantoLineCollider>();
             lc.start = points[i];
