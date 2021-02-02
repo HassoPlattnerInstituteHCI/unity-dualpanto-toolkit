@@ -443,7 +443,6 @@ namespace DualPantoFramework
         {
             if (!debug)
             {
-                Debug.Log("free handle " + isUpper);
                 FreeMotor(Handle, isUpper ? (byte)0 : (byte)1);
             }
         }
@@ -453,7 +452,6 @@ namespace DualPantoFramework
             if (!debug)
             {
                 FreezeMotor(Handle, isUpper ? (byte)0 : (byte)1);
-                Debug.Log("freeze handle " + isUpper);
             }
         }
 
