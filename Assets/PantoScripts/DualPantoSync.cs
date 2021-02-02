@@ -348,35 +348,31 @@ namespace DualPantoFramework
             debugLowerHandle.transform.position = position;
             debugLowerHandle.transform.localScale = transform.localScale;
             debugLowerHandle.name = "ItHandle";
-            //debugLowerHandle.AddComponent<Rigidbody>();
-            //debugLowerHandle.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
             debugUpperHandle.transform.localScale = transform.localScale;
             debugUpperHandle.name = "MeHandle";
-            //debugUpperHandle.AddComponent<Rigidbody>();
-            //debugUpperHandle.AddComponent<SphereCollider>();
 
-            debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            prefab = Resources.Load("MeHandleGodObject");
+            debugUpperGodObject = Instantiate(prefab) as GameObject;
             debugUpperGodObject.transform.position = position;
-            debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
             debugUpperGodObject.name = "MeHandleGodObject";
             debugUpperGodObject.tag = "MeHandle";
             Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
-            rUpper.useGravity = false;
-            rUpper.constraints = RigidbodyConstraints.FreezeRotation;
+            // rUpper.useGravity = false;
+            // rUpper.constraints = RigidbodyConstraints.FreezeRotation;
             //debugUpperGodObject.AddComponent<SphereCollider>();
 
-            debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            prefab = Resources.Load("ItHandleGodObject");
+            debugLowerGodObject = Instantiate(prefab) as GameObject;
             debugLowerGodObject.transform.position = position;
-            debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
             debugLowerGodObject.name = "ItHandleGodObject";
             debugLowerGodObject.tag = "ItHandle";
             Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
-            rLower.useGravity = false;
-            rLower.constraints = RigidbodyConstraints.FreezeRotation;
+            // rLower.useGravity = false;
+            // rLower.constraints = RigidbodyConstraints.FreezeRotation;
             //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 

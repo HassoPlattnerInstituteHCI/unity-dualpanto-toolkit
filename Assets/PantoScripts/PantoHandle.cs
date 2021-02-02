@@ -203,7 +203,7 @@ namespace DualPantoFramework
 
         float MaxMovementSpeed()
         {
-            return 20f;
+            return 1.5f;
         }
 
         public void Rotate(float rotation)
@@ -243,6 +243,7 @@ namespace DualPantoFramework
                 if (newGodObjectPosition != null)
                 {
                     debugGodObject.transform.position = newGodObjectPosition.Value;
+                    debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, newRotation, debugGodObject.transform.eulerAngles.z);
                 }
             }
             position = newPosition;

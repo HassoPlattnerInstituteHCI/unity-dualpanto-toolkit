@@ -1,16 +1,18 @@
 using DualPantoFramework;
-namespace UnityEngine {
+namespace UnityEngine
+{
 
 
     public class RailPolyline : ColliderPolyline
     {
         public string[] texts;
         public float displacement = 0.3f;
-        public RailPolyline(){
+        public RailPolyline()
+        {
 
             this.gizmoColor = Color.cyan;
         }
-        private void CreateObstacle(int i)
+        protected override void CreateObstacle(int i)
         {
             Rail r = this.gameObject.AddComponent<Rail>();
             if (i < texts.Length)
