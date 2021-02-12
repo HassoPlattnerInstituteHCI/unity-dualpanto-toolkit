@@ -481,6 +481,7 @@ namespace DualPantoFramework
                 return;
             }
             float pantoX = float.NaN;
+
             float pantoY = float.NaN;
             if (position != null)
             {
