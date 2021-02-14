@@ -12,13 +12,14 @@ namespace DualPantoFramework
         protected bool isUpper = true;
         private GameObject handledGameObject;
         private float speed = 5.0f;
-        private bool inTransition = false;
+        public bool inTransition = false;
         private float rotation;
         static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
         private Vector3 position = handleDefaultPosition;
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
         protected bool userControlledRotation = true;
+        public bool isFrozen = false;
         private AudioListener listener; // needed to register spatial audio
         void Start()
         {
@@ -183,6 +184,7 @@ namespace DualPantoFramework
             {
                 pantoSync.FreeHandle(isUpper);
             }
+            isFrozen = false;
         }
 
         /// <summary>
@@ -199,6 +201,7 @@ namespace DualPantoFramework
             {
                 pantoSync.FreezeHandle(isUpper);
             }
+            isFrozen = true;
         }
 
         float MaxMovementSpeed()
