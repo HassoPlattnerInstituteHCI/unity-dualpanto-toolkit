@@ -274,7 +274,7 @@ namespace DualPantoFramework
             {
                 inTransition = false;
             }
-            if (handledGameObject != null && !inTransition)// reached gameobject initially 
+            if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
             {
                 GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
             }
