@@ -103,11 +103,16 @@ namespace DualPantoFramework
         private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
         [DllImport(plugin)]
         private static extern void SetSpeedControl(ulong handle, byte tethered, float tetherFactor, float tetherInnerRadius, float tetherOuterRadius, byte tetherStrategy, byte pockEnabled);
+        [DllImport(plugin)]
+        private static extern uint CheckQueuedPackets(uint maxPackets);
+        [DllImport(plugin)]
+        private static extern void Reset();
 
         void Start()
         {
             Application.targetFrameRate = 60;
         }
+
         private static void SyncHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received sync");
@@ -292,6 +297,7 @@ namespace DualPantoFramework
             CreateDebugObjects(handleDefaultPosition);
             if (!debug)
             {
+                Reset();
                 if (showRawValues) SetUpDebugValuesWindow();
                 globalSync = this;
                 SetLoggingHandler(StaticLogHandler);
@@ -387,6 +393,7 @@ namespace DualPantoFramework
         {
             if (!debug)
             {
+                Debug.Log(CheckQueuedPackets(20));
                 Poll(Handle);
             }
             else
