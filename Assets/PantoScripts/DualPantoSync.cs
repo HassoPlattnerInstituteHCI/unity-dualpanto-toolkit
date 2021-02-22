@@ -420,7 +420,6 @@ namespace DualPantoFramework
             }
             else
             {
-
                 if (Input.GetMouseButtonUp(0))
                     debugHandleMeActive = !debugHandleMeActive;
 

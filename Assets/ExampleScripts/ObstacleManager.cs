@@ -9,8 +9,8 @@ public class ObstacleManager : MonoBehaviour
         foreach (PantoCollider collider in pantoColliders)
         {
             Debug.Log("Enabling obstacle");
-            collider.CreateObstacle();
-            collider.Enable();
+            //collider.CreateObstacle();
+            //collider.Enable();
             //await Task.Delay(100);
         }
     }

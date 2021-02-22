@@ -12,12 +12,26 @@ namespace DualPantoFramework
         public bool isPassable = false;
         private bool registered = false;
         public bool showOutline = false;
+        protected int containingSpheres = 0;
 
         public ushort GetId()
         {
             return id;
         }
+        public void IncreaseSpheres()
+        {
+            containingSpheres++;
+        }
+        public void DecreaseSpheres()
+        {
+            containingSpheres--;
+        }
+        public int GetContainingSpheres()
+        {
+            return containingSpheres;
+        }
 
+        // Whether the collider is currently enabled, meaning should provide collision 
         public bool IsEnabled()
         {
             return pantoEnabled;
@@ -215,7 +229,7 @@ namespace DualPantoFramework
         public void Remove()
         {
             GetPantoSync().RemoveObstacle(getPantoIndex(), id);
-            pantoEnabled = false;
+            //pantoEnabled = false;
         }
 
         /// <summar>

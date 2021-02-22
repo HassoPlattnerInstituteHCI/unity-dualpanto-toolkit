@@ -20,8 +20,8 @@ namespace DualPantoFramework
             PantoLineCollider lc = this.gameObject.AddComponent<PantoLineCollider>();
             lc.start = points[i];
             lc.end = points[i + 1];
-            lc.CreateObstacle();
-            lc.Enable();
+            // lc.CreateObstacle();
+            // lc.Enable();
         }
 
         void OnDrawGizmos()
