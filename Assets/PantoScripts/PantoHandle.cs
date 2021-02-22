@@ -12,13 +12,14 @@ namespace DualPantoFramework
         protected bool isUpper = true;
         private GameObject handledGameObject;
         private float speed = 5.0f;
-        private bool inTransition = false;
+        public bool inTransition = false;
         private float rotation;
         static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
         private Vector3 position = handleDefaultPosition;
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
         protected bool userControlledRotation = true;
+        public bool isFrozen = false;
         private AudioListener listener; // needed to register spatial audio
         void Start()
         {
@@ -183,6 +184,7 @@ namespace DualPantoFramework
             {
                 pantoSync.FreeHandle(isUpper);
             }
+            isFrozen = false;
         }
 
         /// <summary>
@@ -199,11 +201,12 @@ namespace DualPantoFramework
             {
                 pantoSync.FreezeHandle(isUpper);
             }
+            isFrozen = true;
         }
 
         float MaxMovementSpeed()
         {
-            return 1f;
+            return 1.5f;
         }
 
         public void Rotate(float rotation)
@@ -243,6 +246,7 @@ namespace DualPantoFramework
                 if (newGodObjectPosition != null)
                 {
                     debugGodObject.transform.position = newGodObjectPosition.Value;
+                    debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, newRotation, debugGodObject.transform.eulerAngles.z);
                 }
             }
             position = newPosition;
@@ -270,7 +274,7 @@ namespace DualPantoFramework
             {
                 inTransition = false;
             }
-            if (handledGameObject != null && !inTransition)// reached gameobject initially 
+            if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
             {
                 GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
             }

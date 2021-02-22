@@ -16,11 +16,33 @@ namespace DualPantoFramework
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
         public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-        public string portName = "//.//COM3";
-#else
-        public string portName = "/dev/cu.SLAB_USBtoUART";
-#endif
+        [Header("Leave this empty to use default port for Windows or OSX respectively.")]
+        public string overwriteDefaultPort;
+        private string portName
+        {
+            get
+            {
+                if (overwriteDefaultPort != "") return overwriteDefaultPort;
+
+                if (Application.platform == RuntimePlatform.WindowsEditor
+                    || Application.platform == RuntimePlatform.WindowsPlayer)
+                {
+                    return "//.//COM3";
+                }
+                else if (Application.platform == RuntimePlatform.OSXEditor
+                    || Application.platform == RuntimePlatform.OSXPlayer)
+                {
+                    return "/dev/cu.SLAB_USBtoUART";
+                }
+                else
+                {
+                    Debug.LogError("No overwrite port was given, but the default port for your OS is not known.");
+                    return "/dev/cu.SLAB_USBtoUART"; // default port for linux?
+                }
+            }
+            set { overwriteDefaultPort = value; }
+        }
+
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
@@ -103,11 +125,16 @@ namespace DualPantoFramework
         private static extern void DisableObstacle(ulong handle, byte pantoIndex, ushort obstacleId);
         [DllImport(plugin)]
         private static extern void SetSpeedControl(ulong handle, byte tethered, float tetherFactor, float tetherInnerRadius, float tetherOuterRadius, byte tetherStrategy, byte pockEnabled);
+        [DllImport(plugin)]
+        private static extern uint CheckQueuedPackets(uint maxPackets);
+        [DllImport(plugin)]
+        private static extern void Reset();
 
         void Start()
         {
             Application.targetFrameRate = 60;
         }
+
         private static void SyncHandler(ulong handle)
         {
             Debug.Log("[DualPanto] Received sync");
@@ -292,6 +319,7 @@ namespace DualPantoFramework
             CreateDebugObjects(handleDefaultPosition);
             if (!debug)
             {
+                Reset();
                 if (showRawValues) SetUpDebugValuesWindow();
                 globalSync = this;
                 SetLoggingHandler(StaticLogHandler);
@@ -348,35 +376,31 @@ namespace DualPantoFramework
             debugLowerHandle.transform.position = position;
             debugLowerHandle.transform.localScale = transform.localScale;
             debugLowerHandle.name = "ItHandle";
-            //debugLowerHandle.AddComponent<Rigidbody>();
-            //debugLowerHandle.AddComponent<SphereCollider>();
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
             debugUpperHandle.transform.localScale = transform.localScale;
             debugUpperHandle.name = "MeHandle";
-            //debugUpperHandle.AddComponent<Rigidbody>();
-            //debugUpperHandle.AddComponent<SphereCollider>();
 
-            debugUpperGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            prefab = Resources.Load("MeHandleGodObject");
+            debugUpperGodObject = Instantiate(prefab) as GameObject;
             debugUpperGodObject.transform.position = position;
-            debugUpperGodObject.transform.localScale = new Vector3(1, 1, 1);
             debugUpperGodObject.name = "MeHandleGodObject";
             debugUpperGodObject.tag = "MeHandle";
             Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
-            rUpper.useGravity = false;
-            rUpper.constraints = RigidbodyConstraints.FreezeRotation;
+            // rUpper.useGravity = false;
+            // rUpper.constraints = RigidbodyConstraints.FreezeRotation;
             //debugUpperGodObject.AddComponent<SphereCollider>();
 
-            debugLowerGodObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            prefab = Resources.Load("ItHandleGodObject");
+            debugLowerGodObject = Instantiate(prefab) as GameObject;
             debugLowerGodObject.transform.position = position;
-            debugLowerGodObject.transform.localScale = new Vector3(1, 1, 1);
             debugLowerGodObject.name = "ItHandleGodObject";
             debugLowerGodObject.tag = "ItHandle";
             Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
-            rLower.useGravity = false;
-            rLower.constraints = RigidbodyConstraints.FreezeRotation;
+            // rLower.useGravity = false;
+            // rLower.constraints = RigidbodyConstraints.FreezeRotation;
             //debugLowerGodObject.AddComponent<SphereCollider>();
         }
 
@@ -391,6 +415,7 @@ namespace DualPantoFramework
         {
             if (!debug)
             {
+                Debug.Log(CheckQueuedPackets(20));
                 Poll(Handle);
             }
             else
@@ -484,6 +509,7 @@ namespace DualPantoFramework
                 return;
             }
             float pantoX = float.NaN;
+
             float pantoY = float.NaN;
             if (position != null)
             {
