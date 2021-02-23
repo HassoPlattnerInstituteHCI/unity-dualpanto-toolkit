@@ -34,20 +34,12 @@ namespace UnityEngine
             BoxCollider newTrigger = newObj.AddComponent<BoxCollider>();
             newTrigger.isTrigger = true;
             newTrigger.size = new Vector3(
-                displacement*2, // <--- width of trigger
+                1, // <--- width of trigger
                 10,
                 Vector2.Distance(points[i], points[i + 1])
             );
             newObj.transform.LookAt(new Vector3(points[i].x, 0, points[i].y), Vector3.up);
             newObj.AddComponent<RailTrigger>();
-        }
-
-        void OnTriggerStay(Collider other)
-        {
-            if (other.CompareTag("Player"))
-            {
-                Debug.LogWarning("Player on rail!");
-            }
         }
     }
     
@@ -55,19 +47,23 @@ namespace UnityEngine
     public class RailTrigger : MonoBehaviour
     {
         AudioSource audioSource;
+        float fadeChangePerSecond = 5f;
+        float fadeTarget;
 
         private void Start()
         {
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.clip = Resources.Load<AudioClip>("railSound");
             audioSource.loop = true;
+            audioSource.volume = 0;
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
             {
-                audioSource.Play();
+                //audioSource.Play();
+                fadeTarget = 1;
             }
         }
 
@@ -75,7 +71,24 @@ namespace UnityEngine
         {
             if (other.CompareTag("Player"))
             {
+                //audioSource.Stop();
+                fadeTarget = 0;
+            }
+        }
+
+        private void Update()
+        {
+            if (audioSource.volume != fadeTarget)
+            {
+                audioSource.volume = Mathf.Clamp01(audioSource.volume + Mathf.Sign(fadeTarget - audioSource.volume) * fadeChangePerSecond * Time.deltaTime);
+            }
+            if (audioSource.volume == 0 && audioSource.isPlaying)
+            {
                 audioSource.Stop();
+            }
+            if (audioSource.volume > 0 && !audioSource.isPlaying)
+            {
+                audioSource.Play();
             }
         }
     }
