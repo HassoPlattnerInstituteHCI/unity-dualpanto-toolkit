@@ -51,8 +51,10 @@ namespace DualPantoFramework
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
+#elif  UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
+    private const string plugin = "libserial.so";
 #else
-        private const string plugin = "libserial";
+    private const string plugin = "libserial";
 #endif
 
         private static bool connected = false;
