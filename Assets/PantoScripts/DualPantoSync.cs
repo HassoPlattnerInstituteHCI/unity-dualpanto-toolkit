@@ -16,11 +16,33 @@ namespace DualPantoFramework
         public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
         public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-        public string portName = "//.//COM3";
-#else
-        public string portName = "/dev/cu.SLAB_USBtoUART";
-#endif
+        [Header("Leave this empty to use default port for Windows or OSX respectively.")]
+        public string overwriteDefaultPort;
+        private string portName
+        {
+            get
+            {
+                if (overwriteDefaultPort != "") return overwriteDefaultPort;
+
+                if (Application.platform == RuntimePlatform.WindowsEditor
+                    || Application.platform == RuntimePlatform.WindowsPlayer)
+                {
+                    return "//.//COM3";
+                }
+                else if (Application.platform == RuntimePlatform.OSXEditor
+                    || Application.platform == RuntimePlatform.OSXPlayer)
+                {
+                    return "/dev/cu.SLAB_USBtoUART";
+                }
+                else
+                {
+                    Debug.LogError("No overwrite port was given, but the default port for your OS is not known.");
+                    return "/dev/cu.SLAB_USBtoUART"; // default port for linux?
+                }
+            }
+            set { overwriteDefaultPort = value; }
+        }
+
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
@@ -400,7 +422,6 @@ namespace DualPantoFramework
             }
             else
             {
-
                 if (Input.GetMouseButtonUp(0))
                     debugHandleMeActive = !debugHandleMeActive;
 

@@ -4,9 +4,8 @@ using DualPantoFramework;
 
 public class GenerateObstacles : MonoBehaviour
 {
-    async void Start()
+    void Start()
     {
-        await Task.Delay(1000);
         for (int i = 0; i <= 30; i++)
         {
             float height = -8f;
@@ -22,8 +21,8 @@ public class GenerateObstacles : MonoBehaviour
                 height
             );
             PantoBoxCollider collider = go.AddComponent<PantoBoxCollider>();
-            collider.CreateObstacle();
-            collider.Enable();
+            //collider.CreateObstacle();
+            //collider.Enable();
         }
     }
 }
