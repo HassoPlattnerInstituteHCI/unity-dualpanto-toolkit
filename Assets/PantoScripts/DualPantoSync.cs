@@ -34,6 +34,11 @@ namespace DualPantoFramework
                 {
                     return "/dev/cu.SLAB_USBtoUART";
                 }
+                else if (Application.platform == RuntimePlatform.LinuxEditor
+                    || Application.platform == RuntimePlatform.LinuxPlayer)
+                {
+                    return "/dev/ttyUSB0";
+                }
                 else
                 {
                     Debug.LogError("No overwrite port was given, but the default port for your OS is not known.");
@@ -73,8 +78,8 @@ namespace DualPantoFramework
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
-#elif  UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-    private const string plugin = "libserial.so";
+#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
+        private const string plugin = "libserial.so";
 #else
     private const string plugin = "libserial";
 #endif
@@ -410,15 +415,21 @@ namespace DualPantoFramework
         {
             FreeHandle(true);
             FreeHandle(false);
-            Close(Handle);
+            if (Handle != 0) Close(Handle);
         }
 
         void Update()
         {
             if (!debug)
             {
-                Debug.Log(CheckQueuedPackets(20));
-                Poll(Handle);
+                if (Handle != 0)
+                {
+                    if (connected)
+                    {
+                        CheckQueuedPackets(20);
+                    }
+                    Poll(Handle);
+                }
             }
             else
             {
