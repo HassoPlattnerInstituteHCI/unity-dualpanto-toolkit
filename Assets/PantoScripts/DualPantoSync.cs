@@ -63,6 +63,8 @@ namespace DualPantoFramework
         private Vector3 lowerGodObject;
         private float lowerHandleRot = 0f;
         private float upperHandleRot = 0f;
+        private float initialUpperRot = -1;
+        private float initialLowerRot = -1;
 
         public bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
@@ -215,6 +217,12 @@ namespace DualPantoFramework
             Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
             upperHandleRot = PantoToUnityRotation(positions[2]);
+            if (initialUpperRot == -1 && initialPoll)
+                initialUpperRot = upperHandleRot;
+            upperHandleRot -= initialUpperRot;
+            if (initialLowerRot == -1 && initialPoll)
+                initialLowerRot = lowerHandleRot;
+            lowerHandleRot -= initialLowerRot;
             upperGodObject = new Vector3(unityGodUpper.x, 0, unityGodUpper.y);
             if (upperHandle)
                 upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
@@ -349,6 +357,8 @@ namespace DualPantoFramework
         }
 
         static DualPantoSync globalSync;
+        private bool initialPoll = false;
+
         static void StaticPositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
         {
             globalSync.PositionHandler(handle, positions);
@@ -417,6 +427,8 @@ namespace DualPantoFramework
             {
                 Debug.Log(CheckQueuedPackets(20));
                 Poll(Handle);
+                if (!initialPoll)
+                    initialPoll = true;
             }
             else
             {
