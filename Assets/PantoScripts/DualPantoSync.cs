@@ -34,6 +34,11 @@ namespace DualPantoFramework
                 {
                     return "/dev/cu.SLAB_USBtoUART";
                 }
+                else if (Application.platform == RuntimePlatform.LinuxEditor
+                    || Application.platform == RuntimePlatform.LinuxPlayer)
+                {
+                    return "/dev/ttyUSB0";
+                }
                 else
                 {
                     Debug.LogError("No overwrite port was given, but the default port for your OS is not known.");
@@ -63,6 +68,8 @@ namespace DualPantoFramework
         private Vector3 lowerGodObject;
         private float lowerHandleRot = 0f;
         private float upperHandleRot = 0f;
+        private float initialUpperRot = -1;
+        private float initialLowerRot = -1;
 
         public bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
@@ -73,8 +80,10 @@ namespace DualPantoFramework
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         private const string plugin = "serial";
+#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
+        private const string plugin = "libserial.so";
 #else
-        private const string plugin = "libserial";
+    private const string plugin = "libserial";
 #endif
 
         private static bool connected = false;
@@ -215,6 +224,12 @@ namespace DualPantoFramework
             Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
             upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
             upperHandleRot = PantoToUnityRotation(positions[2]);
+            if (initialUpperRot == -1 && initialPoll)
+                initialUpperRot = upperHandleRot;
+            upperHandleRot -= initialUpperRot;
+            if (initialLowerRot == -1 && initialPoll)
+                initialLowerRot = lowerHandleRot;
+            lowerHandleRot -= initialLowerRot;
             upperGodObject = new Vector3(unityGodUpper.x, 0, unityGodUpper.y);
             if (upperHandle)
                 upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
@@ -349,6 +364,8 @@ namespace DualPantoFramework
         }
 
         static DualPantoSync globalSync;
+        private bool initialPoll = false;
+
         static void StaticPositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
         {
             globalSync.PositionHandler(handle, positions);
@@ -408,15 +425,23 @@ namespace DualPantoFramework
         {
             FreeHandle(true);
             FreeHandle(false);
-            Close(Handle);
+            if (Handle != 0) Close(Handle);
         }
 
         void Update()
         {
             if (!debug)
             {
-                CheckQueuedPackets(20);
-                Poll(Handle);
+                if (Handle != 0)
+                {
+                    if (connected)
+                    {
+                        CheckQueuedPackets(20);
+                    }
+                    Poll(Handle);
+                    if (!initialPoll)
+                        initialPoll = true;
+                }
             }
             else
             {
