@@ -7,11 +7,9 @@ namespace DualPantoFramework
     {
         void OnTriggerEnter(Collider collider)
         {
-            Debug.Log("Collision");
             PantoCollider pc = collider.GetComponent<PantoCollider>();
             if (pc != null && pc.enabled)
             {
-                Debug.Log(collider.name);
                 if (pc.GetContainingSpheres() == 0)
                 {
                     pc.CreateObstacle();
@@ -30,7 +28,6 @@ namespace DualPantoFramework
                 pc.DecreaseSpheres();
                 if (pc.GetContainingSpheres() == 0)
                 {
-                    Debug.Log("removing");
                     pc.Remove();
                 }
             }
