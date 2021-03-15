@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 734216029095769111}
   - component: {fileID: 409704075154413594}
   m_Layer: 0
-  m_Name: PathTracer
+  m_Name: Tracer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,3 +148,4 @@ MonoBehaviour:
   moveSpeed: 10
   sayOnWayToPoint: []
   sayWhileStoppingAtPoint: []
+  playScratchAudio: 1

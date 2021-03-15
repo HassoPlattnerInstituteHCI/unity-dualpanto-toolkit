@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUpper: 1
-  onLower: 1
+  onLower: 0
   isPassable: 0
   showOutline: 0
 --- !u!65 &48439215
@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUpper: 1
-  onLower: 1
+  onLower: 0
   isPassable: 0
   showOutline: 0
 --- !u!65 &126992265
@@ -650,7 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUpper: 1
-  onLower: 1
+  onLower: 0
   isPassable: 0
   showOutline: 0
 --- !u!65 &203632994
@@ -867,6 +867,7 @@ MonoBehaviour:
   - the
   - exit
   sayWhileStoppingAtPoint: []
+  playScratchAudio: 1
 --- !u!1 &315182545
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,6 +1079,7 @@ MonoBehaviour:
   moveSpeed: 10
   sayOnWayToPoint: []
   sayWhileStoppingAtPoint: []
+  playScratchAudio: 1
 --- !u!120 &563618638
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1227,7 +1229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUpper: 1
-  onLower: 1
+  onLower: 0
   isPassable: 0
   showOutline: 0
 --- !u!65 &597033617
@@ -1617,7 +1619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUpper: 1
-  onLower: 1
+  onLower: 0
   isPassable: 0
   showOutline: 0
 --- !u!65 &1062988849
@@ -1933,6 +1935,85 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: Good luck!
+--- !u!1 &1414191491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1414191492}
+  - component: {fileID: 1414191494}
+  - component: {fileID: 1414191493}
+  m_Layer: 5
+  m_Name: I_to_start_Intros
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1414191492
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414191491}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1467360129}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.9}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 1, y: 1}
+--- !u!114 &1414191493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414191491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 10
+    m_MaxSize: 96
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Hit "i" to start the intro
+--- !u!222 &1414191494
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414191491}
+  m_CullTransparentMesh: 0
 --- !u!1 &1462298298
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,7 +2479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUpper: 1
-  onLower: 1
+  onLower: 0
   isPassable: 0
   showOutline: 0
 --- !u!65 &1911888561
@@ -2555,6 +2636,7 @@ MonoBehaviour:
   moveSpeed: 10
   sayOnWayToPoint: []
   sayWhileStoppingAtPoint: []
+  playScratchAudio: 1
 --- !u!120 &1998174278
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2674,6 +2756,7 @@ MonoBehaviour:
   sayOnWayToFirstPoint: 
   sayWhileGoingBackAndForth: this is a narrow passage
   minimumNumberOfRounds: 0
+  playScratchAudio: 1
 --- !u!4 &6407884605426960263
 Transform:
   m_ObjectHideFlags: 0

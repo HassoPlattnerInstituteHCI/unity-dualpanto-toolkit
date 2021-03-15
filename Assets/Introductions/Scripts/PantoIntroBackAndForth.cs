@@ -13,10 +13,12 @@ public class PantoIntroBackAndForth : PantoIntroBase
     public string sayWhileGoingBackAndForth;
     [Tooltip("When 0, this will stop after the text has been spoken, still finishing the current round.")]
     public int minimumNumberOfRounds;
+    public bool playScratchAudio = true;
 
 
     private LineRenderer lr;
     private SpeechOut speechOut;
+    private AudioSource scratchSound;
 
     private void Awake()
     {
@@ -42,7 +44,15 @@ public class PantoIntroBackAndForth : PantoIntroBase
 
         // begin rounds
         _ = speechOut.Speak(sayWhileGoingBackAndForth);
+        if (playScratchAudio)
+        {
+            scratchSound = gameObject.AddComponent<AudioSource>();
+            scratchSound.loop = true;
+            scratchSound.clip = Resources.Load<AudioClip>("scratch");
+            scratchSound.Play();
+        }
         int roundsSoFar = 0;
+
         while (speechOut.IsSpeaking() || roundsSoFar < minimumNumberOfRounds)
         {
             // forward
@@ -58,6 +68,11 @@ public class PantoIntroBackAndForth : PantoIntroBase
                 await MoveToLineIndex(i);
             }
             roundsSoFar++;
+        }
+        if (playScratchAudio)
+        {
+            scratchSound.Stop();
+            Destroy(scratchSound);
         }
         
     }

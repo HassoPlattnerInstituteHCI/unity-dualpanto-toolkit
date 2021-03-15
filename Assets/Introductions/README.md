@@ -8,7 +8,7 @@ The actual content of the introduction is most conveniently specified by adding 
 Some sub-intros come with slightly hacky visualizations. In-game they are active when the intro is being run. In the editor you can disable or enable them via a button in the inspector while you have the Introducer selected. 
 
 The available intros are specified below, though you can implement your own as well.
-It is recommended to use the prefabs to get visualizations and otherwise necessary components.
+It is recommended to use the prefabs to get visualizations and otherwise necessary components. However, the scaling could get weird depending on how the Panto-object is scaled. You may want to adjust it in that case and just copy-paste new intros from there.
 
 
 # Sub-Intros

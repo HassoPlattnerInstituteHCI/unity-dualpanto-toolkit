@@ -10,9 +10,11 @@ public class PantoIntroTracer : PantoIntroBase
     public float moveSpeed = 3f;
     public string[] sayOnWayToPoint;
     public string[] sayWhileStoppingAtPoint;
+    public bool playScratchAudio = true;
 
     private LineRenderer lr;
     private SpeechOut speechOut;
+    private AudioSource scratchSound;
 
     private void Awake()
     {
@@ -26,6 +28,13 @@ public class PantoIntroTracer : PantoIntroBase
     {
         for (int i = 0; i < lr.positionCount; i++)
         {
+            if (i == 1 && playScratchAudio)
+            {
+                scratchSound = gameObject.AddComponent<AudioSource>();
+                scratchSound.loop = true;
+                scratchSound.clip = Resources.Load<AudioClip>("scratch");
+                scratchSound.Play();
+            }
             // move to point and optionally say something
             Vector3 position = lr.GetPosition(i);
             GameObject newTarget = new GameObject("temporary waypoint for PantoIntroTracer");
@@ -49,6 +58,12 @@ public class PantoIntroTracer : PantoIntroBase
             {
                 await speechOut.Speak(sayWhileStoppingAtPoint[i]);
             }
+        }
+
+        if (playScratchAudio)
+        {
+            scratchSound.Stop();
+            Destroy(scratchSound);
         }
     }
 

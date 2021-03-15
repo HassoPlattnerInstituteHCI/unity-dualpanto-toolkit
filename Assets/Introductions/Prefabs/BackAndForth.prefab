@@ -147,3 +147,4 @@ MonoBehaviour:
   sayOnWayToFirstPoint: 
   sayWhileGoingBackAndForth: 
   minimumNumberOfRounds: 0
+  playScratchAudio: 1
