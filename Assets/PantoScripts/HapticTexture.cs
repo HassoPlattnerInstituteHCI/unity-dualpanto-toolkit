@@ -8,6 +8,7 @@ public class HapticTexture : MonoBehaviour
     public float distanceZ;
     public float distanceX;
     public LayerMask layerMask;
+
     void Start()
     {
         Collider c = GetComponent<Collider>();
@@ -23,36 +24,8 @@ public class HapticTexture : MonoBehaviour
 
                 RaycastHit hit1;
                 RaycastHit hit2;
-                Vector3 start = new Vector3(c.bounds.min.x, 0.1f, height);
-                Vector3 end = new Vector3(c.bounds.max.x, 0.1f, height);
-                Physics.Linecast(start, end, out hit1, layerMask);
-                Physics.Linecast(end, start, out hit2, layerMask);
-
-                float length = Vector3.Distance(hit1.point, hit2.point);
-
-                GameObject rail = Instantiate(Resources.Load("Rail"), transform) as GameObject;
-                Vector3 ls = rail.transform.parent.lossyScale;
-                rail.transform.localScale = new Vector3((1.0f / ls.x) * length, 1, (1.0f / ls.z) * 0.4f);
-                rail.transform.position = new Vector3((hit1.point.x - hit2.point.x) * 0.5f + hit2.point.x, 0, height);
-                rail.transform.eulerAngles = new Vector3(0, 0, 0);
-                Debug.DrawLine(hit1.point, hit2.point, Color.black, float.PositiveInfinity);
-            }
-        }
-        if (distanceX > 0)
-        {
-            float m_Min = c.bounds.min.x;
-            float m_Max = c.bounds.max.x;
-            int numberOfRails = (int)Mathf.Floor((m_Max - m_Min) / distanceX);
-            Debug.Log(numberOfRails);
-            for (int i = 0; i <= numberOfRails; i++)
-            {
-                float height = i * distanceX + m_Min;
-
-                RaycastHit hit1;
-                RaycastHit hit2;
-                Vector3 start = new Vector3(height, 0.1f, c.bounds.min.z);
-                Vector3 end = new Vector3(height, 0.1f, c.bounds.max.x);
-                Debug.Log(end);
+                Vector3 start = new Vector3(c.bounds.min.x, c.bounds.center.y, height);
+                Vector3 end = new Vector3(c.bounds.max.x, c.bounds.center.y, height);
                 if (!Physics.Linecast(start, end, out hit1, layerMask)) continue;
                 if (!Physics.Linecast(end, start, out hit2, layerMask)) continue;
 
@@ -60,10 +33,35 @@ public class HapticTexture : MonoBehaviour
 
                 GameObject rail = Instantiate(Resources.Load("Rail"), transform) as GameObject;
                 Vector3 ls = rail.transform.parent.lossyScale;
-                rail.transform.localScale = new Vector3((1.0f / ls.x) * 0.4f, 1, (1.0f / ls.z) * length);
+                rail.transform.localScale = new Vector3((1.0f / ls.x) * length, 1 / ls.y, (1.0f / ls.z) * 0.4f);
+                rail.transform.position = new Vector3((hit1.point.x - hit2.point.x) * 0.5f + hit2.point.x, 0, height);
+                rail.transform.eulerAngles = new Vector3(0, 0, 0);
+            }
+        }
+        if (distanceX > 0)
+        {
+            float m_Min = c.bounds.min.x;
+            float m_Max = c.bounds.max.x;
+            int numberOfRails = (int)Mathf.Floor((m_Max - m_Min) / distanceX);
+            for (int i = 0; i <= numberOfRails; i++)
+            {
+                float height = i * distanceX + m_Min;
+
+                RaycastHit hit1;
+                RaycastHit hit2;
+                Vector3 start = new Vector3(height, c.bounds.center.y, c.bounds.min.z);
+                Vector3 end = new Vector3(height, c.bounds.center.y, c.bounds.max.z);
+
+                if (!Physics.Linecast(start, end, out hit1, layerMask)) continue;
+                if (!Physics.Linecast(end, start, out hit2, layerMask)) continue;
+
+                float length = Vector3.Distance(hit1.point, hit2.point);
+
+                GameObject rail = Instantiate(Resources.Load("Rail"), transform) as GameObject;
+                Vector3 ls = rail.transform.parent.lossyScale;
+                rail.transform.localScale = new Vector3((1.0f / ls.x) * 0.4f, 1 / ls.y, (1.0f / ls.z) * length);
                 rail.transform.position = new Vector3(height, 0, (hit1.point.z - hit2.point.z) * 0.5f + hit2.point.z);
                 rail.transform.eulerAngles = new Vector3(0, 0, 0);
-                Debug.DrawLine(hit1.point, hit2.point, Color.black, float.PositiveInfinity);
             }
         }
     }
