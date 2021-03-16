@@ -202,7 +202,7 @@ namespace DualPantoFramework
         public void CreateRail()
         {
             BoxCollider collider = GetComponent<BoxCollider>();
-            Vector2 size = new Vector2(collider.size.x * transform.localScale.x, collider.size.z * transform.localScale.z);
+            Vector2 size = new Vector2(collider.size.x * transform.lossyScale.x, collider.size.z * transform.lossyScale.z);
             float displacement = Math.Min(size.x, size.y) / 2;
             Vector2[] points = RailPointsFromRotatedRectangle(transform.position, transform.eulerAngles.y, size);
             byte index = getPantoIndex();
