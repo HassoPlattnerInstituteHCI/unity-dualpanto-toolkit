@@ -10,14 +10,6 @@ namespace DualPantoFramework
         LEASH
     }
 
-    public enum Visualization
-    {
-        DOOM,
-        BLIND,
-        OUTLINES,
-        DOOM_WITH_OUTLINES
-    }
-
     public class Settings : PantoBehaviour
     {
         public bool tetheringEnabled;
@@ -35,7 +27,6 @@ namespace DualPantoFramework
                 Debug.Log("updating settings");
                 pantoSync.SetSpeedControl(tetheringEnabled, tetherFactor, innerRadius, outerRadius, speedControlOption, pockEnabled);
                 //SyncSettings(tetherFactor, innerRadius, outerRadius, speedControlOption);
-                //GameObject.Find("PantoManager").GetComponent<PantoManager>().SetVisualization(visualization);
             }
         }
 
