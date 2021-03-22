@@ -144,7 +144,9 @@ namespace DualPantoFramework
         /// </summary>
         public void FreeRotation()
         {
+            pantoSync.UpdateHandlePosition(null, float.NaN, isUpper);
             userControlledRotation = true;
+
         }
 
         /// <summary>
