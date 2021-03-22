@@ -20,6 +20,8 @@ namespace DualPantoFramework
         public Text currentPhysicsFps;
         public Text currentLowerHandle;
         DateTime lastHeartbeat;
+        public LayerMask blindView;
+        public LayerMask developmentView;
         void Start()
         {
             lastHeartbeat = DateTime.Now;
@@ -40,7 +42,11 @@ namespace DualPantoFramework
 
             if (Input.GetKeyDown(KeyCode.B))
             {
-
+                Camera.main.cullingMask = blindView;
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Camera.main.cullingMask = developmentView;
             }
         }
         public void ShowDebugValuesWindow()
