@@ -24,8 +24,8 @@ public class HapticTexture : MonoBehaviour
 
                 RaycastHit hit1;
                 RaycastHit hit2;
-                Vector3 start = new Vector3(c.bounds.min.x, c.bounds.center.y, height);
-                Vector3 end = new Vector3(c.bounds.max.x, c.bounds.center.y, height);
+                Vector3 start = new Vector3(c.bounds.min.x - 0.01f, c.bounds.center.y, height);
+                Vector3 end = new Vector3(c.bounds.max.x + 0.01f, c.bounds.center.y, height);
                 if (!Physics.Linecast(start, end, out hit1, layerMask)) continue;
                 if (!Physics.Linecast(end, start, out hit2, layerMask)) continue;
 
@@ -49,9 +49,8 @@ public class HapticTexture : MonoBehaviour
 
                 RaycastHit hit1;
                 RaycastHit hit2;
-                Vector3 start = new Vector3(height, c.bounds.center.y, c.bounds.min.z);
-                Vector3 end = new Vector3(height, c.bounds.center.y, c.bounds.max.z);
-
+                Vector3 start = new Vector3(height, c.bounds.center.y, c.bounds.min.z - 0.01f);
+                Vector3 end = new Vector3(height, c.bounds.center.y, c.bounds.max.z + 0.01f);
                 if (!Physics.Linecast(start, end, out hit1, layerMask)) continue;
                 if (!Physics.Linecast(end, start, out hit2, layerMask)) continue;
 
