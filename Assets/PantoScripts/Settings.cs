@@ -19,7 +19,6 @@ namespace DualPantoFramework
         public bool pockEnabled;
         public IntroContourStrategy introContourOption;
         public SpeedControlStrategy speedControlOption;
-        public Visualization visualization;
         void UpdateSettings()
         {
             if (!pantoSync.debug)
