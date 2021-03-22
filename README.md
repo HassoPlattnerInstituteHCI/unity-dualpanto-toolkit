@@ -27,16 +27,11 @@ You can find the installation instructions for SpeechIO [here](https://github.co
 
 ## Creating a Panto Application in Unity
 ### Adding the right components
-Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-framework -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a child component: the Panto Working Area. This is the area the DualPanto can reach.
+Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-framework -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a child component: the Panto Working Area. This is the area the DualPanto can reach. 
 ![Panto Prefab in Scene](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/panto_prefab_with_highlights.png)
 
 ### Setting up the camera
-Prepare your scene by making sure the camera is facing straight down onto your scene. `Main Camera -> Projection` should be `orthographic`. Rotate it to `90` on the x axis, so it's facing downwards. Adjust the position, height and size so that you can see the entire area of the level.
-![Camera Settings](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/camera_with_highlights.png)
-
-### Reducing the rendering quality
-It is good practice to reduce the rendering quality of your application, you can do this via `Edit -> Project Settings -> Quality`. Select `Very Low` in the `Default` dropdown.
-![Reduce Rendering Quality](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/quality_highlights.png)
+Prepare your scene by deleting the `Main Camera` object that is created with every new scene in Unity. The Panto Prefab, that you just added to the scene, already contains a camera that is adjusted to show a top-down perspective of the entire area the Panto can reach.
 
 ### Find out the serial port of your device 
 At this point we still need to manually update the serial port of our panto before running the application.
