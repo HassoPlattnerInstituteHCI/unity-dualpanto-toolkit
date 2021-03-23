@@ -20,8 +20,8 @@ namespace DualPantoFramework
         public Text currentPhysicsFps;
         public Text currentLowerHandle;
         DateTime lastHeartbeat;
-        public GameObject blindPanel;
-        public bool blindPanelEnabled = true;
+        public LayerMask blindView;
+        public LayerMask developmentView;
         void Start()
         {
             lastHeartbeat = DateTime.Now;
@@ -33,10 +33,6 @@ namespace DualPantoFramework
             {
                 portInput.text = DefaultMacPort;
             }
-            if (!blindPanelEnabled)
-            {
-                blindPanel.SetActive(false);
-            }
         }
         void Update()
         {
@@ -44,17 +40,13 @@ namespace DualPantoFramework
             currentHeartbeat.text = ((int)ts.TotalMilliseconds).ToString();
             currentHeartbeat.color = ts.TotalMilliseconds > 1000 ? Color.red : Color.green;
 
-            if (blindPanelEnabled)
+            if (Input.GetKeyDown(KeyCode.B))
             {
-
-                if (Input.GetKey(KeyCode.LeftAlt))
-                {
-                    blindPanel.SetActive(false);
-                }
-                else
-                {
-                    blindPanel.SetActive(true);
-                }
+                Camera.main.cullingMask = blindView;
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Camera.main.cullingMask = developmentView;
             }
         }
         public void ShowDebugValuesWindow()

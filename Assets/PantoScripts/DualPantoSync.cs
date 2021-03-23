@@ -71,7 +71,6 @@ namespace DualPantoFramework
         private float initialUpperRot = -1;
         private float initialLowerRot = -1;
 
-        public bool isBlindModeOn = false;
         private ushort currentObstacleId = 0;
         private GameObject debugLowerHandle;
         private GameObject debugUpperHandle;
@@ -467,28 +466,10 @@ namespace DualPantoFramework
                     }
                 }
             }
-
-            if (Input.GetKeyDown(toggleVisionKey))
-            {
-                ToggleBlindMode();
-            }
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 Application.Quit();
             }
-        }
-
-        private void ToggleBlindMode()
-        {
-            if (!debug)
-            {
-                Light[] lights = GameObject.FindObjectsOfType<Light>();
-                foreach (Light light in lights)
-                {
-                    light.enabled = !light.enabled;
-                }
-            }
-            isBlindModeOn = !isBlindModeOn;
         }
 
         public void FreeHandle(bool isUpper)
