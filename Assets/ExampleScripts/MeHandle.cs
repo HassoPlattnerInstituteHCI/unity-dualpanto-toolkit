@@ -13,6 +13,7 @@ public class MeHandle : MonoBehaviour
     void FixedUpdate()
     {
         transform.position = (upperHandle.HandlePosition(transform.position));
+        transform.eulerAngles = new Vector3(0, upperHandle.GetRotation(), 0);
     }
 
     void Update()

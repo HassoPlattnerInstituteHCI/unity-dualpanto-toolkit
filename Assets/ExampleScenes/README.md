@@ -21,3 +21,6 @@ Contains two spheres, each can be controlled by one handle. Pressing `F` will to
 
 ### Many Obstacles
 A scene with a large amount of obstacles that vary in size.
+
+### PerceptionCone
+This scene includes a demo for a navigation technique. The "Perception Cone" is attached to the player. Each "RoomElement" will repeat it's name while in focus of the cone. Walls can be placed to obstruct the cone, if they are on the correct layer.
