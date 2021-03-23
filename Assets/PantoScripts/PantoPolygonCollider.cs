@@ -21,7 +21,10 @@ namespace DualPantoFramework
                 Vector3 nextPoint = transform.TransformPoint(points[i + 1].x, points[i + 1].y, 0);
                 Gizmos.DrawLine(point, nextPoint);
             }
-
+            // close loop
+            Gizmos.DrawLine(
+                transform.TransformPoint(points[points.Length - 1].x, points[points.Length - 1].y, 0),
+                transform.TransformPoint(points[0].x, points[0].y, 0));
         }
     }
 }
