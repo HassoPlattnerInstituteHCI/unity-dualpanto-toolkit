@@ -63,7 +63,7 @@ namespace DualPantoFramework
             if (!pantoSync.debug)
             {
                 pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y + 180, isUpper);
             }
             inTransition = true;
 
@@ -187,6 +187,7 @@ namespace DualPantoFramework
                 pantoSync.FreeHandle(isUpper);
             }
             isFrozen = false;
+            inTransition = false;
         }
 
         /// <summary>
@@ -267,7 +268,7 @@ namespace DualPantoFramework
             }
             if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
             {
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
             }
         }
 
