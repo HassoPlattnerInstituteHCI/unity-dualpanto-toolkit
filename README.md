@@ -95,3 +95,6 @@ This might be due to obstacles registering before the device is ready. Insert a 
 
 ### Debugging
 If you keep having troubles, you can enable `show raw values` in the DualPantoSync component. A Popup will show you the raw position and rotation values Unity receives for each handle, how much time has passed since t last received a heartbeat from the device, the name of the port and the current protocol revision id.
+
+### Troubleshooting
+Please refer to the Wiki.
