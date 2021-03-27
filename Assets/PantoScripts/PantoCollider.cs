@@ -186,7 +186,15 @@ namespace DualPantoFramework
 
         void DrawLine(Vector2 start, Vector2 end)
         {
-            if (showOutline) Debug.DrawLine(new Vector3(start.x, 0, start.y), new Vector3(end.x, 0, end.y), Color.red, float.PositiveInfinity);
+            GameObject n = new GameObject();
+            n.transform.parent = transform;
+            n.layer = 31;
+            LineRenderer lr = n.AddComponent<LineRenderer>();
+            lr.positionCount = 2;
+            lr.SetPosition(0, new Vector3(start.x, 5, start.y));
+            lr.SetPosition(1, new Vector3(end.x, 5, end.y));
+            lr.startWidth = 0.05f * GetPantoSync().gameObject.transform.localScale.magnitude;
+            lr.material = Resources.Load("Materials/Colliders") as Material;
         }
 
         public void CreateRailForLine(Vector2 start, Vector2 end, float displacement)

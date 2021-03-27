@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5786380867649445570}
   - component: {fileID: 5786380867649445571}
   m_Layer: 10
-  m_Name: VisualizationParticles
-  m_TagString: BlindTrailRenderer
+  m_Name: ItVisualizationParticles
+  m_TagString: ItTrail
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
