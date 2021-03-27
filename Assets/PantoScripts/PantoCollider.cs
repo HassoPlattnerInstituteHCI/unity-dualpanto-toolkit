@@ -11,7 +11,6 @@ namespace DualPantoFramework
         public bool onLower = true;
         public bool isPassable = false;
         private bool registered = false;
-        public bool showOutline = false;
         protected int containingSpheres = 0;
 
         public ushort GetId()
@@ -124,6 +123,7 @@ namespace DualPantoFramework
                 Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
             }
             pantoSync.CreateObstacle(index, id, start, end);
+            DrawLine(start, end);
         }
         protected void CreateBoxObstacle()
         {
@@ -169,6 +169,7 @@ namespace DualPantoFramework
             if (this.isPassable)
             {
                 pantoSync.CreatePassableObstacle(index, id, corners[0], corners[1]);
+                DrawLine(corners[0], corners[1]);
             }
             else
             {
@@ -219,6 +220,7 @@ namespace DualPantoFramework
                 Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
             }
             pantoSync.CreateRail(index, id, points[0], points[1], displacement);
+            DrawLine(points[0], points[1]);
 
         }
 
