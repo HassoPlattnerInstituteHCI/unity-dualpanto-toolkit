@@ -174,6 +174,7 @@ GameObject:
   - component: {fileID: 826605487606422808}
   - component: {fileID: 826605487606422812}
   - component: {fileID: 108249268259716505}
+  - component: {fileID: 3801158577767249954}
   m_Layer: 10
   m_Name: Panto
   m_TagString: Untagged
@@ -248,7 +249,6 @@ MonoBehaviour:
   debugRotationSpeed: 10
   toggleVisionKey: 98
   showRawValues: 1
-  isBlindModeOn: 0
 --- !u!114 &826605487606422812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +280,27 @@ MonoBehaviour:
   pockEnabled: 0
   introContourOption: 0
   speedControlOption: 0
+--- !u!114 &3801158577767249954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826605487606422809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a5f9532bd4402742bb2a686c6e3d57f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blindView:
+    serializedVersion: 2
+    m_Bits: 1024
+  enhancedBlindView:
+    serializedVersion: 2
+    m_Bits: 5120
+  developmentView:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &875243548349468180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,12 +1412,6 @@ MonoBehaviour:
   currentIOFps: {fileID: 7289043884047714474}
   currentPhysicsFps: {fileID: 5388696195647627332}
   currentLowerHandle: {fileID: 6909044344685383625}
-  blindView:
-    serializedVersion: 2
-    m_Bits: 1024
-  developmentView:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!1 &3402125159651419077
 GameObject:
   m_ObjectHideFlags: 0
