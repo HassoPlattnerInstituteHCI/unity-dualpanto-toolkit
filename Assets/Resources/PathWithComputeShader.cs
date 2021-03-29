@@ -5,12 +5,19 @@ using DualPantoFramework;
 
 public class PathWithComputeShader : MonoBehaviour
 {
+    public float diffuseRate = 1;
+    public float decayRate = 1;
+
     public ComputeShader computeShader;
-    public RenderTexture renderTexture;
+    RenderTexture renderTexture;
+    RenderTexture diffuseRenderTexture;
+
     UpperHandle upperHandle;
     // Start is called before the first frame update
 
     Vector3 lastPos;
+    int doItCount = 0;
+    const int growIntervalFrames = 10;
     const int HEIGHT = 1024;
     const int WIDTH = HEIGHT * 2;
 
@@ -23,27 +30,50 @@ public class PathWithComputeShader : MonoBehaviour
     {
         if (renderTexture == null)
         {
-            renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGB32);
+            renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
             renderTexture.enableRandomWrite = true;
+            renderTexture.autoGenerateMips = false;
+            renderTexture.wrapMode = TextureWrapMode.Clamp;
+            renderTexture.filterMode = FilterMode.Point;
             renderTexture.Create();
 
             GetComponent<MeshRenderer>().material.mainTexture = renderTexture;
         }
 
+        if (diffuseRenderTexture == null)
+        {
+            diffuseRenderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
+            diffuseRenderTexture.enableRandomWrite = true;
+            diffuseRenderTexture.autoGenerateMips = false;
+            renderTexture.wrapMode = TextureWrapMode.Clamp;
+            diffuseRenderTexture.filterMode = FilterMode.Point;
+            diffuseRenderTexture.Create();
+        }
+
         computeShader.SetTexture(0, "Result", renderTexture);
+        computeShader.SetTexture(1, "Result", renderTexture);
+        computeShader.SetTexture(1, "DiffuseResult", diffuseRenderTexture);
         var bounds = GetComponent<MeshFilter>().mesh.bounds;
         Vector3 position = upperHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
 
         if (lastPos != null) {
             computeShader.SetBool("moving", true);
+            computeShader.SetBool("doIt", doItCount == 0);
+            if (++doItCount == growIntervalFrames)
+                doItCount = 0;
             computeShader.SetInt("width", WIDTH);
             computeShader.SetInt("height", HEIGHT);
+            computeShader.SetFloat("diffuseRate", diffuseRate);
+            computeShader.SetFloat("decayRate", decayRate);
             computeShader.SetFloat("last_x", 1.0f - lastPos.x / bounds.size.x / transform.localScale.x);
             computeShader.SetFloat("last_y", 1.0f - lastPos.z / bounds.size.z / transform.localScale.z);
             computeShader.SetFloat("x", 1.0f - position.x / bounds.size.x / transform.localScale.x);
             computeShader.SetFloat("y", 1.0f - position.z / bounds.size.z / transform.localScale.z);
             computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, 1);
+            computeShader.Dispatch(1, renderTexture.width / 8, renderTexture.height / 8, 1);
             lastPos = position;
+
+            Graphics.Blit(diffuseRenderTexture, renderTexture);
         }
     }
 }

@@ -232,8 +232,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8175f47702cce734aa3f4f27c20c1738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  diffuseRate: 1
+  decayRate: 0.01
   computeShader: {fileID: 7200000, guid: f0da9c9da5731a44ba5147d1e405dc65, type: 3}
-  renderTexture: {fileID: 0}
 --- !u!1 &880537917
 GameObject:
   m_ObjectHideFlags: 0
