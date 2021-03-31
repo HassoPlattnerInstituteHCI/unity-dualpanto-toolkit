@@ -5,7 +5,6 @@ using DualPantoFramework;
 
 public class PathWithComputeShader : MonoBehaviour
 {
-    public float diffuseRate = 1;
     public float decayRate = 1;
 
     public ComputeShader computeShader;
@@ -13,9 +12,10 @@ public class PathWithComputeShader : MonoBehaviour
     RenderTexture diffuseRenderTexture;
 
     UpperHandle upperHandle;
-    // Start is called before the first frame update
+    LowerHandle lowerHandle;
 
-    Vector3 lastPos;
+    Vector3 u_lastPos;
+    Vector3 l_lastPos;
     int doItCount = 0;
     const int growIntervalFrames = 10;
     const int HEIGHT = 1024;
@@ -24,6 +24,7 @@ public class PathWithComputeShader : MonoBehaviour
     void Start()
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+        lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
     }
     
     void Update()
@@ -54,24 +55,29 @@ public class PathWithComputeShader : MonoBehaviour
         computeShader.SetTexture(1, "Result", renderTexture);
         computeShader.SetTexture(1, "DiffuseResult", diffuseRenderTexture);
         var bounds = GetComponent<MeshFilter>().mesh.bounds;
-        Vector3 position = upperHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
+        Vector3 upperPosition = upperHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
+        Vector3 lowerPosition = lowerHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
 
-        if (lastPos != null) {
+        if (u_lastPos != null && l_lastPos != null) {
             computeShader.SetBool("moving", true);
             computeShader.SetBool("doIt", doItCount == 0);
             if (++doItCount == growIntervalFrames)
                 doItCount = 0;
             computeShader.SetInt("width", WIDTH);
             computeShader.SetInt("height", HEIGHT);
-            computeShader.SetFloat("diffuseRate", diffuseRate);
             computeShader.SetFloat("decayRate", decayRate);
-            computeShader.SetFloat("last_x", 1.0f - lastPos.x / bounds.size.x / transform.localScale.x);
-            computeShader.SetFloat("last_y", 1.0f - lastPos.z / bounds.size.z / transform.localScale.z);
-            computeShader.SetFloat("x", 1.0f - position.x / bounds.size.x / transform.localScale.x);
-            computeShader.SetFloat("y", 1.0f - position.z / bounds.size.z / transform.localScale.z);
+            computeShader.SetFloat("u_last_x", 1.0f - u_lastPos.x / bounds.size.x / transform.localScale.x);
+            computeShader.SetFloat("u_last_y", 1.0f - u_lastPos.z / bounds.size.z / transform.localScale.z);
+            computeShader.SetFloat("u_x", 1.0f - upperPosition.x / bounds.size.x / transform.localScale.x);
+            computeShader.SetFloat("u_y", 1.0f - upperPosition.z / bounds.size.z / transform.localScale.z);
+            computeShader.SetFloat("l_last_x", 1.0f - l_lastPos.x / bounds.size.x / transform.localScale.x);
+            computeShader.SetFloat("l_last_y", 1.0f - l_lastPos.z / bounds.size.z / transform.localScale.z);
+            computeShader.SetFloat("l_x", 1.0f - lowerPosition.x / bounds.size.x / transform.localScale.x);
+            computeShader.SetFloat("l_y", 1.0f - lowerPosition.z / bounds.size.z / transform.localScale.z);
             computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, 1);
             computeShader.Dispatch(1, renderTexture.width / 8, renderTexture.height / 8, 1);
-            lastPos = position;
+            l_lastPos = lowerPosition;
+            u_lastPos = upperPosition;
 
             Graphics.Blit(diffuseRenderTexture, renderTexture);
         }
