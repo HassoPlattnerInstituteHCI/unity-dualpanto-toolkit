@@ -29,7 +29,6 @@ public class PathWithComputeShader : MonoBehaviour
     
     void Update()
     {
-        Debug.Log(u_lastPos);
         if (renderTexture == null)
         {
             renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
