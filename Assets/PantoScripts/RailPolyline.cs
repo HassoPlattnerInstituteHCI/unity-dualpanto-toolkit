@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using DualPantoFramework;
 namespace UnityEngine
 {
@@ -58,13 +60,44 @@ namespace UnityEngine
             audioSource.volume = 0;
         }
 
-        private void OnTriggerEnter(Collider other)
+        async private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
             {
+                Debug.Log("fade target");
+                PantoManager pantoManager = GameObject.Find("PantoManager").GetComponent<PantoManager>();
+                if (!pantoManager.hasEncounteredRail){
+                    await IntroduceRailAsync(pantoManager);
+                }
                 //audioSource.Play();
                 fadeTarget = 1;
             }
+        }
+
+        private async System.Threading.Tasks.Task IntroduceRailAsync(PantoManager pantoManager)
+        {
+            pantoManager.SetPaused(true);
+            pantoManager.upper.Freeze();
+            pantoManager.lower.Freeze();
+            
+            Debug.Log("introducing rail");
+            pantoManager.hasEncounteredRail = true;
+            AudioSource railAudio = gameObject.AddComponent<AudioSource>();
+            railAudio.clip = Resources.Load<AudioClip>("Sounds/Speech/Rails");
+
+            AudioSource dingAudioSource = gameObject.AddComponent<AudioSource>();
+            dingAudioSource.clip = Resources.Load<AudioClip>("Sounds/IntroSound2");
+            dingAudioSource.PlayOneShot(dingAudioSource.clip);
+            await Task.Delay((int)dingAudioSource.clip.length * 1000);
+            railAudio.Play();
+            while(railAudio.isPlaying){
+                await Task.Delay(10);
+            }
+                
+            dingAudioSource.PlayOneShot(dingAudioSource.clip);
+            await Task.Delay((int)dingAudioSource.clip.length * 1000);
+            pantoManager.SetPaused(false);
+
         }
 
         private void OnTriggerExit(Collider other)
