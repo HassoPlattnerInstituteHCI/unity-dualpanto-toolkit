@@ -29,6 +29,7 @@ public class PathWithComputeShader : MonoBehaviour
     
     void Update()
     {
+        Debug.Log(u_lastPos);
         if (renderTexture == null)
         {
             renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
@@ -66,14 +67,14 @@ public class PathWithComputeShader : MonoBehaviour
             computeShader.SetInt("width", WIDTH);
             computeShader.SetInt("height", HEIGHT);
             computeShader.SetFloat("decayRate", decayRate);
-            computeShader.SetFloat("u_last_x", 1.0f - u_lastPos.x / bounds.size.x / transform.localScale.x);
-            computeShader.SetFloat("u_last_y", 1.0f - u_lastPos.z / bounds.size.z / transform.localScale.z);
-            computeShader.SetFloat("u_x", 1.0f - upperPosition.x / bounds.size.x / transform.localScale.x);
-            computeShader.SetFloat("u_y", 1.0f - upperPosition.z / bounds.size.z / transform.localScale.z);
-            computeShader.SetFloat("l_last_x", 1.0f - l_lastPos.x / bounds.size.x / transform.localScale.x);
-            computeShader.SetFloat("l_last_y", 1.0f - l_lastPos.z / bounds.size.z / transform.localScale.z);
-            computeShader.SetFloat("l_x", 1.0f - lowerPosition.x / bounds.size.x / transform.localScale.x);
-            computeShader.SetFloat("l_y", 1.0f - lowerPosition.z / bounds.size.z / transform.localScale.z);
+            computeShader.SetFloat("u_last_x", 1.0f - u_lastPos.x / bounds.size.x / transform.lossyScale.x);
+            computeShader.SetFloat("u_last_y", 1.0f - u_lastPos.z / bounds.size.z / transform.lossyScale.z);
+            computeShader.SetFloat("u_x", 1.0f - upperPosition.x / bounds.size.x / transform.lossyScale.x);
+            computeShader.SetFloat("u_y", 1.0f - upperPosition.z / bounds.size.z / transform.lossyScale.z);
+            computeShader.SetFloat("l_last_x", 1.0f - l_lastPos.x / bounds.size.x / transform.lossyScale.x);
+            computeShader.SetFloat("l_last_y", 1.0f - l_lastPos.z / bounds.size.z / transform.lossyScale.z);
+            computeShader.SetFloat("l_x", 1.0f - lowerPosition.x / bounds.size.x / transform.lossyScale.x);
+            computeShader.SetFloat("l_y", 1.0f - lowerPosition.z / bounds.size.z / transform.lossyScale.z);
             computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, 1);
             computeShader.Dispatch(1, renderTexture.width / 8, renderTexture.height / 8, 1);
             l_lastPos = lowerPosition;
