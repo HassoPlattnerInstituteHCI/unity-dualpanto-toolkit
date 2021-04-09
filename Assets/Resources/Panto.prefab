@@ -248,7 +248,6 @@ MonoBehaviour:
   debugRotationSpeed: 10
   toggleVisionKey: 98
   showRawValues: 1
-  isBlindModeOn: 0
 --- !u!114 &826605487606422812
 MonoBehaviour:
   m_ObjectHideFlags: 0
