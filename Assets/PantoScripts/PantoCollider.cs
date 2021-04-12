@@ -11,7 +11,6 @@ namespace DualPantoFramework
         public bool onLower = true;
         public bool isPassable = false;
         private bool registered = false;
-        public bool showOutline = false;
         protected int containingSpheres = 0;
 
         public ushort GetId()
@@ -124,6 +123,7 @@ namespace DualPantoFramework
                 Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
             }
             pantoSync.CreateObstacle(index, id, start, end);
+            DrawLine(start, end);
         }
         protected void CreateBoxObstacle()
         {
@@ -169,6 +169,7 @@ namespace DualPantoFramework
             if (this.isPassable)
             {
                 pantoSync.CreatePassableObstacle(index, id, corners[0], corners[1]);
+                DrawLine(corners[0], corners[1]);
             }
             else
             {
@@ -186,7 +187,15 @@ namespace DualPantoFramework
 
         void DrawLine(Vector2 start, Vector2 end)
         {
-            if (showOutline) Debug.DrawLine(new Vector3(start.x, 0, start.y), new Vector3(end.x, 0, end.y), Color.red, float.PositiveInfinity);
+            GameObject n = new GameObject();
+            n.transform.parent = transform;
+            n.layer = 31;
+            LineRenderer lr = n.AddComponent<LineRenderer>();
+            lr.positionCount = 2;
+            lr.SetPosition(0, new Vector3(start.x, 5, start.y));
+            lr.SetPosition(1, new Vector3(end.x, 5, end.y));
+            lr.startWidth = 0.05f * GetPantoSync().gameObject.transform.localScale.magnitude;
+            lr.material = Resources.Load("Materials/Colliders") as Material;
         }
 
         public void CreateRailForLine(Vector2 start, Vector2 end, float displacement)
@@ -211,6 +220,7 @@ namespace DualPantoFramework
                 Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
             }
             pantoSync.CreateRail(index, id, points[0], points[1], displacement);
+            DrawLine(points[0], points[1]);
 
         }
 
