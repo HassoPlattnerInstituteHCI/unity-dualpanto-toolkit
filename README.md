@@ -28,7 +28,7 @@ You can find the installation instructions for SpeechIO [here](https://github.co
 ## Creating a Panto Application in Unity
 ### Adding the right components
 Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-framework -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach.
-![Panto Prefab in Scene](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/panto_prefab_with_highlights.png)
+![Panto Prefab in Scene](/Documentation/readme_images/panto_prefab_with_highlights.png)
 
 ### Setting up the camera
 Prepare your scene by deleting the `Main Camera` object that is created with every new scene in Unity. The Panto Prefab, that you just added to the scene, already contains a camera that is adjusted to show a top-down perspective of the entire area the Panto can reach.
@@ -46,12 +46,12 @@ The _Port Name_ in your Panto Object would hence after updating be "//.//COM6".
 On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
 To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
 Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ on the Panto Object.
-![Setting Port Name](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/portname_with_highlight.png)
+![Setting Port Name](/Documentation/readme_images/portname_with_highlight.png)
 
 
 ### Your first Panto demo
 In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `MeHandle` component to this cube. It should now follow the movement of the Upper Panto Handle.
-![Adding the player script to the cube](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/adding_script_to_object.png)
+![Adding the player script to the cube](/Documentation/readme_images/adding_script_to_object.png)
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
@@ -60,13 +60,13 @@ There are two ways to test your app:
 * Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, both will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer. If you have no device connect, it will fall back to the emulator mode.
 **If you do not see the cube in Game Vew:** Hit D to switch to debug view (where everything is displayed), or B to go back to blind view.
-![First App](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/first_app.gif)
+![First App](/Documentation/readme_images/first_app.gif)
 
 ### Using the Blind emulator
 To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. By default, pressing `b` during game play will toggle this mode.
 If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
 This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
-![Blind mode emulator](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Documentation/readme_images/blind_mode.png)
+![Blind mode emulator](/Documentation/readme_images/blind_mode.png)
 
 ## Troubleshooting
 
