@@ -63,10 +63,7 @@ There are two ways to test your app:
 ![First App](/Documentation/readme_images/first_app.gif)
 
 ### Using the Blind emulator
-To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. By default, pressing `b` during game play will toggle this mode.
-If you are using a panto, it will simply hide the game. If you are using the emulator, you should only see the two handles and a small area surrounding them.
-This will work best if you disable environment lighting in the scene first: Open `Window -> Rendering -> Lighting Settings`, then set `Environment Setting -> Source` to `Color` and choose that color to be black. In addition, set `Environment Reflections -> Source` to `Custom`. You will need to do this for each scene.
-![Blind mode emulator](/Documentation/readme_images/blind_mode.png)
+To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. You can use `b` to toggle between blind view (only the handles and the area is displayed), mixed mode (the outlines of collider will also be displayed) and development mode (everything is displayed).
 
 ## Troubleshooting
 
