@@ -42,7 +42,7 @@ namespace DualPantoFramework
                 else
                 {
                     Debug.LogError("No overwrite port was given, but the default port for your OS is not known.");
-                    return "/dev/cu.SLAB_USBtoUART"; // default port for linux?
+                    return "/dev/cu.SLAB_USBtoUART";
                 }
             }
             set { overwriteDefaultPort = value; }
