@@ -64,6 +64,9 @@ There are two ways to test your app:
 
 ### Using the Blind emulator
 To get a better sense of what your game will feel to blind people, there is a small emulator for blind vision. You can use `b` to toggle between blind view (only the handles and the area is displayed), mixed mode (the outlines of collider will also be displayed) and development mode (everything is displayed).
+Blind Mode                 | Mixed Mode                | Develop Mode
+:-------------------------:|:-------------------------:|:--------------------:
+![Blind Mode](/Documentation/readme_images/blind_mode.jpg)            |  ![Mixed Mode](/Documentation/readme_images/mixed_mode.jpg)          | ![Develop Mode](/Documentation/readme_images/develop_mode.jpg)
 
 ## Troubleshooting
 
