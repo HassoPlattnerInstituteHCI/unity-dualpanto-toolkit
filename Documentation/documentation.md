@@ -31,6 +31,12 @@ Moves the handle to the specified position. The handle will be freed by default,
 * `Free()`  
 Frees the handle, it can now be controlled by the player.
 
+* `Freeze()`  
+Freezes the handle in its current position.
+
+* `ApplyForce()`
+Applies a force to the handle. This will only work if the handle is not attached to an object.
+
 ## Level & ObjectOfInterest
 The Level component is attached to the Panto Prefab. You can add the ObjectOfInterest component to game objects in your scene.
 
@@ -60,8 +66,16 @@ Enables the obstacle. Only when this function is called, will you be able to fee
 * `Disable()`  
 Disables the obstacle.
 
+Instead of enabling the colliders immediately, you can make use of the `ObstacleSphere`. Attach it to your player components, and it will Create and Enable all obstacles when the player moves near them. This can be useful if your scene has many obstacles, that cannot be stored on the Panto at the same time. See the `ManyObstacles.unity` scene for an example.
+
 ### PantoBoxCollider
 Attach this to a cube and `CreateObstacle()` will create a box obstacle using the dimensions of the BoxCollider.
 
 ### PantoCircularCollider
 Attach this to a sphere and `CreateObstacle()` will create a circular obstacle using the position and radius of the SphereCollider. The obstacle, however, will only be an approximation of a sphere using the number of corners defined, 8 by default.
+
+### PantoPolygonCollider
+Use it with a Polygon2D to create more complex shapes.
+
+### PantoLineCollider
+A simple line from point A to point B. You need to set start and end, before using using `CreateObstacle()`.
