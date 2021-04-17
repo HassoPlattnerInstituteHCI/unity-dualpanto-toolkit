@@ -51,8 +51,6 @@ namespace DualPantoFramework
         [Header("When Debug is enabled, the emulator mode will be used. You do not need to be connected to a Panto for this mode.")]
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
-        private bool debugHandleMeActive = true; // is the me handle or the it handle currently controlled using the mouse
-        public KeyCode toggleVisionKey = KeyCode.B;
         public bool showRawValues = true;
         protected ulong Handle;
         private static LowerHandle lowerHandle;
@@ -62,8 +60,8 @@ namespace DualPantoFramework
         //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
         private static Vector2[] pantoBounds = { new Vector2(0, -100), new Vector2(360, 210) }; // ember
         private static Vector2[] unityBounds;
-        private Vector3 upperHandlePos;
-        private Vector3 lowerHandlePos;
+        //private Vector3 upperHandlePos;
+        //private Vector3 lowerHandlePos;
         private Vector3 upperGodObject;
         private Vector3 lowerGodObject;
         private float lowerHandleRot = 0f;
@@ -221,7 +219,7 @@ namespace DualPantoFramework
         {
             Vector2 unityPosUpper = PantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
             Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
-            upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
+            Vector3 upperHandlePos = new Vector3(unityPosUpper.x, 0, unityPosUpper.y);
             upperHandleRot = PantoToUnityRotation(positions[2]);
             if (initialUpperRot == -1 && initialPoll)
                 initialUpperRot = upperHandleRot;
@@ -235,7 +233,7 @@ namespace DualPantoFramework
 
             Vector2 unityPosLower = PantoToUnity(new Vector2((float)positions[5], (float)positions[6]));
             Vector2 unityGodLower = PantoToUnity(new Vector2((float)positions[8], (float)positions[9]));
-            lowerHandlePos = new Vector3(unityPosLower.x, 0, unityPosLower.y);
+            Vector3 lowerHandlePos = new Vector3(unityPosLower.x, 0, unityPosLower.y);
             lowerHandleRot = PantoToUnityRotation(positions[7]);
             lowerGodObject = new Vector3(unityGodLower.x, 0, unityGodLower.y);
             if (lowerHandle)
@@ -272,11 +270,13 @@ namespace DualPantoFramework
         {
             if (isUpper)
             {
-                return debugUpperGodObject;
+                //return debugUpperGodObject;
+                return debugUpperHandle;
             }
             else
             {
-                return debugLowerGodObject;
+                //return debugLowerGodObject;
+                return debugLowerHandle;
             }
 
         }
@@ -328,8 +328,8 @@ namespace DualPantoFramework
             ParseCommandLineArguments();
 
             Vector3 handleDefaultPosition = transform.position + new Vector3(0, 0, 3);
-            upperHandlePos = handleDefaultPosition;
-            lowerHandlePos = handleDefaultPosition;
+            //upperHandlePos = handleDefaultPosition;
+            //lowerHandlePos = handleDefaultPosition;
             CreateDebugObjects(handleDefaultPosition);
             if (!debug)
             {
@@ -399,25 +399,17 @@ namespace DualPantoFramework
             debugUpperHandle.transform.localScale = transform.localScale;
             debugUpperHandle.name = "MeHandle";
 
-            prefab = Resources.Load("MeHandleGodObject");
-            debugUpperGodObject = Instantiate(prefab) as GameObject;
-            debugUpperGodObject.transform.position = position;
-            debugUpperGodObject.name = "MeHandleGodObject";
-            debugUpperGodObject.tag = "MeHandle";
-            Rigidbody rUpper = debugUpperGodObject.AddComponent<Rigidbody>();
-            // rUpper.useGravity = false;
-            // rUpper.constraints = RigidbodyConstraints.FreezeRotation;
-            //debugUpperGodObject.AddComponent<SphereCollider>();
+            //prefab = Resources.Load("MeHandleGodObject");
+            //debugUpperGodObject = Instantiate(prefab) as GameObject;
+            //debugUpperGodObject.transform.position = position;
+            //debugUpperGodObject.name = "MeHandleGodObject";
+            //debugUpperGodObject.tag = "MeHandle";
 
-            prefab = Resources.Load("ItHandleGodObject");
-            debugLowerGodObject = Instantiate(prefab) as GameObject;
-            debugLowerGodObject.transform.position = position;
-            debugLowerGodObject.name = "ItHandleGodObject";
-            debugLowerGodObject.tag = "ItHandle";
-            Rigidbody rLower = debugLowerGodObject.AddComponent<Rigidbody>();
-            // rLower.useGravity = false;
-            // rLower.constraints = RigidbodyConstraints.FreezeRotation;
-            //debugLowerGodObject.AddComponent<SphereCollider>();
+            //prefab = Resources.Load("ItHandleGodObject");
+            //debugLowerGodObject = Instantiate(prefab) as GameObject;
+            //debugLowerGodObject.transform.position = position;
+            //debugLowerGodObject.name = "ItHandleGodObject";
+            //debugLowerGodObject.tag = "ItHandle";
         }
 
         void OnDestroy()
@@ -444,26 +436,23 @@ namespace DualPantoFramework
             }
             else
             {
-                if (Input.GetMouseButtonUp(0))
-                    debugHandleMeActive = !debugHandleMeActive;
-
+                //upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
+                //lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
                 if (Input.GetMouseButton(0))
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
                     Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                    if (debugHandleMeActive)
-                    {
-                        upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
-                        upperHandlePos = position;
-                        upperHandle.SetPositions(upperHandlePos, upperHandleRot, null);
-                    }
-                    else
-                    {
-                        lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
-                        lowerHandlePos = position;
-                        lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, null);
-                    }
+                    upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
+                    upperHandle.SetPositions(position, upperHandleRot, null);
+                }
+                if (Input.GetMouseButton(1))
+                {
+                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
+                    Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
+                    lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
+                    lowerHandle.SetPositions(position, lowerHandleRot, null);
                 }
             }
             if (Input.GetKeyDown(KeyCode.Q))
@@ -513,8 +502,8 @@ namespace DualPantoFramework
                 if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
             }
-            float pantoX = float.NaN;
 
+            float pantoX = float.NaN;
             float pantoY = float.NaN;
             if (position != null)
             {
@@ -560,12 +549,12 @@ namespace DualPantoFramework
             SetSpeedControl(Handle, Convert.ToByte(tethered), tetherFactor, tetherInnerRadius, tetherOuterRadius, tetherStrategy, Convert.ToByte(pockEnabled));
         }
 
-        public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)
-        {
-            GameObject debugObject = GetDebugObject(isUpper);
-            if (position != null) debugObject.transform.position = (Vector3)position;
-            if (rotation != null) debugObject.transform.eulerAngles = new Vector3(0, (float)rotation, transform.eulerAngles.z);
-        }
+        //public void SetDebugObjects(bool isUpper, Vector3? position, float? rotation)
+        //{
+        //GameObject debugObject = GetDebugObject(isUpper);
+        //if (position != null) debugObject.transform.position = (Vector3)position;
+        //if (rotation != null) debugObject.transform.eulerAngles = new Vector3(0, (float)rotation, transform.eulerAngles.z);
+        //}
 
         private static float UnityToPantoRotation(float rotation)
         {

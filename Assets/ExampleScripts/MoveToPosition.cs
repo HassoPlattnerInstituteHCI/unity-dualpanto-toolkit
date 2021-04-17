@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DualPantoFramework;
+using System.Threading.Tasks;
 
 public class MoveToPosition : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class MoveToPosition : MonoBehaviour
     PantoHandle handle;
     async void Start()
     {
+        await Task.Delay(500);
         handle = isUpper
             ? (PantoHandle)GameObject.Find("Panto").GetComponent<UpperHandle>()
             : (PantoHandle)GameObject.Find("Panto").GetComponent<LowerHandle>();
