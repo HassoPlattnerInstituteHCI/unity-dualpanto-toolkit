@@ -436,9 +436,7 @@ namespace DualPantoFramework
             }
             else
             {
-                //upperHandle.SetPositions(upperHandlePos, upperHandleRot, upperGodObject);
-                //lowerHandle.SetPositions(lowerHandlePos, lowerHandleRot, lowerGodObject);
-                if (Input.GetMouseButton(0))
+                if (Input.GetMouseButton(0) && upperHandle.IsUserControlled())
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
@@ -446,7 +444,7 @@ namespace DualPantoFramework
                     upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
                     upperHandle.SetPositions(position, upperHandleRot, null);
                 }
-                if (Input.GetMouseButton(1))
+                if (Input.GetMouseButton(1) && lowerHandle.IsUserControlled())
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;

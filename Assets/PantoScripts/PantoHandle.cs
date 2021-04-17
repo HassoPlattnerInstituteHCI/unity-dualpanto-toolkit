@@ -211,6 +211,11 @@ namespace DualPantoFramework
             isFrozen = true;
         }
 
+        public bool IsUserControlled()
+        {
+            return userControlledPosition;
+        }
+
         float MaxMovementSpeed()
         {
             return 1.5f;
