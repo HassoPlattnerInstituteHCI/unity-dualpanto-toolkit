@@ -239,7 +239,14 @@ namespace DualPantoFramework
         public void Remove()
         {
             GetPantoSync().RemoveObstacle(getPantoIndex(), id);
-            //pantoEnabled = false;
+            foreach (Transform child in this.transform)
+            {
+                Debug.Log(child);
+                if (child.GetComponent<LineRenderer>())
+                {
+                    Destroy(child.gameObject);
+                }
+            }
         }
 
         /// <summar>
