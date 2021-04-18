@@ -42,7 +42,6 @@ namespace UnityEngine
             newObj.AddComponent<RailTrigger>();
         }
     }
-    
 
     public class RailTrigger : MonoBehaviour
     {
@@ -53,7 +52,7 @@ namespace UnityEngine
         private void Start()
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.clip = Resources.Load<AudioClip>("railSound");
+            audioSource.clip = Resources.Load<AudioClip>("Sounds/railSound");
             audioSource.loop = true;
             audioSource.volume = 0;
         }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -403,7 +403,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 1
-  showOutline: 0
 --- !u!1 &767868459
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,7 +546,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 0
-  showOutline: 0
 --- !u!1 &1184726424
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +657,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 1
-  showOutline: 0
   text: 
 --- !u!1 &1345781018
 GameObject:
@@ -696,7 +693,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 1
-  showOutline: 0
   text: 
 --- !u!65 &1345781021
 BoxCollider:
@@ -807,7 +803,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 0
   isPassable: 0
-  showOutline: 0
 --- !u!60 &1550062301
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -995,7 +990,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 1
-  showOutline: 0
   text: 
 --- !u!65 &1736803261
 BoxCollider:
@@ -1108,7 +1102,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 1
-  showOutline: 0
   text: 
 --- !u!65 &1778785117
 BoxCollider:
@@ -1345,7 +1338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: debug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: portName
@@ -1512,7 +1505,6 @@ MonoBehaviour:
   onUpper: 1
   onLower: 1
   isPassable: 0
-  showOutline: 0
 --- !u!65 &2031066674
 BoxCollider:
   m_ObjectHideFlags: 0

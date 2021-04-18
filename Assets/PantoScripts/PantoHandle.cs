@@ -11,10 +11,9 @@ namespace DualPantoFramework
     {
         protected bool isUpper = true;
         private GameObject handledGameObject;
-        private float speed = 5.0f;
         public bool inTransition = false;
         private float rotation;
-        static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 14.5f);
+        static Vector3 handleDefaultPosition = new Vector3(0f, 0f, 0f);
         private Vector3 position = handleDefaultPosition;
         private Vector3? godObjectPosition;
         protected bool userControlledPosition = true; //for debug only
@@ -63,7 +62,11 @@ namespace DualPantoFramework
             if (!pantoSync.debug)
             {
                 pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y + 180, isUpper);
+            }
+            else
+            {
+                Debug.DrawLine(handledGameObject.transform.position + Vector3.up, position + Vector3.up, Color.red, float.PositiveInfinity);
             }
             inTransition = true;
 
@@ -72,6 +75,7 @@ namespace DualPantoFramework
                 if (time > 3000)
                 {
                     Debug.Log("Abandoning gameobject that couldn't be reached: " + handledGameObject.name);
+                    inTransition = false;
                     return;
                 }
                 await Task.Delay(10);
@@ -146,7 +150,6 @@ namespace DualPantoFramework
         {
             pantoSync.UpdateHandlePosition(null, float.NaN, isUpper);
             userControlledRotation = true;
-
         }
 
         /// <summary>
@@ -187,6 +190,7 @@ namespace DualPantoFramework
                 pantoSync.FreeHandle(isUpper);
             }
             isFrozen = false;
+            inTransition = false;
         }
 
         /// <summary>
@@ -206,6 +210,11 @@ namespace DualPantoFramework
             isFrozen = true;
         }
 
+        public bool IsUserControlled()
+        {
+            return userControlledPosition;
+        }
+
         float MaxMovementSpeed()
         {
             return 1.5f;
@@ -223,7 +232,7 @@ namespace DualPantoFramework
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
             }
-            if (pantoSync.debug && userControlledPosition)
+            if (pantoSync.debug)// && userControlledPosition)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.position = position;
@@ -261,13 +270,25 @@ namespace DualPantoFramework
 
         protected void FixedUpdate()
         {
-            if (pantoSync.debug && handledGameObject != null && Vector3.Distance(handledGameObject.transform.position, position) < 0.1f)
+            if (pantoSync.debug)
             {
-                inTransition = false;
             }
-            if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
+            if (pantoSync.debug && handledGameObject != null)
             {
-                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, null, isUpper);
+                if (Vector3.Distance(handledGameObject.transform.position, position) < 0.1f)
+                {
+                    inTransition = false;
+                }
+                else
+                {
+                    Vector3 goalPos = handledGameObject.transform.position;
+                    //GetPantoSync().UpdateHandlePosition(position + (goalPos - position) * 0.1f, handledGameObject.transform.eulerAngles.y, isUpper);
+                    SetPositions(position + (goalPos - position) * 0.05f, handledGameObject.transform.eulerAngles.y, null);
+                }
+            }
+            else if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
+            {
+                GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
             }
         }
 
