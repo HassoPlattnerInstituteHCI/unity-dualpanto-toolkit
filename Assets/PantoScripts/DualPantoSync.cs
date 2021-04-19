@@ -399,17 +399,17 @@ namespace DualPantoFramework
             debugUpperHandle.transform.localScale = transform.localScale;
             debugUpperHandle.name = "MeHandle";
 
-            //prefab = Resources.Load("MeHandleGodObject");
-            //debugUpperGodObject = Instantiate(prefab) as GameObject;
-            //debugUpperGodObject.transform.position = position;
-            //debugUpperGodObject.name = "MeHandleGodObject";
-            //debugUpperGodObject.tag = "MeHandle";
+            prefab = Resources.Load("MeHandleGodObject");
+            debugUpperGodObject = Instantiate(prefab) as GameObject;
+            debugUpperGodObject.transform.position = position;
+            debugUpperGodObject.name = "MeHandleGodObject";
+            debugUpperGodObject.tag = "MeHandle";
 
-            //prefab = Resources.Load("ItHandleGodObject");
-            //debugLowerGodObject = Instantiate(prefab) as GameObject;
-            //debugLowerGodObject.transform.position = position;
-            //debugLowerGodObject.name = "ItHandleGodObject";
-            //debugLowerGodObject.tag = "ItHandle";
+            prefab = Resources.Load("ItHandleGodObject");
+            debugLowerGodObject = Instantiate(prefab) as GameObject;
+            debugLowerGodObject.transform.position = position;
+            debugLowerGodObject.name = "ItHandleGodObject";
+            debugLowerGodObject.tag = "ItHandle";
         }
 
         void OnDestroy()
