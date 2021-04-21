@@ -189,7 +189,7 @@ namespace DualPantoFramework
         {
             GameObject n = new GameObject();
             n.transform.parent = transform;
-            n.layer = 31;
+            n.layer = LayerMask.NameToLayer("MixedMode");
             LineRenderer lr = n.AddComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
@@ -239,7 +239,14 @@ namespace DualPantoFramework
         public void Remove()
         {
             GetPantoSync().RemoveObstacle(getPantoIndex(), id);
-            //pantoEnabled = false;
+            foreach (Transform child in this.transform)
+            {
+                Debug.Log(child);
+                if (child.GetComponent<LineRenderer>())
+                {
+                    Destroy(child.gameObject);
+                }
+            }
         }
 
         /// <summar>

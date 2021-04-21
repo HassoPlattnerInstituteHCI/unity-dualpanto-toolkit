@@ -7,6 +7,9 @@ TagManager:
   - PantoHandle
   - ItHandle
   - MeHandle
+  - ItTrail
+  - MeTrail
+  - PerceptionCone
   layers:
   - Default
   - TransparentFX
@@ -16,9 +19,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - HapticTextures
+  - BlindMode
+  - MixedMode
   - 
   - 
   - 

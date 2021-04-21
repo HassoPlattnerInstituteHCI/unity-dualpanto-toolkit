@@ -19,7 +19,7 @@ namespace DualPantoFramework
         {
             speechOut = new SpeechOut();
             scratchSound = gameObject.AddComponent<AudioSource>();
-            scratchSound.clip = Resources.Load<AudioClip>("scratch");
+            scratchSound.clip = Resources.Load<AudioClip>("Sounds/scratch");
             scratchSound.loop = true;
             scratchSound.volume = 1;
             lower = GameObject.Find("Panto").GetComponent<LowerHandle>();

@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 2307693089428900514}
   - component: {fileID: 5763654064626165513}
   - component: {fileID: 4485703323886267288}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: DoerteWorkingArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,10 +297,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blindView:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 512
   enhancedBlindView:
     serializedVersion: 2
-    m_Bits: 5120
+    m_Bits: 1536
   developmentView:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -473,15 +473,14 @@ GameObject:
   - component: {fileID: 1305547398829918299}
   - component: {fileID: 6488281642945532573}
   - component: {fileID: 4749783678075532512}
-  - component: {fileID: 8729338832266199785}
   - component: {fileID: 7514010203271449956}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: VisualizationPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1305547398829918299
 Transform:
   m_ObjectHideFlags: 0
@@ -545,20 +544,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8729338832266199785
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1147493856053161812}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &7514010203271449956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1252,7 +1237,7 @@ GameObject:
   - component: {fileID: 4615792043202523929}
   - component: {fileID: 2443863139540227316}
   - component: {fileID: 8322132819214234425}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: EmberWorkingArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2168,7 +2153,7 @@ GameObject:
   - component: {fileID: 4448097317320992897}
   - component: {fileID: 334029352965873684}
   - component: {fileID: 3117561587551626614}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: EmberWorkingAreaWhite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2380,7 +2365,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 512
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3110,7 +3095,7 @@ GameObject:
   - component: {fileID: 7051017208497526617}
   - component: {fileID: 1024537503750043979}
   - component: {fileID: 4794782899197110579}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: DoerteWorkingAreaWhite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
