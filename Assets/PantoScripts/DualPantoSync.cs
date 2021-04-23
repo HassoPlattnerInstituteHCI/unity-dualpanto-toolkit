@@ -556,7 +556,7 @@ namespace DualPantoFramework
 
         private static float UnityToPantoRotation(float rotation)
         {
-            return (-rotation) / (180f / Mathf.PI);
+            return (-rotation% 360) / (180f / Mathf.PI);
         }
 
         private static float PantoToUnityRotation(double pantoDegrees)
