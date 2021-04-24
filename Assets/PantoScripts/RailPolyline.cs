@@ -42,6 +42,21 @@ namespace UnityEngine
             );
             newObj.transform.LookAt(new Vector3(points[i].x, 0, points[i].y), Vector3.up);
             newObj.AddComponent<RailTrigger>();
+            DrawLine(points[i], points[i + 1]);
+        }
+
+        void DrawLine(Vector2 start, Vector2 end)
+        {
+            GameObject n = new GameObject();
+            n.transform.parent = transform;
+            n.layer = LayerMask.NameToLayer("MixedMode");
+            LineRenderer lr = n.AddComponent<LineRenderer>();
+            lr.startColor = Color.gray;
+            lr.positionCount = 2;
+            lr.SetPosition(0, new Vector3(start.x, 5, start.y));
+            lr.SetPosition(1, new Vector3(end.x, 5, end.y));
+            lr.startWidth = 0.05f * GetPantoSync().gameObject.transform.localScale.magnitude;
+            lr.material = Resources.Load("Materials/Colliders") as Material;
         }
     }
 
