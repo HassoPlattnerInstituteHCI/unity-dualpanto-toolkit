@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 namespace DualPantoFramework
 {
-    public class ColliderPolyline : MonoBehaviour
+    public class ColliderPolyline : PantoBehaviour
     {
         public Vector2[] points;
         protected Color gizmoColor = Color.green;
@@ -19,7 +19,7 @@ namespace DualPantoFramework
         {
             PantoLineCollider lc = this.gameObject.AddComponent<PantoLineCollider>();
             lc.start = points[i];
-            lc.end = points[i + 1];
+            lc.end = points[i + 1];           
             // lc.CreateObstacle();
             // lc.Enable();
         }
@@ -32,6 +32,7 @@ namespace DualPantoFramework
                 Gizmos.DrawLine(new Vector3(points[i].x, 5, points[i].y), new Vector3(points[i + 1].x, 5, points[i + 1].y));
             }
 
-        }
+        }        
+        
     }
 }

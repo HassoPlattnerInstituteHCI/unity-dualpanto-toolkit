@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DualPantoFramework
@@ -32,15 +33,16 @@ namespace DualPantoFramework
 
         void CreateTrails()
         {
-            if (visualizeItPath)
-            {
-                GameObject x = GameObject.Find("MeHandleGodObject");
-                GameObject go = Instantiate(Resources.Load("ItVisualizationParticles"), x.transform) as GameObject;
-            }
             if (visualizeMePath)
             {
-                GameObject x = GameObject.Find("ItHandleGodObject");
+                GameObject x = GameObject.Find("MeHandleGodObject");
+                Debug.Log("visualize me" + x.name);
                 GameObject go = Instantiate(Resources.Load("MeVisualizationParticles"), x.transform) as GameObject;
+            }
+            if (visualizeItPath)
+            {
+                GameObject x = GameObject.Find("ItHandleGodObject");
+                GameObject go = Instantiate(Resources.Load("ItVisualizationParticles"), x.transform) as GameObject;
             }
         }
 

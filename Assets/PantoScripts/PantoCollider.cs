@@ -189,7 +189,7 @@ namespace DualPantoFramework
         {
             GameObject n = new GameObject();
             n.transform.parent = transform;
-            n.layer = LayerMask.NameToLayer("MixedMode");
+            n.layer = LayerMask.NameToLayer("Walls2");
             LineRenderer lr = n.AddComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
