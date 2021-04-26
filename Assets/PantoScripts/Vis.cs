@@ -20,7 +20,7 @@ public class Vis : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             current++;
-            if (current > 2) current = 0;
+            if (current > 1) current = 0;
             Camera.main.cullingMask = views[current];
         }
     }

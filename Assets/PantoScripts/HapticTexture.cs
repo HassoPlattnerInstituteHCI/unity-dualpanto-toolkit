@@ -61,6 +61,8 @@ public class HapticTexture : MonoBehaviour
                 rail.transform.localScale = new Vector3((1.0f / ls.x) * 0.4f, 1 / ls.y, (1.0f / ls.z) * length);
                 rail.transform.position = new Vector3(height, 0, (hit1.point.z - hit2.point.z) * 0.5f + hit2.point.z);
                 rail.transform.eulerAngles = new Vector3(0, 0, 0);
+                Rail railComponent = rail.GetComponent<Rail>();
+                railComponent.CreateObstacle();
             }
         }
     }

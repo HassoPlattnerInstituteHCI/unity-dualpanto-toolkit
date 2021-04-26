@@ -185,7 +185,7 @@ namespace DualPantoFramework
             DrawLine(corners[corners.Length - 1], corners[0]);
         }
 
-        void DrawLine(Vector2 start, Vector2 end)
+        protected void DrawLine(Vector2 start, Vector2 end)
         {
             GameObject n = new GameObject();
             n.transform.parent = transform;

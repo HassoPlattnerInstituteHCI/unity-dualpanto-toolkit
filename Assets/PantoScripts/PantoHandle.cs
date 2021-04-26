@@ -130,6 +130,7 @@ namespace DualPantoFramework
             //TODO only consider enabled obstacles
             if (!pantoSync.debug) return GetPosition();
             Vector3 desiredPosition = GetPosition();
+            return desiredPosition;
             Vector3 direction = desiredPosition - currentPosition;
             Ray ray = new Ray(currentPosition, direction);
             RaycastHit hit;
