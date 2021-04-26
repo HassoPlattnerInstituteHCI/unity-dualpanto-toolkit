@@ -189,12 +189,12 @@ namespace DualPantoFramework
         {
             GameObject n = new GameObject();
             n.transform.parent = transform;
-            n.layer = LayerMask.NameToLayer("MixedMode");
+            n.layer = LayerMask.NameToLayer("Walls2");
             LineRenderer lr = n.AddComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
             lr.SetPosition(1, new Vector3(end.x, 5, end.y));
-            lr.startWidth = 0.05f * GetPantoSync().gameObject.transform.localScale.magnitude;
+            lr.startWidth = 0.02f * GetPantoSync().gameObject.transform.localScale.magnitude;
             lr.material = Resources.Load("Materials/Colliders") as Material;
         }
 
