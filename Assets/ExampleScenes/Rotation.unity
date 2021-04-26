@@ -228,12 +228,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 88050352}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04522c2d238b4f64ea786c244d6c7957, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a0cd99c2b2a343ab975bb8748134731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleStep: 90
+  isUpper: 1
   angle: 0
-  onUpper: 1
+  angleStep: 0.5
 --- !u!1 &832737044
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,12 +263,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 832737044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04522c2d238b4f64ea786c244d6c7957, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a0cd99c2b2a343ab975bb8748134731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleStep: 90
+  isUpper: 0
   angle: 0
-  onUpper: 0
+  angleStep: 1
 --- !u!65 &832737046
 BoxCollider:
   m_ObjectHideFlags: 0
