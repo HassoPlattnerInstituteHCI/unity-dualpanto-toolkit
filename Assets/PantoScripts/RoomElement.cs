@@ -10,7 +10,8 @@ namespace DualPantoFramework
         AudioSource audioSource;
         public LayerMask layerMask;
 
-        void Awake() {
+        void Awake()
+        {
             audioSource = GetComponent<AudioSource>();
             audioSource.loop = true;
             audioSource.playOnAwake = false;
@@ -27,7 +28,6 @@ namespace DualPantoFramework
 
         void OnTriggerEnter(Collider collider)
         {
-            Debug.Log("enter" + collider.name);
             if (collider.tag == "PerceptionCone" && IsViewClear(collider))
             {
                 if (audioSource.isPlaying) return;
@@ -41,7 +41,9 @@ namespace DualPantoFramework
             {
                 if (audioSource.isPlaying) return;
                 if (audioSource.enabled) audioSource.Play();
-            } else if (collider.tag == "PerceptionCone") {
+            }
+            else if (collider.tag == "PerceptionCone")
+            {
                 audioSource.Pause();
             }
         }
