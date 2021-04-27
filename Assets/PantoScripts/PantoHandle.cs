@@ -114,7 +114,6 @@ namespace DualPantoFramework
             if (pantoSync.debug)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                Debug.Log(debugObject.transform.position);
                 return debugObject.transform.position;
             }
             else

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 namespace DualPantoFramework
 {
-    public class ColliderPolyline : MonoBehaviour
+    public class ColliderPolyline : PantoBehaviour
     {
         public Vector2[] points;
         protected Color gizmoColor = Color.green;
