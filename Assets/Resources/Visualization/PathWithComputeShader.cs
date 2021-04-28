@@ -10,6 +10,7 @@ public class PathWithComputeShader : MonoBehaviour
     public ComputeShader computeShader;
     RenderTexture renderTexture;
     RenderTexture diffuseRenderTexture;
+    RenderTexture shiftRenderTexture;
 
     UpperHandle upperHandle;
     LowerHandle lowerHandle;
@@ -17,7 +18,9 @@ public class PathWithComputeShader : MonoBehaviour
     Vector3 u_lastPos;
     Vector3 l_lastPos;
     int doItCount = 0;
+    int shiftItCount = 0;
     const int growIntervalFrames = 20;
+    const int shiftIntervalFrames = 10;
     const int HEIGHT = 1024;
     const int WIDTH = HEIGHT * 2;
     Bounds bounds;
@@ -27,6 +30,28 @@ public class PathWithComputeShader : MonoBehaviour
         bounds = GetComponent<MeshFilter>().mesh.bounds;
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
+    }
+
+    public void SetCollision(Vector3 point)
+    {
+        if (renderTexture == null)
+        {
+            renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
+            renderTexture.enableRandomWrite = true;
+            renderTexture.autoGenerateMips = false;
+            renderTexture.wrapMode = TextureWrapMode.Clamp;
+            renderTexture.filterMode = FilterMode.Point;
+            renderTexture.Create();
+
+            GetComponent<MeshRenderer>().material.mainTexture = renderTexture;
+        }
+
+        Vector3 pos = point - transform.TransformPoint(bounds.min);
+        computeShader.SetFloat("collision_x", 1.0f - pos.x / bounds.size.x / transform.lossyScale.x);
+        computeShader.SetFloat("collision_y", 1.0f - pos.z / bounds.size.z / transform.lossyScale.z);
+        computeShader.SetTexture(0, "Result", renderTexture);
+
+        computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, 1);
     }
 
     void Update()
@@ -53,10 +78,22 @@ public class PathWithComputeShader : MonoBehaviour
             diffuseRenderTexture.Create();
         }
 
-        computeShader.SetTexture(0, "Result", renderTexture);
+        if (shiftRenderTexture == null)
+        {
+            shiftRenderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
+            shiftRenderTexture.enableRandomWrite = true;
+            shiftRenderTexture.autoGenerateMips = false;
+            shiftRenderTexture.wrapMode = TextureWrapMode.Clamp;
+            shiftRenderTexture.filterMode = FilterMode.Point;
+            shiftRenderTexture.Create();
+        }
+
         computeShader.SetTexture(1, "Result", renderTexture);
         computeShader.SetTexture(2, "Result", renderTexture);
-        computeShader.SetTexture(2, "DiffuseResult", diffuseRenderTexture);
+        computeShader.SetTexture(3, "Result", renderTexture);
+        computeShader.SetTexture(3, "DiffuseResult", diffuseRenderTexture);
+        computeShader.SetTexture(4, "DiffuseResult", diffuseRenderTexture);
+        computeShader.SetTexture(4, "ShiftResult", shiftRenderTexture);
         Vector3 upperPosition = upperHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
         Vector3 lowerPosition = lowerHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
 
@@ -83,6 +120,9 @@ public class PathWithComputeShader : MonoBehaviour
             computeShader.SetBool("doIt", doItCount == 0);
             if (++doItCount == growIntervalFrames)
                 doItCount = 0;
+            computeShader.SetBool("shiftIt", shiftItCount == 0);
+            if (++shiftItCount == shiftIntervalFrames)
+                shiftItCount = 0;
             computeShader.SetInt("width", WIDTH);
             computeShader.SetInt("height", HEIGHT);
             computeShader.SetFloat("decayRate", decayRate);
@@ -94,13 +134,14 @@ public class PathWithComputeShader : MonoBehaviour
             computeShader.SetFloat("l_last_y", 1.0f - l_lastPos.z / bounds.size.z / transform.lossyScale.z);
             computeShader.SetFloat("l_x", 1.0f - lowerPosition.x / bounds.size.x / transform.lossyScale.x);
             computeShader.SetFloat("l_y", 1.0f - lowerPosition.z / bounds.size.z / transform.lossyScale.z);
-            computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, 1);
             computeShader.Dispatch(1, renderTexture.width / 8, renderTexture.height / 8, 1);
             computeShader.Dispatch(2, renderTexture.width / 8, renderTexture.height / 8, 1);
+            computeShader.Dispatch(3, renderTexture.width / 8, renderTexture.height / 8, 1);
+            computeShader.Dispatch(4, renderTexture.width / 8, renderTexture.height / 8, 1);
             l_lastPos = lowerPosition;
             u_lastPos = upperPosition;
 
-            Graphics.Blit(diffuseRenderTexture, renderTexture);
+            Graphics.Blit(shiftRenderTexture, renderTexture);
         }
     }
 }

@@ -189,7 +189,7 @@ namespace DualPantoFramework
         {
             GameObject n = new GameObject();
             n.transform.parent = transform;
-            n.layer = LayerMask.NameToLayer("Walls2");
+            n.layer = LayerMask.NameToLayer("MixedMode");
             LineRenderer lr = n.AddComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
@@ -257,5 +257,23 @@ namespace DualPantoFramework
             pantoEnabled = true;
             GetPantoSync().EnableObstacle(getPantoIndex(), id);
         }
+
+        void OnCollisionEnter(Collision collision)
+        {
+            if (collision.collider.tag == "MeHandle")
+            {
+                Debug.Log("COLLIDER");
+                GameObject.FindObjectOfType<PathWithComputeShader>().SetCollision(collision.contacts[0].point);
+            }
+        }
+        void OnCollisionStay(Collision collision)
+        {
+            if (collision.collider.tag == "MeHandle")
+            {
+                Debug.Log("COLLIDER");
+                GameObject.FindObjectOfType<PathWithComputeShader>().SetCollision(collision.contacts[0].point);
+            }
+        }
+
     }
 }
