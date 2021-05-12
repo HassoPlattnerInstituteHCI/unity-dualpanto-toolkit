@@ -270,13 +270,11 @@ namespace DualPantoFramework
         {
             if (isUpper)
             {
-                //return debugUpperGodObject;
-                return debugUpperHandle;
+                return debugUpperGodObject;
             }
             else
             {
-                //return debugLowerGodObject;
-                return debugLowerHandle;
+                return debugLowerGodObject;
             }
 
         }
