@@ -181,13 +181,15 @@ void Diffuse(uint3 id : SV_DispatchThreadID)
 #pragma kernel Shift
 RWTexture2D<float4> ShiftResult;
 bool shiftIt;
+int shiftx;
+int shifty;
 
 [numthreads(8,8,1)]
 void Shift(uint3 id: SV_DispatchThreadID)
 {
 	if (shiftIt) {
-		int sampleX = min(width-1, max(0, id.x + 1));
-		int sampleY = min(height-1, max(0, id.y + 0));
+		int sampleX = min(width-1, max(0, id.x + shiftx));
+		int sampleY = min(height-1, max(0, id.y + shifty));
 		ShiftResult[id.xy] = DiffuseResult[int2(sampleX, sampleY)];
 	}
 	else {

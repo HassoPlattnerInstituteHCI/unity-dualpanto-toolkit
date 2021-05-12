@@ -19,8 +19,8 @@ public class PathWithComputeShader : MonoBehaviour
     Vector3 l_lastPos;
     int doItCount = 0;
     int shiftItCount = 0;
-    const int growIntervalFrames = 20;
-    const int shiftIntervalFrames = 10;
+    const int growIntervalFrames = 1000;
+    const int shiftIntervalFrames = 5;
     const int HEIGHT = 1024;
     const int WIDTH = HEIGHT * 2;
     Bounds bounds;
@@ -123,6 +123,8 @@ public class PathWithComputeShader : MonoBehaviour
             computeShader.SetBool("shiftIt", shiftItCount == 0);
             if (++shiftItCount == shiftIntervalFrames)
                 shiftItCount = 0;
+            computeShader.SetInt("shiftx", Random.Range(0, 1) > 0.9 ? 0 : 1);
+            computeShader.SetInt("shifty", Random.Range(0, 1) < 0.9 ? 0 : 1);
             computeShader.SetInt("width", WIDTH);
             computeShader.SetInt("height", HEIGHT);
             computeShader.SetFloat("decayRate", decayRate);
