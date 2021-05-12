@@ -29,6 +29,9 @@ public class PathWithComputeShader : MonoBehaviour
     
     void Update()
     {
+        if (!GameManager.Paused){
+            
+        
         if (renderTexture == null)
         {
             renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
@@ -80,6 +83,7 @@ public class PathWithComputeShader : MonoBehaviour
             u_lastPos = upperPosition;
 
             Graphics.Blit(diffuseRenderTexture, renderTexture);
+        }
         }
     }
 }
