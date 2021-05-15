@@ -92,7 +92,9 @@ namespace DualPantoFramework
             {
                 if (userControlledRotation)
                 {
-                    return rotation;
+                    //return rotation;
+                    GameObject debugObject = pantoSync.GetDebugObject(isUpper);
+                    return debugObject.transform.eulerAngles.y;
                 }
                 else
                 {
@@ -214,6 +216,10 @@ namespace DualPantoFramework
         {
             return userControlledPosition;
         }
+        public bool IsRotationUserControlled()
+        {
+            return userControlledRotation;
+        }
 
         float MaxMovementSpeed()
         {
@@ -225,32 +231,33 @@ namespace DualPantoFramework
             pantoSync.UpdateHandlePosition(null, rotation, isUpper);
         }
 
-        public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
+        public void SetPositions(Vector3 newPosition, float? newRotation, Vector3? newGodObjectPosition)
         {
-            if (pantoSync.debug && userControlledRotation)
+            if (pantoSync.debug && newRotation != null)
             {
+                Debug.Log("setting rotation");
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
+                debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)newRotation, debugObject.transform.eulerAngles.z);
             }
             if (pantoSync.debug)// && userControlledPosition)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                debugObject.transform.position = position;
+                debugObject.transform.position = newPosition;
             }
             if (!pantoSync.debug)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
+                debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)newRotation, debugObject.transform.eulerAngles.z);
                 debugObject.transform.position = position;
                 GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
                 if (newGodObjectPosition != null)
                 {
                     debugGodObject.transform.position = newGodObjectPosition.Value;
-                    debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, newRotation, debugGodObject.transform.eulerAngles.z);
+                    debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, (float)newRotation, debugGodObject.transform.eulerAngles.z);
                 }
             }
             position = newPosition;
-            rotation = newRotation;
+            if (newRotation != null) rotation = (float)newRotation;
             godObjectPosition = newGodObjectPosition;
         }
 
@@ -270,9 +277,6 @@ namespace DualPantoFramework
 
         protected void FixedUpdate()
         {
-            if (pantoSync.debug)
-            {
-            }
             if (pantoSync.debug && handledGameObject != null)
             {
                 if (Vector3.Distance(handledGameObject.transform.position, position) < 0.1f)
@@ -282,8 +286,9 @@ namespace DualPantoFramework
                 else
                 {
                     Vector3 goalPos = handledGameObject.transform.position;
-                    //GetPantoSync().UpdateHandlePosition(position + (goalPos - position) * 0.1f, handledGameObject.transform.eulerAngles.y, isUpper);
-                    SetPositions(position + (goalPos - position) * 0.05f, handledGameObject.transform.eulerAngles.y, null);
+                    float? newRot = null;
+                    if (!userControlledRotation) newRot = handledGameObject.transform.eulerAngles.y;
+                    SetPositions(position + (goalPos - position) * 0.05f, newRot, null);
                 }
             }
             else if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
