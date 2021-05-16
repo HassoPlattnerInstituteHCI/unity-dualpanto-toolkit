@@ -32,15 +32,15 @@ namespace DualPantoFramework
 
         void CreateTrails()
         {
-            if (visualizeItPath)
-            {
-                GameObject x = GameObject.Find("MeHandleGodObject");
-                GameObject go = Instantiate(Resources.Load("ItVisualizationParticles"), x.transform) as GameObject;
-            }
             if (visualizeMePath)
             {
-                GameObject x = GameObject.Find("ItHandleGodObject");
+                GameObject x = GameObject.Find("MeHandleGodObject");
                 GameObject go = Instantiate(Resources.Load("MeVisualizationParticles"), x.transform) as GameObject;
+            }
+            if (visualizeItPath)
+            {
+                GameObject x = GameObject.Find("ItHandleGodObject");
+                GameObject go = Instantiate(Resources.Load("ItVisualizationParticles"), x.transform) as GameObject;
             }
         }
 

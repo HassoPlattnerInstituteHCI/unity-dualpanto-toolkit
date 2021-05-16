@@ -245,7 +245,7 @@ namespace DualPantoFramework
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.position = newPosition;
                 debugGodObject.transform.position = newPosition;
-                debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, newRotation, debugGodObject.transform.eulerAngles.z);
+                debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, (float)newRotation, debugGodObject.transform.eulerAngles.z);
             }
             if (!pantoSync.debug)
             {
