@@ -62,5 +62,9 @@ namespace DualPantoFramework
             await Task.WhenAll(tasks);
             await Task.Delay(msDelay);
         }
+        void OnApplicationQuit()
+        {
+            speechOut.Stop();
+        }
     }
 }

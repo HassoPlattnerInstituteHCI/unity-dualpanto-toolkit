@@ -41,7 +41,6 @@ public class Tutorial : MonoBehaviour
     async void endTutorial()
     {
         await game.playSound(tutorialSteps[7]);
-        Debug.Log("enabling");
         GetComponent<Game>().enabled = true;
     }
 

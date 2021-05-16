@@ -24,6 +24,7 @@ namespace UnityEngine
 
             r.CreateObstacle(points[i], points[i + 1], displacement);
             r.Enable();
+            DrawLine(points[i], points[i+1]);
 
             // create new trigger for sound
             GameObject newObj = new GameObject("RailTrigger");
@@ -55,6 +56,18 @@ namespace UnityEngine
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
             lr.SetPosition(1, new Vector3(end.x, 5, end.y));
             lr.startWidth = 0.02f * GetPantoSync().gameObject.transform.localScale.magnitude;
+            lr.material = Resources.Load("Materials/Rails") as Material;
+        }
+        void DrawLine(Vector2 start, Vector2 end)
+        {
+            GameObject n = new GameObject();
+            n.transform.parent = transform;
+            n.layer = LayerMask.NameToLayer("Rails");
+            LineRenderer lr = n.AddComponent<LineRenderer>();
+            lr.positionCount = 2;
+            lr.SetPosition(0, new Vector3(start.x, 5, start.y));
+            lr.SetPosition(1, new Vector3(end.x, 5, end.y));
+            lr.startWidth = 0.01f * GetPantoSync().gameObject.transform.localScale.magnitude;
             lr.material = Resources.Load("Materials/Rails") as Material;
         }
     }

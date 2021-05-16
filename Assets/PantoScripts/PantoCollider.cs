@@ -194,7 +194,7 @@ namespace DualPantoFramework
             lr.positionCount = 2;
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
             lr.SetPosition(1, new Vector3(end.x, 5, end.y));
-            lr.startWidth = 0.05f * GetPantoSync().gameObject.transform.localScale.magnitude;
+            lr.startWidth = 0.02f * GetPantoSync().gameObject.transform.localScale.magnitude;
             lr.material = Resources.Load("Materials/Colliders") as Material;
         }
 
