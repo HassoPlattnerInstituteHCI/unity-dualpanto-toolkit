@@ -227,6 +227,7 @@ namespace DualPantoFramework
 
         public void SetPositions(Vector3 newPosition, float newRotation, Vector3? newGodObjectPosition)
         {
+            GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
             if (pantoSync.debug && userControlledRotation)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
@@ -236,13 +237,14 @@ namespace DualPantoFramework
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.position = position;
+                debugGodObject.transform.position = position;
+                debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, newRotation, debugGodObject.transform.eulerAngles.z);
             }
             if (!pantoSync.debug)
             {
                 GameObject debugObject = pantoSync.GetDebugObject(isUpper);
                 debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, newRotation, debugObject.transform.eulerAngles.z);
                 debugObject.transform.position = position;
-                GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
                 if (newGodObjectPosition != null)
                 {
                     debugGodObject.transform.position = newGodObjectPosition.Value;
