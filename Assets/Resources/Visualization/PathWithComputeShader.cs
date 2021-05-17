@@ -17,20 +17,21 @@ public class PathWithComputeShader : MonoBehaviour
     Vector3 u_lastPos;
     Vector3 l_lastPos;
     int doItCount = 0;
-    const int growIntervalFrames = 20;
+    const int growIntervalFrames = 10;
     const int HEIGHT = 1024;
     const int WIDTH = HEIGHT * 2;
-    Bounds bounds;
 
     void Start()
     {
-        bounds = GetComponent<MeshFilter>().mesh.bounds;
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
     }
-
+    
     void Update()
     {
+        if (!GameManager.Paused){
+            
+        
         if (renderTexture == null)
         {
             renderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
@@ -48,37 +49,19 @@ public class PathWithComputeShader : MonoBehaviour
             diffuseRenderTexture = new RenderTexture(WIDTH, HEIGHT, 24, RenderTextureFormat.ARGBFloat);
             diffuseRenderTexture.enableRandomWrite = true;
             diffuseRenderTexture.autoGenerateMips = false;
-            diffuseRenderTexture.wrapMode = TextureWrapMode.Clamp;
+            renderTexture.wrapMode = TextureWrapMode.Clamp;
             diffuseRenderTexture.filterMode = FilterMode.Point;
             diffuseRenderTexture.Create();
         }
 
         computeShader.SetTexture(0, "Result", renderTexture);
         computeShader.SetTexture(1, "Result", renderTexture);
-        computeShader.SetTexture(2, "Result", renderTexture);
-        computeShader.SetTexture(2, "DiffuseResult", diffuseRenderTexture);
+        computeShader.SetTexture(1, "DiffuseResult", diffuseRenderTexture);
+        var bounds = GetComponent<MeshFilter>().mesh.bounds;
         Vector3 upperPosition = upperHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
         Vector3 lowerPosition = lowerHandle.HandlePosition(new Vector3(0, 0, 0)) - transform.TransformPoint(bounds.min);
 
-        float[] positionXs = new float[10];
-        float[] positionYs = new float[10];
-        AudioSource[] sounds = GameObject.FindObjectsOfType<AudioSource>();
-        int i = 0;
-        foreach (AudioSource s in sounds)
-        {
-            if (!s.isPlaying) return;
-            if (i >= 10) return; //limited number of sources can be displayed
-            Vector3 pos = s.transform.position - transform.TransformPoint(bounds.min);
-            positionXs[i] = 1.0f - pos.x / bounds.size.x / transform.lossyScale.x;
-            positionYs[i] = 1.0f - pos.z / bounds.size.z / transform.lossyScale.z;
-            i++;
-        }
-
-        if (u_lastPos != null && l_lastPos != null)
-        {
-            computeShader.SetInts("numberOfSoundSources", sounds.Length);
-            computeShader.SetFloats("soundPositionXs", positionXs);
-            computeShader.SetFloats("soundPositionYs", positionYs);
+        if (u_lastPos != null && l_lastPos != null) {
             computeShader.SetBool("moving", true);
             computeShader.SetBool("doIt", doItCount == 0);
             if (++doItCount == growIntervalFrames)
@@ -96,11 +79,11 @@ public class PathWithComputeShader : MonoBehaviour
             computeShader.SetFloat("l_y", 1.0f - lowerPosition.z / bounds.size.z / transform.lossyScale.z);
             computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, 1);
             computeShader.Dispatch(1, renderTexture.width / 8, renderTexture.height / 8, 1);
-            computeShader.Dispatch(2, renderTexture.width / 8, renderTexture.height / 8, 1);
             l_lastPos = lowerPosition;
             u_lastPos = upperPosition;
 
             Graphics.Blit(diffuseRenderTexture, renderTexture);
+        }
         }
     }
 }
