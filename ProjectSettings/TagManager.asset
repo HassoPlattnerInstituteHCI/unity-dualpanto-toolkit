@@ -42,7 +42,7 @@ TagManager:
   - Handles
   - Rails
   - Walls2
-  - VisModeDoom- 
+  - VisModeDoom 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
