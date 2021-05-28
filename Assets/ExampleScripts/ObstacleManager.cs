@@ -2,6 +2,7 @@
 using DualPantoFramework;
 public class ObstacleManager : MonoBehaviour
 {
+    GameObject perceptionCone;
     PantoCollider[] pantoColliders;
     void Start()
     {
@@ -11,6 +12,12 @@ public class ObstacleManager : MonoBehaviour
             collider.CreateObstacle();
             collider.Enable();
         }
+        foreach (GameObject r in GameObject.FindGameObjectsWithTag("Rail"))
+        {
+            RailPolyline rail = r.GetComponent<RailPolyline>();
+            rail.CreateObstacles();
+        }
+        AddPerceptionCone();
     }
 
     void Update()
@@ -30,4 +37,13 @@ public class ObstacleManager : MonoBehaviour
             }
         }
     }
+
+    void AddPerceptionCone()
+    {
+        GameObject parent = GameObject.FindGameObjectWithTag("MeHandle");
+        UnityEngine.Object cone = Resources.Load("PerceptionCone");
+        perceptionCone = Instantiate(cone, parent.transform) as GameObject;
+        perceptionCone.name = "MeHandlePerceptionCone";
+    }
+
 }

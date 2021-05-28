@@ -17,8 +17,8 @@ namespace DualPantoFramework
         public float innerRadius;
         public float outerRadius;
         public bool pockEnabled;
-        public IntroContourStrategy introContourOption;
         public SpeedControlStrategy speedControlOption;
+        public IntroContourStrategy introContourOption;
         public bool visualizeMePath;
         public bool visualizeItPath;
         void UpdateSettings()

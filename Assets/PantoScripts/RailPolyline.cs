@@ -35,7 +35,7 @@ namespace UnityEngine
             BoxCollider newTrigger = newObj.AddComponent<BoxCollider>();
             newTrigger.isTrigger = true;
             newTrigger.size = new Vector3(
-                1, // <--- width of trigger
+                0.1f, // <--- width of trigger
                 10,
                 Vector2.Distance(points[i], points[i + 1])
             );
@@ -72,7 +72,8 @@ namespace UnityEngine
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            Debug.Log(other.tag);
+            if (other.CompareTag("Player") || other.CompareTag("MeHandle"))
             {
                 //audioSource.Play();
                 fadeTarget = 1;
@@ -81,7 +82,7 @@ namespace UnityEngine
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") || other.CompareTag("MeHandle"))
             {
                 //audioSource.Stop();
                 fadeTarget = 0;
