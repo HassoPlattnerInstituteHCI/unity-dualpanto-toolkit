@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 469850843357933149}
   - component: {fileID: 4513456394820284433}
   - component: {fileID: 5071142004099565300}
-  m_Layer: 0
+  m_Layer: 27
   m_Name: PerceptionCone
   m_TagString: PerceptionCone
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -1904673785501896028, guid: f38d04a08d0d84fa39f6330773ee1774, type: 3}
+  m_Mesh: {fileID: -1904673785501896028, guid: bbe106802bed40142bb03b91104017fb, type: 3}
 --- !u!54 &5071142004099565300
 Rigidbody:
   m_ObjectHideFlags: 0
