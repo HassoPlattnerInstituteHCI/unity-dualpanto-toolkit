@@ -39,10 +39,10 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Handles
+  - Rails
+  - Walls2
+  - VisModeDoom 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
