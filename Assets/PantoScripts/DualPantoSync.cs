@@ -388,13 +388,13 @@ namespace DualPantoFramework
             UnityEngine.Object prefab = Resources.Load("ItHandlePrefab");
             debugLowerHandle = Instantiate(prefab) as GameObject;
             debugLowerHandle.transform.position = position;
-            debugLowerHandle.transform.localScale = transform.localScale;
+            debugLowerHandle.transform.localScale = transform.localScale/2;
             debugLowerHandle.name = "ItHandle";
 
             prefab = Resources.Load("MeHandlePrefab");
             debugUpperHandle = Instantiate(prefab) as GameObject;
             debugUpperHandle.transform.position = position;
-            debugUpperHandle.transform.localScale = transform.localScale;
+            debugUpperHandle.transform.localScale = transform.localScale/2;
             debugUpperHandle.name = "MeHandle";
 
             prefab = Resources.Load("MeHandleGodObject");
