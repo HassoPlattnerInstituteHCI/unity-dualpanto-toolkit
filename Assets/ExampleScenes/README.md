@@ -13,6 +13,9 @@ A haptic texture consists of rails in parallel or in a grid. Moving over a textu
 ### Introduction
 Contains multiple objects that will be introduced at the start of the game.
 
+### Level Introduction System
+An alterative, more sophisticated way to introduce a scene. Features a graphic editor. More information can be found [here](../PantoScripts/LevelIntroducer/README.md).
+
 ### Many Obstacles
 A scene with a large amount of obstacles that vary in size. This scene uses the `ObstacleSphere`, as it contains more obstacles that can be rendered on the device at once. The sphere will only activate obstacles that are close to the handles.
 
