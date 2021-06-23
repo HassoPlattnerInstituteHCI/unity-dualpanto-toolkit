@@ -20,6 +20,8 @@ namespace DualPantoFramework
         protected bool userControlledRotation = true;
         public bool isFrozen = false;
         private AudioListener listener; // needed to register spatial audio
+        private Vector3 handledGameObjectLastPos;
+
         void Start()
         {
             listener = new AudioListener();
@@ -59,6 +61,7 @@ namespace DualPantoFramework
             }
             Debug.Log("[DualPanto] Switching to: " + newHandle.name);
             handledGameObject = newHandle;
+            handledGameObjectLastPos = handledGameObject.transform.position;
             if (!pantoSync.debug)
             {
                 pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
@@ -293,10 +296,13 @@ namespace DualPantoFramework
                     SetPositions(position + (goalPos - position) * 0.05f, newRot, null);
                 }
             }
-            else if (handledGameObject != null && !inTransition && !isFrozen)// reached gameobject initially 
+            else if (handledGameObject != null && handledGameObject.transform.position != handledGameObjectLastPos && !isFrozen)// reached gameobject initially 
             {
+                // for SwitchTo(): follow the handledGameObject
                 GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y, isUpper);
             }
+            if (handledGameObject)
+            handledGameObjectLastPos = handledGameObject.transform.position; 
         }
 
         public void TweeningEnded()
