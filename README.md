@@ -16,11 +16,13 @@ For version control you will need git.
 ### Adding the framework to your project
 If you already have a Unity project, that's great. If not, create a new Unity 3D project, initialize a git repo with `git init` and add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore).
 
-Add this framework as a submodule into the Assets folder:
+[Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/releases/tag/v1.2) of this repository and drag it into Unity. 
+
+Alternatively you can add this framework as a submodule into the Assets folder. This is recommended if you wish to make changes to the framework:
 ```
 cd path/to/repo
 cd Assets
-git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
+git submodule add git@github.com:HassoPlattnerInstituteHCI/unity-dualpanto-framework
 git submodule update --init --recursive
 ```
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
