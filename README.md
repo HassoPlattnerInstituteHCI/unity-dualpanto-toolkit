@@ -16,11 +16,13 @@ For version control you will need git.
 ### Adding the framework to your project
 If you already have a Unity project, that's great. If not, create a new Unity 3D project, initialize a git repo with `git init` and add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore).
 
-Add this framework as a submodule into the Assets folder:
+[Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/releases/tag/v1.2) of this repository and drag it into Unity. 
+
+Alternatively you can add this framework as a submodule into the Assets folder. This is recommended if you wish to make changes to the framework:
 ```
 cd path/to/repo
 cd Assets
-git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework
+git submodule add git@github.com:HassoPlattnerInstituteHCI/unity-dualpanto-framework
 git submodule update --init --recursive
 ```
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
@@ -93,9 +95,11 @@ Don't hold the handles too hard or push against the motors too hard.
 ### Game objects do not collide with obstacles in debug mode.
 Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Assets/documentation/documentation.md) for more info on usage.
 
-
 ### No input or output from the DualPanto is arriving, the Console is showing *Received sync*, but no *Received heartbeat*.  
 This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  
+
+### The device keeps crashing
+You might be adding too many obstacles at once. The Panto has a limited capacity for the amount and size for obstacles it can store at any time. A large obstacle takes up as much capacity as many small ones. If you only need obstacles on one handle, it is good practice to only only toggle `onUpper` or `onLower`.
 
 ### Debugging
 If you keep having troubles, you can enable `show raw values` in the DualPantoSync component. A Popup will show you the raw position and rotation values Unity receives for each handle, how much time has passed since t last received a heartbeat from the device, the name of the port and the current protocol revision id.

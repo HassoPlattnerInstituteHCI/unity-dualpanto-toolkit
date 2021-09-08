@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace DualPantoFramework
 {
@@ -52,6 +56,9 @@ namespace DualPantoFramework
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
         public bool showRawValues = true;
+        public bool logRawValues = true;
+        List<string> rawValues;
+        public string path = "debuglog_" + SceneManager.GetActiveScene().name + DateTime.Now + ".csv";
         protected ulong Handle;
         private static LowerHandle lowerHandle;
         private static UpperHandle upperHandle;
@@ -208,6 +215,18 @@ namespace DualPantoFramework
         private void OnPantoStarted()
         {
             connected = false;
+            if(logRawValues){
+                if (!File.Exists(path))
+                {
+                    // add header to csv file (watch the order of attributes and questionnaire answers
+                    string header = "Pos0x,Pos0y,Rot0,Pos1x,Pos1y,Rot1";
+                    using (StreamWriter sw = File.CreateText(path))
+                    {
+                        sw.WriteLine(header);
+                    }
+                    rawValues = new List<string>();
+                }
+            }
             while (!connected)
             {
                 Poll(Handle);
@@ -246,7 +265,23 @@ namespace DualPantoFramework
 
             Debug.DrawLine(upperHandlePos + upper * Vector3.back * 0.5f, upperHandlePos + upper * Vector3.forward, Color.black);
             Debug.DrawLine(upperHandlePos + upper * Vector3.left * 0.5f, upperHandlePos + upper * Vector3.right * 0.5f, Color.black);
-            if (showRawValues) uiManager.UpdateValues(positions);
+            if (showRawValues) {
+                uiManager.UpdateValues(positions);
+            }
+            if (logRawValues){
+                ArrayList rawValueAttrs = new ArrayList{upperHandlePos.x,upperHandlePos.y,upperHandleRot,lowerHandlePos.x,lowerHandlePos.y,lowerHandleRot};
+                rawValues.Add(string.Join(",", rawValueAttrs));
+                if (rawValues.Count == 10){
+                  using (StreamWriter writer = File.AppendText(path))
+                    {
+                        foreach (string vals in rawValues)
+                        {
+                            writer.WriteLine(vals);
+                        }
+                        rawValues.Clear();
+                    }
+                }
+            }
         }
 
         private static ulong OpenPort(string port)
