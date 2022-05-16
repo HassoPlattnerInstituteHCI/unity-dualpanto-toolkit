@@ -3,7 +3,7 @@
 ## Installation Guide (Using UnityPanto)
 
 ### Unity
-Install [Unity Version 2020.1.6](https://unity3d.com/de/get-unity/download/archive) (best 2020.1.6f1).
+Install 2021.3.0f1 (best 2020.1.6f1).
 
 #### VisualStudio & Git
 You will need something to edit code (e.g. the VisualStudio IDE or VisualStudio Code).
