@@ -434,21 +434,36 @@ namespace DualPantoFramework
             }
             else
             {
-                if (Input.GetMouseButton(0) && upperHandle.IsUserControlled())
+                if (Input.GetMouseButton(0) && (upperHandle.IsRotationUserControlled() || upperHandle.IsUserControlled()))
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
-                    Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                    upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
-                    upperHandle.SetPositions(position, upperHandleRot, null);
+                    if (upperHandle.IsUserControlled())
+                    {
+                        Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
+                        upperHandle.SetPositions(position, upperHandle.GetRotation(), null);
+                    }
+                    else if (upperHandle.IsRotationUserControlled())
+                    {
+                        upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
+                        upperHandle.Rotate(upperHandleRot);
+                    }
+
                 }
-                if (Input.GetMouseButton(1) && lowerHandle.IsUserControlled())
+                if (Input.GetMouseButton(1) && lowerHandle.IsRotationUserControlled() || lowerHandle.IsUserControlled())
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
-                    Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
-                    lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
-                    lowerHandle.SetPositions(position, lowerHandleRot, null);
+                    if (lowerHandle.IsUserControlled())
+                    {
+                        Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
+                        lowerHandle.SetPositions(position, lowerHandle.GetRotation(), null);
+                    }
+                    else if (lowerHandle.IsRotationUserControlled())
+                    {
+                        lowerHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
+                        lowerHandle.Rotate(upperHandleRot);
+                    }
                 }
             }
             if (Input.GetKeyDown(KeyCode.Q))
@@ -488,33 +503,38 @@ namespace DualPantoFramework
             }
         }
 
-        public void UpdateHandlePosition(Vector3? position, float? rotation, bool isUpper)
+        public void UpdateHandlePosition(Vector3? pos, float? rotation, bool isUpper)
         {
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
                 //TODO: also update the GodObject
-                if (position != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)position);
-                if (rotation != null) debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
+                if (pos != null) debugObject.transform.position = GetPositionWithObstacles(debugObject.transform.position, (Vector3)pos);
+                if (rotation != null && !float.IsNaN((float)rotation))
+                    debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)rotation, debugObject.transform.eulerAngles.z);
                 return;
             }
 
             float pantoX = float.NaN;
             float pantoY = float.NaN;
-            if (position != null)
+            if (pos != null)
             {
-                Vector3 definitePosition = (Vector3)position;
-                Vector2 pantoPoint = UnityToPanto(new Vector2(definitePosition.x, definitePosition.z));
-                pantoX = pantoPoint.x;
-                pantoY = pantoPoint.y;
+                Vector3 definitePosition = (Vector3)pos;
+                if (IsInBounds(new Vector2(definitePosition.x, definitePosition.z))) 
+                {
+                    Vector2 pantoPoint = UnityToPanto(new Vector2(definitePosition.x, definitePosition.z));
+                    pantoX = pantoPoint.x;
+                    pantoY = pantoPoint.y;
+                }
             }
+
+            float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
+            SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoX, pantoY, pantoRotation);
             //if (IsInBounds(pantoPoint))
             {
                 //Vector2 currentPantoPoint = new Vector2();
                 //if (isUpper) currentPantoPoint = UnityToPanto(new Vector2(upperHandlePos.x, upperHandlePos.z));
                 //else currentPantoPoint = UnityToPanto(new Vector2(lowerHandlePos.x, lowerHandlePos.z));
-                float pantoRotation = rotation != null ? UnityToPantoRotation((float)rotation) : float.NaN;
-                SendMotor(Handle, (byte)0, isUpper ? (byte)0 : (byte)1, pantoX, pantoY, pantoRotation);
             }
             //else
             //{
