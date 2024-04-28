@@ -34,7 +34,7 @@ public abstract class PantoIntroWithAudio : PantoIntroBase
     protected bool IsSpeakingOrPlaying()
     { // even more avoiding of unnecessary initialization
         if (_speechOut != null)
-            if (_speechOut.IsSpeaking())
+            // if (_speechOut.IsSpeaking())
                 return true;
         if (_audioSrc)
             if (_audioSrc.isPlaying)

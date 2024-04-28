@@ -145,6 +145,7 @@ namespace DualPantoFramework
         {
             Debug.Log("[DualPanto] Received sync");
             connected = true;
+            Debug.Log("[DualPanto] Sending SyncAck");
             SendSyncAck(handle);
         }
 

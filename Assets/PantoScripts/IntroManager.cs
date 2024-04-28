@@ -69,11 +69,11 @@ namespace DualPantoFramework
                 Vector3 next = i % 2 == 1 ? start2 + ((float)i / (float)segments) * vector2 : start1 + ((float)i / (float)segments) * vector1;
                 await MoveToPosition(next, onUpper);
             }
-            while (speechOut.IsSpeaking())
-            {
-                await MoveToPosition(end1, onUpper);
-                await MoveToPosition(end2, onUpper);
-            }
+            // while (speechOut.IsSpeaking())
+            // {
+            //     await MoveToPosition(end1, onUpper);
+            //     await MoveToPosition(end2, onUpper);
+            // }
 
         }
         // mark the exit by going back and forth using the handle
@@ -81,11 +81,11 @@ namespace DualPantoFramework
         {
             speechOut.Speak(text);
             scratchSound.Play();
-            while (speechOut.IsSpeaking())
-            {
-                await MoveToPosition(end, onUpper);
-                await MoveToPosition(start, onUpper);
-            }
+            // while (speechOut.IsSpeaking())
+            // {
+            //     await MoveToPosition(end, onUpper);
+            //     await MoveToPosition(start, onUpper);
+            // }
             scratchSound.Pause();
         }
         public async Task IntroduceContours(GameObject[] positions, string text, bool onUpper = false)
