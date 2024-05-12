@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     /// <summary>
     /// The lower handle of the Panto, usually the It Handle.

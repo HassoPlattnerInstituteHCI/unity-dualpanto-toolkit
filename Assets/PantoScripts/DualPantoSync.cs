@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     /// <summary>
     /// The main DualPanto class. Takes care of the communication with the Panto.

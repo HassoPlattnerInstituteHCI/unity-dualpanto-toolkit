@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using DualPantoFramework;
+using DualPantoToolkit;
 
 public class PantoObjectMenu : MonoBehaviour
 {

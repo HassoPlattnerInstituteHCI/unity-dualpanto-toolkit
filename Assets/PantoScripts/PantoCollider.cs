@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     public abstract class PantoCollider : PantoBehaviour
     {

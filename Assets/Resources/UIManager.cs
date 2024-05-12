@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     public class UIManager : MonoBehaviour
     {

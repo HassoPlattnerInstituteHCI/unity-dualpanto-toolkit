@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
-using DualPantoFramework;
+using DualPantoToolkit;
 using System;
 
 public class MovingObstacleManager : MonoBehaviour

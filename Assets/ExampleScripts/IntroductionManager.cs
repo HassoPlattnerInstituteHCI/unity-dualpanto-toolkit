@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using SpeechIO;
-using DualPantoFramework;
+using DualPantoToolkit;
 
 public class IntroductionManager : MonoBehaviour
 {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     /// <summary>
     /// Representation of a panto handle.

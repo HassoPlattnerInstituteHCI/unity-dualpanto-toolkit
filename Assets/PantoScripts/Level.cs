@@ -4,7 +4,7 @@ using UnityEngine;
 using SpeechIO;
 using System.Threading.Tasks;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     /// <summary>
     /// A level that can be introduced to the player. You could use one of these for each scene, or for each room in a scene.

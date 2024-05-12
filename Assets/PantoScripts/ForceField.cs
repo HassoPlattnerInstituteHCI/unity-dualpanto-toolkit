@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     abstract public class ForceField : MonoBehaviour
     {

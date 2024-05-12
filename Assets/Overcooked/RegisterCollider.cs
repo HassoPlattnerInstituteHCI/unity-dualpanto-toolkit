@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
-using DualPantoFramework;
+using DualPantoToolkit;
 
 public class RegisterCollider : MonoBehaviour
 {

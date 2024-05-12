@@ -2,7 +2,7 @@
 using SpeechIO;
 using System.Collections.Generic;
 using UnityEngine;
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
 
 

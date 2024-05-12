@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Threading.Tasks;
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     public class ColliderPolyline : PantoBehaviour
     {

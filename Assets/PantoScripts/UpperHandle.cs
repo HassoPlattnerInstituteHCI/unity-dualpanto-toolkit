@@ -1,4 +1,4 @@
-﻿namespace DualPantoFramework
+﻿namespace DualPantoToolkit
 {
     /// <summary>
     /// The upper handle of the Panto, usually the Me Handle.

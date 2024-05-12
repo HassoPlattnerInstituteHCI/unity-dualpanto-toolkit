@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     /// <summary>
     /// Applies a force directed at the center of the field on any object with a "MeHandle" or "ItHandle" tag within its area.

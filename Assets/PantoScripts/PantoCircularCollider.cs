@@ -1,4 +1,4 @@
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     public class PantoCircularCollider : PantoCollider
     {

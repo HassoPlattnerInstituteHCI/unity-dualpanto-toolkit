@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using DualPantoFramework;
+using DualPantoToolkit;
 
 public class Tutorial : MonoBehaviour
 {

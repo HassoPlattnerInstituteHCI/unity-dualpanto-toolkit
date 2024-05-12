@@ -1,4 +1,4 @@
-# unity-dualpanto-framework
+# unity-dualpanto-toolkit
 
 ## Installation Guide (Using UnityPanto)
 
@@ -16,20 +16,20 @@ For version control you will need git.
 ### Adding the framework to your project
 If you already have a Unity project, that's great. If not, create a new Unity 3D project, initialize a git repo with `git init` and add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore).
 
-[Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/releases/tag/v1.2) of this repository and drag it into Unity. 
+[Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) of this repository and drag it into Unity. 
 
 Alternatively you can add this framework as a submodule into the Assets folder. This is recommended if you wish to make changes to the framework:
 ```
 cd path/to/repo
 cd Assets
-git submodule add git@github.com:HassoPlattnerInstituteHCI/unity-dualpanto-framework
+git submodule add git@github.com:HassoPlattnerInstituteHCI/unity-dualpanto-toolkit
 git submodule update --init --recursive
 ```
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
 
 ## Creating a Panto Application in Unity
 ### Adding the right components
-Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-framework -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach.
+Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-toolkit -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach.
 ![Panto Prefab in Scene](/Documentation/readme_images/panto_prefab_with_highlights.png)
 
 ### Setting up the camera
@@ -87,13 +87,13 @@ On the back of your dualPanto device is a button next to the cable connection. M
 Try to reset the dualPanto device using the button on the back. For this see _How do I reset my dualPanto device._
 
 ### dualPanto handles not moving physically.
-Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on)
+Have you turned the device on? For this see [How do I turn my dualPanto device on?](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/blob/master/README.md#how-do-i-turn-my-dualpanto-device-on)
 
 ### dualPanto works sometimes/Message _Skipping god object_ appears.
 Don't hold the handles too hard or push against the motors too hard.
 
 ### Game objects do not collide with obstacles in debug mode.
-Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-framework/blob/master/Assets/documentation/documentation.md) for more info on usage.
+Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/blob/master/Assets/documentation/documentation.md) for more info on usage.
 
 ### No input or output from the DualPanto is arriving, the Console is showing *Received sync*, but no *Received heartbeat*.  
 This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  

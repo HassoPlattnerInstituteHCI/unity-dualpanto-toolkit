@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     public class PantoLineCollider : PantoCollider
     {

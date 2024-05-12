@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using DualPantoFramework;
+using DualPantoToolkit;
 
 public class RotatingHandle : MonoBehaviour
 {

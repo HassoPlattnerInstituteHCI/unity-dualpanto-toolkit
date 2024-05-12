@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace DualPantoFramework
+namespace DualPantoToolkit
 {
     public class ObjectOfInterest : MonoBehaviour
     {
