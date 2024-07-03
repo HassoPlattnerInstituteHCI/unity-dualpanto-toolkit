@@ -444,14 +444,14 @@ namespace DualPantoToolkit
                         Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
                         upperHandle.SetPositions(position, upperHandle.GetRotation(), null);
                     }
-                    else if (upperHandle.IsRotationUserControlled())
+                    if (upperHandle.IsRotationUserControlled())
                     {
                         upperHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
                         upperHandle.Rotate(upperHandleRot);
                     }
 
                 }
-                if (Input.GetMouseButton(1) && lowerHandle.IsRotationUserControlled() || lowerHandle.IsUserControlled())
+                if (Input.GetMouseButton(1) && (lowerHandle.IsRotationUserControlled() || lowerHandle.IsUserControlled()))
                 {
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float mouseRotation = Input.GetAxis("Horizontal") * debugRotationSpeed * Time.deltaTime * 60f;
@@ -460,10 +460,10 @@ namespace DualPantoToolkit
                         Vector3 position = new Vector3(mousePosition.x, 0.0f, mousePosition.z);
                         lowerHandle.SetPositions(position, lowerHandle.GetRotation(), null);
                     }
-                    else if (lowerHandle.IsRotationUserControlled())
+                    if (lowerHandle.IsRotationUserControlled())
                     {
-                        lowerHandleRot = debugUpperHandle.transform.eulerAngles.y + mouseRotation;
-                        lowerHandle.Rotate(upperHandleRot);
+                        lowerHandleRot = debugLowerHandle.transform.eulerAngles.y + mouseRotation;
+                        lowerHandle.Rotate(lowerHandleRot);
                     }
                 }
             }
