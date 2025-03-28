@@ -61,7 +61,7 @@ The _Port Name_ in your Panto Object would hence be needed to be changed to "//.
 - In your Unity Scene, add a cube using the global menu `GameObject -> 3D Object -> Cube`, or through the right-click menu in the game object hierarchy.
 - Select the cube and attach the `MeHandle` component to it.
 It should now follow the movement of the Upper Panto Handle.
-![Adding the player script to the cube](/Documentation/readme_images/adding_script_to_object.png)
+![Adding the player script to the cube](/Documentation/readme_images/adding-script-to-object-2.jpg)
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
