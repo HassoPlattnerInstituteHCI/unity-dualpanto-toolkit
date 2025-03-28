@@ -1,22 +1,26 @@
 # unity-dualpanto-toolkit
+This repo provides a [Unity Package](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) for developing Unity Applications for dualpanto.
 
 ## Installation Guide (Using UnityPanto)
 
 ### Unity
-Install 2021.3.0f1 (best 2020.1.6f1).
+- Install [Unity Hub](https://unity.com/download).
+- Install editor version 2021.3.0f1 (alternatively  2020.1.6f1) from the [Unity Download Archive](https://unity.com/de/releases/editor/archive). **If on Apple Silicon, use Intel version under Rosetta.**
 
-#### VisualStudio & Git
-You will need something to edit code (e.g. the VisualStudio IDE or VisualStudio Code).
-For version control you will need git.
+#### Code Editor & Git
+- You will need something to edit C# code (VSCode or Rider work great, VisualStudio IDE is fine too).
+- For version control you will need git.
 
 ### Install the ESP32 driver
+If you haven't already, get the driver needed to communicate with the dualpanto microcontroller
 - [Download](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers) the installer for your OS-Version.
 - Run the installer.
 
 ### Adding the framework to your project
-If you already have a Unity project, that's great. If not, create a new Unity 3D project, initialize a git repo with `git init` and add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore).
-
-[Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) of this repository and drag it into Unity. 
+1. Open a blank Unity project.
+2. Initialize a git repo by running `git init` in your project directory. If you want, [add a remote](https://docs.github.com/en/get-started/git-basics/managing-remote-repositories)
+3. Add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore) at the root of your project directory
+4. [Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) of the Unity package and drag it into Unity. 
 
 Alternatively you can add this framework as a submodule into the Assets folder. This is recommended if you wish to make changes to the framework:
 ```
@@ -29,12 +33,11 @@ You can find the installation instructions for SpeechIO [here](https://github.co
 
 ## Creating a Panto Application in Unity
 ### Adding the right components
-Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-toolkit -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach.
+Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-toolkit -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach. 
 ![Panto Prefab in Scene](/Documentation/readme_images/panto_prefab_with_highlights.png)
 
-### Setting up the camera
-Prepare your scene by deleting the `Main Camera` object that is created with every new scene in Unity. The Panto Prefab, that you just added to the scene, already contains a camera that is adjusted to show a top-down perspective of the entire area the Panto can reach.
-If the scene is very bright (white panto-area), also delete the directional light that is part of any new scene. The Panto Prefab also contains one of those.
+### Setting up the camera and lighting
+After adding the Panto Prefab, the scene might look overly bright, or be shown from a weird camera angle. The Panto Prefab already contains it's own light source and a fittingly positioned camera. You can therefore delete the `Main Camera` object that is created with every new scene in Unity. If the scene is very bright (white panto-area), also delete the directional light that is part of any new scene.
 
 ### Find out the serial port of your device, if needed
 You may be able to skip this step. The Panto will by default use the most common port name on your OS: `//.//COM3` (Windows), `/dev/cu.SLAB_USBtoUART` (MacOS) or `/dev/ttyUSB0` (Linux). Check if your Panto is already being found by connecting it and hitting Play (make sure Debug is disabled). If it works, you can skip this part!
@@ -42,22 +45,29 @@ You may be able to skip this step. The Panto will by default use the most common
 If it doesn't work, you need to manually update the serial port of your panto before running the application.
 Therefore you have to find the correct port name and enter it in DualPantoSync's _Overwrite Default Port_.
 
-On Windows open the _Device Manager_ and go to _Ports (COM & LPT)_. Under that tab you will find a device called "Silicon Labs CP..." with the usb serial port in brackets (e.g. "COM6"). 
-The _Port Name_ in your Panto Object would hence after updating be "//.//COM6".
+**On Windows:**
+- Open the _Device Manager_ and go to _Ports (COM & LPT)_.
+- Under that tab you will find a device called "Silicon Labs CP..." with the usb serial port in brackets (e.g. "COM6"). 
+The _Port Name_ in your Panto Object would hence be needed to be changed to "//.//COM6".
 
-On Unix you can list your usb devices by using the command `ls /dev | grep cu.`
-To find out which device your Panto is one easy way is to plug the device out and in again and to check in between which serial port disappeared. That's the one we want to use.
-Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ on the Panto Object.
+**On Unix:**
+- With dualpanto disconnected, run `ls /dev/cu.*` to list your USB devices
+- Repeat with dualpanto attached and check which of the listed serial ports is new
+- Copy the path of the port (e.g. "/dev/cu.SLAB_USBtoUART") into the _Port Name_ on the Panto Object.
 ![Setting Port Name](/Documentation/readme_images/portname_with_highlight.png)
 
 
 ### Your first Panto demo
-In your Unity Scene, add a cube using `GameObject -> 3D Object -> Cube`. Attach the `MeHandle` component to this cube. It should now follow the movement of the Upper Panto Handle.
+- In your Unity Scene, add a cube using the global menu `GameObject -> 3D Object -> Cube`, or through the right-click menu in the game object hierarchy.
+- Select the cube and attach the `MeHandle` component to it.
+It should now follow the movement of the Upper Panto Handle.
 ![Adding the player script to the cube](/Documentation/readme_images/adding_script_to_object.png)
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
 ### Testing your app
+#### NOTE: If your don't see your game objects when running, press `b`to toggle visibility modes (see "Using the Blind emulator")
+
 There are two ways to test your app:
 * Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, both will follow the mouse. You emulate rotation input with `a` and `d`.
 * Using a DualPanto: If you want to run the application on the Panto, make sure the Debug mode is disabled in the DualPantoSync component and the panto is connected to your computer. If you have no device connect, it will fall back to the emulator mode.
@@ -80,7 +90,7 @@ if a function does not seem to exist (unity throws an error like "missing assemb
 ### How do I turn my dualPanto device on?
 On the back of your dualPanto device is a power switch. Push so that it turns to **On** and make sure the battery is charged.
 
-### How do I reset my dualPanto device?
+### How do I reset/calibrate my dualPanto device?
 On the back of your dualPanto device is a button next to the cable connection. Move the linkages back in the closing position, turn the handles so they point to the right, press the button and wait 3 seconds.
 
 ### dualPanto handles not moving inside the game/Message _Revision id not matching. Try resetting the panto._ appears.
