@@ -1,22 +1,22 @@
 # unity-dualpanto-toolkit
 This repo provides a [Unity Package](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) for developing Unity Applications for dualpanto.
 
-## Installation Guide (Using UnityPanto)
+## Installation Guide
 
-### Unity
+### 1. Install Unity
 - Install [Unity Hub](https://unity.com/download).
 - Install editor version 2021.3.0f1 (alternatively  2020.1.6f1) from the [Unity Download Archive](https://unity.com/de/releases/editor/archive). **If on Apple Silicon, use Intel version under Rosetta.**
 
-#### Code Editor & Git
+### 2. Install Code Editor & Git
 - You will need something to edit C# code (VSCode or Rider work great, VisualStudio IDE is fine too).
 - For version control you will need git.
 
-### Install the ESP32 driver
+### 3. Install the ESP32 driver
 If you haven't already, get the driver needed to communicate with the dualpanto microcontroller
 - [Download](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers) the installer for your OS-Version.
 - Run the installer.
 
-### Adding the framework to your project
+### 4. Adding the framework to your project
 1. Open a blank Unity project.
 2. Initialize a git repo by running `git init` in your project directory. If you want, [add a remote](https://docs.github.com/en/get-started/git-basics/managing-remote-repositories)
 3. Add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore) at the root of your project directory
@@ -32,14 +32,15 @@ git submodule update --init --recursive
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
 
 ## Creating a Panto Application in Unity
-### Adding the right components
-Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-toolkit -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach. 
+### 1. Adding the right components
+Drag the Panto Prefab into your scene. You can find it at `Assets -> unity-dualpanto-toolkit -> Assets -> Resources`. The Panto game object has different components attached to it: the DualPantoSync, the lower handle, the upper handle and a level. It also has a few child objects, including Panto Working Areas for different device versions. This is the area the DualPanto can reach.
+#### Don't worry if your scene looks odd, this will be taken care of in the next step.
 ![Panto Prefab in Scene](/Documentation/readme_images/panto_prefab_with_highlights.png)
 
-### Setting up the camera and lighting
+### 2. Setting up the camera and lighting
 After adding the Panto Prefab, the scene might look overly bright, or be shown from a weird camera angle. The Panto Prefab already contains it's own light source and a fittingly positioned camera. You can therefore delete the `Main Camera` object that is created with every new scene in Unity. If the scene is very bright (white panto-area), also delete the directional light that is part of any new scene.
 
-### Find out the serial port of your device, if needed
+### 3. Find out the serial port of your device, if needed
 You may be able to skip this step. The Panto will by default use the most common port name on your OS: `//.//COM3` (Windows), `/dev/cu.SLAB_USBtoUART` (MacOS) or `/dev/ttyUSB0` (Linux). Check if your Panto is already being found by connecting it and hitting Play (make sure Debug is disabled). If it works, you can skip this part!
 
 If it doesn't work, you need to manually update the serial port of your panto before running the application.
@@ -57,7 +58,7 @@ The _Port Name_ in your Panto Object would hence be needed to be changed to "//.
 ![Setting Port Name](/Documentation/readme_images/portname_with_highlight.png)
 
 
-### Your first Panto demo
+### 4. Creating a simple interaction with dualpanto
 - In your Unity Scene, add a cube using the global menu `GameObject -> 3D Object -> Cube`, or through the right-click menu in the game object hierarchy.
 - Select the cube and attach the `MeHandle` component to it.
 It should now follow the movement of the Upper Panto Handle.
@@ -65,8 +66,8 @@ It should now follow the movement of the Upper Panto Handle.
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
-### Testing your app
-#### NOTE: If your don't see your game objects when running, press `b`to toggle visibility modes (see "Using the Blind emulator")
+### 5. Testing your app
+#### NOTE: If your don't see your game objects while running, press `b`to toggle visibility modes (see "Using the Blind emulator")
 
 There are two ways to test your app:
 * Using the emulator mode (default): For this you do not need a DualPanto, the device will be emulated. You should see two game objects that represent the two handles. The blue objects represents the lower handle, the green one the upper handle. When the handles are controlled by the user, both will follow the mouse. You emulate rotation input with `a` and `d`.
