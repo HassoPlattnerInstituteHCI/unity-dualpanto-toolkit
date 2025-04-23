@@ -189,7 +189,16 @@ namespace DualPantoToolkit
         {
             GameObject n = new GameObject();
             n.transform.parent = transform;
-            n.layer = LayerMask.NameToLayer("Walls2");
+            
+            //TODO: add this object to Unity tags and layers
+            int layerIndex = LayerMask.NameToLayer("Walls2");
+            if (layerIndex == -1)
+            {
+                Debug.LogError("Layer 'Walls2' does not exist. Please add it in the Tags and Layers settings.");
+                layerIndex = 3; // Default to layer 3 if the layer is missing
+            }
+            n.layer = layerIndex;
+            
             LineRenderer lr = n.AddComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.SetPosition(0, new Vector3(start.x, 5, start.y));
