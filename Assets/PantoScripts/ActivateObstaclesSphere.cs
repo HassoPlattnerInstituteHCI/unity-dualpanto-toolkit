@@ -7,7 +7,6 @@ namespace DualPantoToolkit
     {
         void OnTriggerEnter(Collider collider)
         {
-            /*
             PantoCollider pc = collider.GetComponent<PantoCollider>();
             if (pc != null && pc.enabled)
             {
@@ -18,12 +17,10 @@ namespace DualPantoToolkit
                 }
                 pc.IncreaseSpheres();
             }
-            */
         }
 
         void OnTriggerExit(Collider collider)
         {
-            /*
             PantoCollider pc = collider.GetComponent<PantoCollider>();
             if (pc != null)
             {
@@ -33,7 +30,6 @@ namespace DualPantoToolkit
                     pc.Remove();
                 }
             }
-            */
         }
     }
 }

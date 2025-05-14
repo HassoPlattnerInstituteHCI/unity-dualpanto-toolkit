@@ -139,7 +139,7 @@ namespace DualPantoToolkit
 
         void Start()
         {
-            Application.targetFrameRate = 30;
+            Application.targetFrameRate = 60;
         }
 
         private static void SyncHandler(ulong handle)

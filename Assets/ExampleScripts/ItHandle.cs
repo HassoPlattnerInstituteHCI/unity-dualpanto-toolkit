@@ -17,9 +17,7 @@ public class ItHandle : MonoBehaviour
 
     void FixedUpdate()
     {
-        //if (!DualPantoToolkit.DualPantoSync.IsPantoReady) return;
         transform.position = lowerHandle.GetPosition();
-        //transform.position = lowerHandle.HandlePosition(transform.position);
         transform.eulerAngles = new Vector3(0, lowerHandle.GetRotation(), 0);
     }
 
