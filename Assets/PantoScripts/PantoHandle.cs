@@ -233,34 +233,50 @@ namespace DualPantoToolkit
 
         public void SetPositions(Vector3 newPosition, float? newRotation, Vector3? newGodObjectPosition)
         {
-            GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
-            if (pantoSync.debug && newRotation != null)
-            {
-                Debug.Log("setting rotation");
-                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)newRotation, debugObject.transform.eulerAngles.z);
-            }
-            if (pantoSync.debug)// && userControlledPosition)
-            {
-                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                debugObject.transform.position = newPosition;
-                debugGodObject.transform.position = newPosition;
-                debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, (float)newRotation, debugGodObject.transform.eulerAngles.z);
-            }
-            if (!pantoSync.debug)
-            {
-                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
-                debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)newRotation, debugObject.transform.eulerAngles.z);
-                debugObject.transform.position = position;
-                if (newGodObjectPosition != null)
-                {
-                    debugGodObject.transform.position = newGodObjectPosition.Value;
-                    debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, (float)newRotation, debugGodObject.transform.eulerAngles.z);
-                }
-            }
             position = newPosition;
             if (newRotation != null) rotation = (float)newRotation;
             godObjectPosition = newGodObjectPosition;
+
+            GameObject debugGodObject = pantoSync.GetDebugGodObject(isUpper);
+
+            if (!pantoSync.debug)
+            {
+                // Update the visible handle (for visualization)
+                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
+                if (debugObject != null)
+                {
+                    if (newRotation != null)
+                        debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)newRotation, debugObject.transform.eulerAngles.z);
+                    debugObject.transform.position = position;
+                }
+
+                // Always update the GodObject position, fallback to handle position if null
+                if (debugGodObject != null)
+                {
+                    Vector3 godPos = newGodObjectPosition ?? position;
+                    debugGodObject.transform.position = godPos;
+                    if (newRotation != null)
+                        debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, (float)newRotation, debugGodObject.transform.eulerAngles.z);
+                    // Debug log for verification
+                    // Debug.Log($"[DualPanto] GodObject {(isUpper ? "Me" : "It")} updated to {godPos}");
+                }
+            }
+            else // Debug mode
+            {
+                if (debugGodObject != null)
+                {
+                    debugGodObject.transform.position = newPosition;
+                    if (newRotation != null)
+                        debugGodObject.transform.eulerAngles = new Vector3(debugGodObject.transform.eulerAngles.x, (float)newRotation, debugGodObject.transform.eulerAngles.z);
+                }
+                GameObject debugObject = pantoSync.GetDebugObject(isUpper);
+                if (debugObject != null)
+                {
+                    debugObject.transform.position = newPosition;
+                    if (newRotation != null)
+                        debugObject.transform.eulerAngles = new Vector3(debugObject.transform.eulerAngles.x, (float)newRotation, debugObject.transform.eulerAngles.z);
+                }
+            }
         }
 
         async public Task TraceObjectByPoints(List<GameObject> cornerObjects, float speed)

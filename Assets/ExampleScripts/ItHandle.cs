@@ -5,14 +5,22 @@ public class ItHandle : MonoBehaviour
 {
     PantoHandle lowerHandle;
     bool free = true;
+
     void Start()
     {
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
+        if (lowerHandle == null)
+        {
+            Debug.LogError("[DualPanto] LowerHandle not found on Panto GameObject!");
+        }
     }
 
     void FixedUpdate()
     {
-        transform.position = lowerHandle.HandlePosition(transform.position);
+        if (!DualPantoToolkit.DualPantoSync.IsPantoReady) return;
+        transform.position = lowerHandle.GetPosition();
+        //transform.position = lowerHandle.HandlePosition(transform.position);
+        transform.eulerAngles = new Vector3(0, lowerHandle.GetRotation(), 0);
     }
 
     void Update()

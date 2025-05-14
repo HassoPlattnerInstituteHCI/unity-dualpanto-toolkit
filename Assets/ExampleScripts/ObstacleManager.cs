@@ -5,7 +5,7 @@ public class ObstacleManager : MonoBehaviour
     PantoCollider[] pantoColliders;
     void Start()
     {
-        Invoke("createObstacles", 1.0f);
+        Invoke("createObstacles", 2.0f);
     }
 
     private void createObstacles()
