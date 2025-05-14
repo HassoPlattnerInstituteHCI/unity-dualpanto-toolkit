@@ -56,7 +56,6 @@ namespace DualPantoToolkit
         protected ulong Handle;
         private static LowerHandle lowerHandle;
         private static UpperHandle upperHandle;
-        public static bool IsPantoReady { get; private set; } = false;
 
         // bounds are defined by center and extent
         //private static Vector2[] pantoBounds = { new Vector2(0, -110), new Vector2(320, 160) }; // for version D
@@ -211,11 +210,17 @@ namespace DualPantoToolkit
         private async void OnPantoStarted()
         {
             // Wait until both handles are registered
-            //while (upperHandle == null || lowerHandle == null)
-            //    await Task.Yield();
-
+            while (upperHandle == null || lowerHandle == null)
+            {
+                await Task.Yield();
+            }
+            while (!connected && Handle != 0)
+            {
+                Poll(Handle);
+                await Task.Yield();
+            }
+            
             Debug.Log("[DualPanto] Panto is fully ready!");
-            IsPantoReady = true;
 
             // Now it's safe to register obstacles or send commands
             //ColliderRegistry.RegisterObstacles();
@@ -350,7 +355,7 @@ namespace DualPantoToolkit
                 SetPort(portName);
                 // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
                 // only then everyone else can start sending their own stuff
-                while (!IsPantoReady)
+                while (Handle != 0 && !connected)
                 {
                     Poll(Handle);
                 }
@@ -440,7 +445,7 @@ namespace DualPantoToolkit
                     {
                         initialPoll = true;
                     }
-                    if (IsPantoReady)
+                    if (connected)
                     {
                         CheckQueuedPackets(20);
                     }
@@ -519,7 +524,7 @@ namespace DualPantoToolkit
 
         public void UpdateHandlePosition(Vector3? pos, float? rotation, bool isUpper)
         {
-            if (!IsPantoReady && !debug) return;
+            if (!connected && !debug) return;
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
@@ -635,7 +640,7 @@ namespace DualPantoToolkit
 
         public void CreateObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
-            if (!IsPantoReady && !debug) return;
+            if (!connected && !debug) return;
             if (!debug)
             {
                 Vector2 pantoStartPoint = UnityToPanto(startPoint);

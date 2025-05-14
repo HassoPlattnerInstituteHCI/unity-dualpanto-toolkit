@@ -17,7 +17,7 @@ public class MeHandle : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!DualPantoToolkit.DualPantoSync.IsPantoReady) return;
+        //if (!DualPantoToolkit.DualPantoSync.IsPantoReady) return;
         transform.position = upperHandle.GetPosition();
         //transform.position = upperHandle.HandlePosition(transform.position);
         transform.eulerAngles = new Vector3(0, upperHandle.GetRotation(), 0);
