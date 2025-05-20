@@ -440,14 +440,14 @@ namespace DualPantoToolkit
             {
                 if (Handle != 0)
                 {
+                    if (connected)
+                    {
+                        CheckQueuedPackets(20);
+                    }
                     Poll(Handle);
                     if (!initialPoll)
                     {
                         initialPoll = true;
-                    }
-                    if (connected)
-                    {
-                        CheckQueuedPackets(20);
                     }
                 }
             }
