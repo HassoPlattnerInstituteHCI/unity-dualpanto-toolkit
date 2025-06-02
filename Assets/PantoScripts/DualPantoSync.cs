@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DualPantoToolkit
@@ -80,7 +81,7 @@ namespace DualPantoToolkit
 #elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
         private const string plugin = "libserial.so";
 #else
-    private const string plugin = "libserial";
+        private const string plugin = "libserial";
 #endif
 
         private static bool connected = false;
@@ -206,14 +207,23 @@ namespace DualPantoToolkit
             }
         }
 
-        private void OnPantoStarted()
+        private async void OnPantoStarted()
         {
-            connected = false;
-            while (!connected)
+            // Wait until both handles are registered
+            while (upperHandle == null || lowerHandle == null)
+            {
+                await Task.Yield();
+            }
+            while (!connected && Handle != 0)
             {
                 Poll(Handle);
+                await Task.Yield();
             }
-            ColliderRegistry.RegisterObstacles();
+            
+            Debug.Log("[DualPanto] Panto is fully ready!");
+
+            // Now it's safe to register obstacles or send commands
+            //ColliderRegistry.RegisterObstacles();
         }
 
         private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
@@ -335,15 +345,17 @@ namespace DualPantoToolkit
                 Reset();
                 if (showRawValues) SetUpDebugValuesWindow();
                 globalSync = this;
+
                 SetLoggingHandler(StaticLogHandler);
                 SetSyncHandler(SyncHandler);
                 SetHeartbeatHandler(StaticHeartbeatHandler);
                 SetPositionHandler(StaticPositionHandler);
                 SetTransitionHandler(StaticTransitionHandler);
+
                 SetPort(portName);
                 // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
                 // only then everyone else can start sending their own stuff
-                while (!connected && Handle != 0)
+                while (Handle != 0 && !connected)
                 {
                     Poll(Handle);
                 }
@@ -415,7 +427,11 @@ namespace DualPantoToolkit
         {
             FreeHandle(true);
             FreeHandle(false);
-            if (Handle != 0) Close(Handle);
+            if (Handle != 0)
+            {
+                Close(Handle);
+                Handle = 0;
+            }
         }
 
         void Update()
@@ -430,7 +446,9 @@ namespace DualPantoToolkit
                     }
                     Poll(Handle);
                     if (!initialPoll)
+                    {
                         initialPoll = true;
+                    }
                 }
             }
             else
@@ -506,6 +524,7 @@ namespace DualPantoToolkit
 
         public void UpdateHandlePosition(Vector3? pos, float? rotation, bool isUpper)
         {
+            if (!connected && !debug) return;
             if (debug)
             {
                 GameObject debugObject = GetDebugObject(isUpper);
@@ -521,7 +540,7 @@ namespace DualPantoToolkit
             if (pos != null)
             {
                 Vector3 definitePosition = (Vector3)pos;
-                if (IsInBounds(new Vector2(definitePosition.x, definitePosition.z))) 
+                if (IsInBounds(new Vector2(definitePosition.x, definitePosition.z)))
                 {
                     Vector2 pantoPoint = UnityToPanto(new Vector2(definitePosition.x, definitePosition.z));
                     pantoX = pantoPoint.x;
@@ -575,7 +594,7 @@ namespace DualPantoToolkit
 
         private static float UnityToPantoRotation(float rotation)
         {
-            return (-rotation% 360) / (180f / Mathf.PI);
+            return (-rotation % 360) / (180f / Mathf.PI);
         }
 
         private static float PantoToUnityRotation(double pantoDegrees)
@@ -621,6 +640,7 @@ namespace DualPantoToolkit
 
         public void CreateObstacle(byte pantoIndex, ushort obstacleId, Vector2 startPoint, Vector2 endPoint)
         {
+            if (!connected && !debug) return;
             if (!debug)
             {
                 Vector2 pantoStartPoint = UnityToPanto(startPoint);

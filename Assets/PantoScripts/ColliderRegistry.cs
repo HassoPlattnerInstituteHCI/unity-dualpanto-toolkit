@@ -14,7 +14,7 @@ namespace DualPantoToolkit
             {
                 await Task.Delay(10);
                 collider.CreateObstacle();
-                if (collider.IsEnabled()) collider.Enable();
+                if (!collider.IsEnabled()) collider.Enable();
             }
         }
 

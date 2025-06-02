@@ -13,7 +13,6 @@ namespace DualPantoToolkit
                 if (pc.GetContainingSpheres() == 0)
                 {
                     pc.CreateObstacle();
-                    //if (pc.IsEnabled()) pc.Enable();
                     pc.Enable();
                 }
                 pc.IncreaseSpheres();

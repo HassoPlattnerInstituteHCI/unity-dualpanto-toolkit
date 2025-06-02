@@ -4,6 +4,7 @@ using DualPantoToolkit;
 
 public class RegisterCollider : MonoBehaviour
 {
+    /*
     async void Start()
     {
         await Task.Delay(2000);
@@ -14,4 +15,5 @@ public class RegisterCollider : MonoBehaviour
             collider.Enable();
         }
     }
+    */
 }
