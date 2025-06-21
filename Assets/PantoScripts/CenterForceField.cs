@@ -9,19 +9,27 @@ namespace DualPantoToolkit
     /// Applies a force directed at the center of the field on any object with a "MeHandle" or "ItHandle" tag within its area.
     /// </summary>
     ///
+    ///
+    ///
+    
     public class CenterForceField : ForceField
     {
         [Tooltip("Positive strength will push the handle towards the center, negative strength towards the edges")]
         [Range(-1, 1)]
         public float strength;
         public bool isAttractive = true; // can be attractive or repulsive
+        float LogGrow(float x, float baseValue = 2f, float scale = 1f)
+        {
+            // Shift input up slightly to avoid log(0), then scale
+            return scale * Mathf.Log(x + 1f, baseValue);
+        }
 
         protected override float GetCurrentStrength(Collider other)
         {
             float dist = (Vector3.Distance(gameObject.transform.position, other.transform.position));
             if (isAttractive)
             {
-                return strength * dist;
+                return strength * LogGrow(dist);
             } else
             {
                 //repulsive center force field
@@ -43,4 +51,5 @@ namespace DualPantoToolkit
             }
         }
     }
+
 }
