@@ -82,6 +82,37 @@ namespace DualPantoToolkit
                 time += 10;
             }
         }
+        
+        async public Task MovingWall(GameObject newHandle, float newSpeed = 1.0f)
+        {
+            int time = 0;
+            userControlledPosition = false;
+            userControlledRotation = false;
+            if (inTransition)
+            {
+                if (handledGameObject != null) Debug.LogWarning("[DualPanto] Discarding not yet reached gameObject: " + handledGameObject.name);
+                else Debug.LogWarning("[DualPanto] Discarding not yet reached position or gameObject");
+            }
+            Debug.Log("[DualPanto] Switching to: " + newHandle.name);
+            handledGameObject = newHandle;
+    
+            pantoSync.SetSpeed(isUpper, Mathf.Min(newSpeed, MaxMovementSpeed()));
+            GetPantoSync().UpdateHandlePosition(handledGameObject.transform.position, handledGameObject.transform.eulerAngles.y + 180, isUpper);
+    
+            inTransition = true;
+
+            while (inTransition)
+            {
+                if (time > 3000)
+                {
+                    Debug.Log("Abandoning gameobject that couldn't be reached: " + handledGameObject.name);
+                    inTransition = false;
+                    return;
+                }
+                await Task.Delay(10);
+                time += 10;
+            }
+        }
 
         /// <summary>
         /// Get the current rotation of the handle, use this as the y axis in Unity.
