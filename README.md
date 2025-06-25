@@ -1,6 +1,4 @@
 # unity-dualpanto-toolkit
-This repo provides a [Unity Package](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) for developing Unity Applications for dualpanto.
-
 ## Installation Guide
 
 ### 1. Install Unity
@@ -20,9 +18,7 @@ If you haven't already, get the driver needed to communicate with the dualpanto 
 1. Open a blank 3D Unity project.
 2. Initialize a git repo by running `git init` in your project directory. If you want, [add a remote](https://docs.github.com/en/get-started/git-basics/managing-remote-repositories)
 3. Add the [Unity .gitignore](https://github.com/github/gitignore/blob/master/Unity.gitignore) at the root of your project directory
-4. [Download the latest release](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/releases/tag/v1.2) of the Unity package and drag it into Unity. Choose "Import" in the dialog box.
-
-Alternatively you can add this framework as a submodule into the Assets folder. This is recommended if you wish to make changes to the framework:
+4. Add this framework as a submodule into the Assets folder:
 ```
 cd path/to/repo
 cd Assets
