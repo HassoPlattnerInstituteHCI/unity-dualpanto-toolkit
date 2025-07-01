@@ -30,17 +30,23 @@ namespace DualPantoToolkit
 
             for (int index = 0; index < gos.Length; index++)
             {
+                Debug.LogWarning("Here:" + gos[index].ToString());
                 await IntroduceObject(gos[index], msDelayBetweenObjects);
             }
-            GetPantoGameObject().GetComponent<LowerHandle>().Free();
-            GetPantoGameObject().GetComponent<UpperHandle>().Free();
+
+            if (this != null)
+            {
+                GetPantoGameObject().GetComponent<LowerHandle>().Free();
+                GetPantoGameObject().GetComponent<UpperHandle>().Free();
+            }
         }
 
         async private Task IntroduceObject(ObjectOfInterest objectOfInterest, int msDelay)
         {
+            if (this == null) return;
             Task[] tasks = new Task[2];
             tasks[0] = speechOut.Speak(objectOfInterest.description);
-
+            
             PantoHandle pantoHandle = objectOfInterest.isOnUpper
                 ? (PantoHandle)GetPantoGameObject().GetComponent<UpperHandle>()
                 : (PantoHandle)GetPantoGameObject().GetComponent<LowerHandle>();
