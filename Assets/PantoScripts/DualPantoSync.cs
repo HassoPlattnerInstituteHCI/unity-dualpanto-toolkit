@@ -298,6 +298,12 @@ namespace DualPantoToolkit
 
         public void SetPort(string name)
         {
+            if (Handle != 0)
+            {
+                Close(Handle);
+                Handle = 0;
+                connected = false;
+            }
             portName = name;
             uiManager.UpdatePort(portName);
             uiManager.ShowPortWindow(false);
