@@ -14,7 +14,8 @@ namespace DualPantoToolkit
         public delegate void SyncDelegate(ulong handle);
         public delegate void HeartbeatDelegate(ulong handle);
         public delegate void LoggingDelegate(IntPtr msg);
-        public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions);
+        // now includes a battery voltage value at the last index
+        public delegate void PositionDelegate(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 11)] double[] positions);
         public delegate void TransitionDelegate(byte pantoIndex);
         public UIManager uiManager;
         [Header("Leave this empty to use default port for Windows or OSX respectively.")]
@@ -85,6 +86,12 @@ namespace DualPantoToolkit
 #endif
 
         private static bool connected = false;
+        private float batteryVoltage = 0f;
+
+        public float BatteryVoltage
+        {
+            get { return batteryVoltage; }
+        }
 
         [DllImport(plugin)]
         private static extern uint GetRevision();
@@ -226,7 +233,7 @@ namespace DualPantoToolkit
             //ColliderRegistry.RegisterObstacles();
         }
 
-        private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
+        private void PositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 11)] double[] positions)
         {
             Vector2 unityPosUpper = PantoToUnity(new Vector2((float)positions[0], (float)positions[1]));
             Vector2 unityGodUpper = PantoToUnity(new Vector2((float)positions[3], (float)positions[4]));
@@ -257,6 +264,7 @@ namespace DualPantoToolkit
 
             Debug.DrawLine(upperHandlePos + upper * Vector3.back * 0.5f, upperHandlePos + upper * Vector3.forward, Color.black);
             Debug.DrawLine(upperHandlePos + upper * Vector3.left * 0.5f, upperHandlePos + upper * Vector3.right * 0.5f, Color.black);
+            batteryVoltage = (float)positions[10];
             if (showRawValues) uiManager.UpdateValues(positions);
         }
 
@@ -376,7 +384,7 @@ namespace DualPantoToolkit
         static DualPantoSync globalSync;
         private bool initialPoll = false;
 
-        static void StaticPositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 10)] double[] positions)
+        static void StaticPositionHandler(ulong handle, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R8, SizeConst = 11)] double[] positions)
         {
             globalSync.PositionHandler(handle, positions);
         }
