@@ -19,6 +19,7 @@ namespace DualPantoToolkit
         public Text currentIOFps;
         public Text currentPhysicsFps;
         public Text currentLowerHandle;
+        public Text currentBatteryVoltage;
         DateTime lastHeartbeat;
         void Start()
         {
