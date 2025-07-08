@@ -20,10 +20,13 @@ namespace DualPantoToolkit
         public Text currentPhysicsFps;
         public Text currentLowerHandle;
         public Text currentBatteryVoltage;
+        public float batteryWarningThreshold = 7f;
+        Color defaultBatteryColor;
         DateTime lastHeartbeat;
         void Start()
         {
             lastHeartbeat = DateTime.Now;
+            defaultBatteryColor = currentBatteryVoltage.color;
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 portInput.text = DefaultWindowsPort;
@@ -81,6 +84,11 @@ namespace DualPantoToolkit
         public void UpdateIOFps(string newFps)
         {
             currentIOFps.text = newFps;
+        }
+        public void UpdateBatteryVoltage(float voltage)
+        {
+            currentBatteryVoltage.text = voltage.ToString("F2");
+            currentBatteryVoltage.color = voltage < batteryWarningThreshold ? Color.red : defaultBatteryColor;
         }
         public void UpdateHeartbeat()
         {
