@@ -305,7 +305,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Battery Voltage:'
+  m_Text: 'Battery:'
 --- !u!222 &194536906
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 298477318}
   - component: {fileID: 298477317}
   m_Layer: 10
-  m_Name: CurrentBatteryVoltage
+  m_Name: CurrentBatteryPercentage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -683,6 +683,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5991186418955879667, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}
+      propertyPath: minBatteryVoltage
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5991186418955879667, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
       propertyPath: currentBatteryVoltage
       value: 
       objectReference: {fileID: 298477317}
@@ -690,6 +695,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -88.70004
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827900398297005970, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 280
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827900398297005970, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 43.769997
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827900398297005970, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827900398297005970, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -12.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827900398297005970, guid: f08d327e9fb42f94d97ba9d1d226d418,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -42
       objectReference: {fileID: 0}
     - target: {fileID: 9078697684515870706, guid: f08d327e9fb42f94d97ba9d1d226d418,
         type: 3}

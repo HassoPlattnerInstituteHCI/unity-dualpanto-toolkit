@@ -265,7 +265,11 @@ namespace DualPantoToolkit
             Debug.DrawLine(upperHandlePos + upper * Vector3.back * 0.5f, upperHandlePos + upper * Vector3.forward, Color.black);
             Debug.DrawLine(upperHandlePos + upper * Vector3.left * 0.5f, upperHandlePos + upper * Vector3.right * 0.5f, Color.black);
             batteryVoltage = (float)positions[10];
-            if (showRawValues) uiManager.UpdateValues(positions);
+            if (showRawValues)
+            {
+                uiManager.UpdateValues(positions);
+                uiManager.UpdateBatteryVoltage(batteryVoltage);
+            }
         }
 
         private static ulong OpenPort(string port)
