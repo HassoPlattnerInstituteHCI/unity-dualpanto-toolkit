@@ -14,7 +14,7 @@ public class ObstacleManager : MonoBehaviour
         foreach (PantoCollider collider in pantoColliders)
         {
             collider.CreateObstacle();
-            collider.Enable();
+            //collider.Enable();
         }
     }
 
