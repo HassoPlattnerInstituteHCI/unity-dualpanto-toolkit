@@ -37,11 +37,12 @@ namespace DualPantoToolkit
 
         private Vector2[] Vector2ArrayFromPath(Path path)
         {
-            Vector2[] value = new Vector2[path.Count];
+            Vector2[] value = new Vector2[path.Count+1];
             for (int i = 0; i < path.Count; i++)
             {
                 value[i] = (new Vector2(path[i].X / 1000f, path[i].Y / 1000f));
             }
+            value[path.Count] = value[path.Count-1];
             return value;
         }
 
@@ -63,6 +64,7 @@ namespace DualPantoToolkit
                 c.AddPaths(newPath, PolyType.ptClip, true);
                 c.Execute(ClipType.ctUnion, solution);
             }
+            Debug.Log("[DualPanto] Vector array length: " + Vector2ArrayFromPath(solution[0]).Length);
             CreateFromCorners(Vector2ArrayFromPath(solution[0]));
         }
     }
