@@ -3,9 +3,12 @@ using DualPantoToolkit;
 public class ObstacleManager : MonoBehaviour
 {
     PantoCollider[] pantoColliders;
+    public bool createAtStart = true;
     void Start()
     {
+        if (createAtStart) {
         Invoke("createObstacles", 1.0f);
+        }
     }
 
     private void createObstacles()
