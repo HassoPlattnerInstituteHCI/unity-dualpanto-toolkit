@@ -23,9 +23,9 @@ public class Trap : MonoBehaviour
         speech = new SpeechOut();
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private async void OnTriggerEnter(Collider other) {
         if (handleFree && other.tag == "MeHandle" && onUpper) {
-            speech.Speak("trapped!");
+            await speech.Speak("trapped!");
             upperHandle.Freeze();
             handleFree = false;
             inTrap = true;

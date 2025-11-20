@@ -21,7 +21,8 @@ public class MeToIt : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            await upperHandle.MoveToPosition(lowerHandle.transform.position, speed, shouldFreeHandle);
+            // transform.position = lowerHandle.GetPosition();
+            await upperHandle.MoveToPosition(lowerHandle.GetPosition(), speed, shouldFreeHandle);
         }
     }
 }
