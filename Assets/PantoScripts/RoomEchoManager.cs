@@ -303,11 +303,6 @@ namespace DualPantoToolkit
                 audioSource.volume = volume;
         }
 
-        void OnTriggerStay(Collider other)
-        {
-            //UnityEngine.Debug.Log("Trigger Stay detected with " + other.tag);
-
-        }
 
         async void PlayWalkSound(float speed = 1)
         {
@@ -346,37 +341,6 @@ namespace DualPantoToolkit
                 echoRooms.Add(room);
             }
         }
-
-        // public void CreateCompoundObstacle()
-        // {
-        //     Collider[] colliders = gameObject.GetComponentsInChildren<Collider>();
-        //     Collider coll = colliders[0];
-
-        //     Paths solution = new Paths();
-        //     solution.Add(PathFromBounds(colliders[0].bounds));
-
-        //     for (int i = 1; i < colliders.Length; i++)
-        //     {
-        //         Paths newPath = new Paths(1);
-        //         newPath.Add(PathFromBounds(colliders[i].bounds));
-
-        //         Clipper c = new Clipper();
-        //         c.AddPaths(solution, PolyType.ptSubject, true);
-        //         c.AddPaths(newPath, PolyType.ptClip, true);
-        //         c.Execute(ClipType.ctUnion, solution);
-        //     }
-        //     CreateFromCorners(Vector2ArrayFromPath(solution[0]));
-        // }
-
-        // void playRoomEchoSound()
-        // {
-        //     if (audioSource != null && walkSound != null && !audioSource.isPlaying)
-        //     {
-        //         audioSource.clip = walkSound;
-        //         audioSource.loop = true;
-        //         audioSource.Play();
-        //     }
-        // }
 
     }
 }

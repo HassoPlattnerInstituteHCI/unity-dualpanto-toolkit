@@ -1125,9 +1125,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39047a230e82c4dbdbd4154f927b1ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onUpperEnter: 0
+  onUpperEnter: 1
   onLowerEnter: 0
   introductionText: You juste entered Room 1.
+  introductionClip: {fileID: 8300000, guid: 57b1127d3bebc774c9bf8bc54e201fc3, type: 3}
   onEnter:
     m_PersistentCalls:
       m_Calls:
@@ -1143,6 +1144,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+  triggerAfterSpeechEnd: 1
   onExit:
     m_PersistentCalls:
       m_Calls:
