@@ -12,7 +12,8 @@ namespace Rogue
         public static GameManager instance; // what's this?
         
         public GameObject player;
-        public Transform position;
+        public Transform spawnPosition;
+
         private UpperHandle upperHandle;
         private LowerHandle lowerHandle;
         private bool lowerFree = true;
@@ -35,21 +36,35 @@ namespace Rogue
         // Start is called before the first frame update
         void Start()
         {
-            upperHandle = GetComponent<UpperHandle>();
-            lowerHandle = GetComponent<LowerHandle>();
+            upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+            lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
             Introduction();
         }
         async void Introduction()
         {
-            await Task.Delay(1000);
+            await Task.Delay(2000);
             await StartGame();
         }
 
         async Task StartGame()
         {
+
+            await TransformPlayerToSpawn();
+            await Task.Delay(2000);
             await RenderObstacle();
-            upperHandle.Free();
-            lowerHandle.Free();
+            //upperHandle.Free();
+           
+            // lowerHandle.Free();
+        }
+
+        async Task TransformPlayerToSpawn()
+        {
+            if (upperHandle != null)
+            {
+                
+                await upperHandle.MoveToPosition(spawnPosition.position,1f);
+                //upperHandle.GetComponent<Collider>().enabled = true;
+            }
         }
 
         async Task RenderObstacle()
