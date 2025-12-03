@@ -7,6 +7,7 @@ using SpeechIO;
 public class MenuSelection : MonoBehaviour
 {
     PantoHandle upperHandle;
+    PantoHandle lowerHandle;
     int selectedMenuOption = 0;
     bool rotatedFromZero = true;
     SpeechOut speech;
@@ -17,26 +18,41 @@ public class MenuSelection : MonoBehaviour
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         upperHandle.Rotate(0.0f);
+
+        // lowerHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+        // lowerHandle.Rotate(0.0f);
+    }
+
+    float NormalizeAngle(float angle) {
+        while (angle > 180) angle -= 360;
+        while (angle < -180) angle += 360;
+        return angle;
     }
 
     // Update is called once per frame
     async void Update()
     {
-        if (upperHandle.GetRotation() > 10 && rotatedFromZero && !disableSelection) {
+        // Debug.Log(NormalizeAngle(upperHandle.GetRotation()).ToString());
+        // Debug.Log(NormalizeAngle(lowerHandle.GetRotation()).ToString());
+
+        if (Mathf.Abs(NormalizeAngle(upperHandle.GetRotation())) > 50 && !disableSelection) {
             selectedMenuOption += 1;
-            rotatedFromZero = false;
             if (selectedMenuOption > numberOfOptions) {
                 selectedMenuOption = 1;
             }
             upperHandle.Rotate(0.0f);
-            rotatedFromZero = true;
         }
+
         if (Input.GetKeyDown(KeyCode.S)) {
             disableSelection = true;
             await speech.Speak("Selected option number " + selectedMenuOption.ToString());
             Debug.Log("Selected option number " + selectedMenuOption.ToString());
             disableSelection = false;
         }
+
+        // if (Input.GetKeyDown(KeyCode.G)) {
+        //     Debug.Log("Rotation: " + upperHandle.GetRotation().ToString());
+        // }
     }
 
     void OnApplicationQuit()
