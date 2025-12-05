@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2494547392891021349}
   - component: {fileID: 7347316086691064017}
   - component: {fileID: 5096202260244526150}
-  - component: {fileID: 2559951035933350950}
+  - component: {fileID: 2918151921920437874}
   m_Layer: 0
   m_Name: Food
   m_TagString: Food
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2559951035933350950
+--- !u!136 &2918151921920437874
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

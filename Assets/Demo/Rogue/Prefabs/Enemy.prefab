@@ -113,6 +113,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 2
   enemyLevel: 9
-  speed: 0.2
+  speed: 0.405
   roomCenter: {x: 0.41, y: 0}
   roomSize: {x: 27.52, y: 22.08}

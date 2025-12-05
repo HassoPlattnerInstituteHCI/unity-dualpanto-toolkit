@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     private float attackCooldown = 3.0f; // in seconds
     private RogueManager rogueManager;
 
+    private RogueAudioManager rogueAudioManager;
+
     void Start()
     {
         rogueManager = FindObjectOfType<RogueManager>();
@@ -22,7 +24,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void OnCollisionStay(Collision collision)
+    async void OnCollisionStay(Collision collision)
     {
         Debug.Log("Player collided with: " + collision.gameObject.name);
 
@@ -38,9 +40,12 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Food"))
         {
             heal();
-            Destroy(collision.gameObject);
+        
+            Destroy(collision.gameObject.transform.parent.gameObject);
         }
     }
+
+
     
     private void heal()
     {

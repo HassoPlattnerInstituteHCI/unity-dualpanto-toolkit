@@ -42,16 +42,19 @@ namespace Rogue
         }
         async void Introduction()
         {
-            await Task.Delay(2000);
+            //await Task.Delay(1000);
             await StartGame();
         }
 
         async Task StartGame()
         {
+            //await RenderObstacle();
+
+            //await Task.Delay(2000);
 
             await TransformPlayerToSpawn();
-            await Task.Delay(2000);
-            await RenderObstacle();
+            
+            
             //upperHandle.Free();
            
             // lowerHandle.Free();

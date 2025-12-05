@@ -8,13 +8,11 @@ public class RogueManager : MonoBehaviour
     public int playerHealth = 5;
     public int playerAC = 3;
 
-    public AudioClip hitSound;
-
-    private AudioSource audioSource;
+    private RogueAudioManager rogueAudioManager;
 
     void Start()
     {
-        audioSource = this.gameObject.AddComponent<AudioSource>();
+        rogueAudioManager = GetComponent<RogueAudioManager>();
     }
 
     // Update is called once per frame
@@ -27,9 +25,12 @@ public class RogueManager : MonoBehaviour
     {
         playerHealth--;
         Debug.Log("Player Health: " + playerHealth);
-        if(hitSound != null)
+        rogueAudioManager.PlayPlayerHitSound();
+        if (playerHealth <= 0)
         {
-            audioSource.PlayOneShot(hitSound);
+            Debug.Log("Player has died!");
+            rogueAudioManager.PlayPlayerDeathSound();
+            // Handle player death (e.g., end game, respawn, etc.)
         }
     }
 }

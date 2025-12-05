@@ -21,9 +21,11 @@ public class Enemy : MonoBehaviour
     public Vector2 roomSize;
 
     private float lastAttackTime = -Mathf.Infinity;
-    private float attackCooldown = 4.0f; // in seconds
+    private float attackCooldown = 8.0f; // in seconds
 
     private RogueManager rogueManager;
+
+    private RogueAudioManager rogueAudioManager;
 
     private UpperHandle meHandle;
 
@@ -33,6 +35,10 @@ public class Enemy : MonoBehaviour
 
     private bool playerInRange = false;
 
+    private float lastEnemyPresent = -Mathf.Infinity;
+    private float enemyPresentCooldown = 2.0f;
+
+    private float volumeFactor = 0.1f;
 
     //Room mesurements
     private float roomMaxX;
@@ -45,16 +51,14 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rogueManager = FindObjectOfType<RogueManager>();
+        rogueAudioManager = FindObjectOfType<RogueAudioManager>();
         if (rogueManager == null)
         {
             Debug.LogWarning("RogueManager not found in scene.");
         }
         meHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
-        if(lowerHandle != null)
-        {
-            //lowerHandle.SwitchTo(this.gameObject, 100.0f);
-        }
+        
         // initialize room bounds from serialized values
         UpdateRoomBounds();
     }
@@ -86,9 +90,9 @@ public class Enemy : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         Debug.Log("Enemy collided with: " + collision.gameObject.name);
-        if (collision.gameObject.CompareTag("Player") && Time.time - lastAttackTime > attackCooldown)
+        if (collision.gameObject.CompareTag("MeHandle") && Time.time - lastAttackTime > attackCooldown)
         {
-            hitPlayer();
+            HitPlayer();
             lastAttackTime = Time.time;
         }
     }
@@ -99,9 +103,10 @@ public class Enemy : MonoBehaviour
     {
         roomCenter = center;
         roomSize = size;
-        UpdateRoomBounds(); 
+        UpdateRoomBounds();
     }
 
+    // update min/max bounds based on center and size of the room
     private void UpdateRoomBounds()
     {
         // Only compute if we have a sensible room size
@@ -116,18 +121,18 @@ public class Enemy : MonoBehaviour
         roomMaxZ = roomCenter.y + halfZ;
         roomMinZ = roomCenter.y - halfZ;
     }
-    
 
+    // move enemy towards player, if player is in range
     private void MoveEnemy()
     {
         if (meHandle == null) return;
 
-        if (!checkPlayerInRange())
+        if (!CheckPlayerInRange())
         {
             return; // Player is out of range
         }
 
-        if (Vector3.Distance(meHandle.GetPosition(), lastPlayerPosition) < 0.01f)
+        if (Vector3.Distance(meHandle.GetPosition(), lastPlayerPosition) < 0.03f)
         {
             lastPlayerPosition = meHandle.GetPosition();
             return; // Player is not moving
@@ -136,7 +141,7 @@ public class Enemy : MonoBehaviour
 
         Vector3 direction = (lastPlayerPosition - transform.position).normalized;
         float dt = Time.deltaTime;
-        
+
         Vector3 nextPos = transform.position + direction * speed * dt;
         if (nextPos.x < roomMinX || nextPos.x > roomMaxX || nextPos.z < roomMinZ || nextPos.z > roomMaxZ)
         {
@@ -146,14 +151,15 @@ public class Enemy : MonoBehaviour
         transform.position = nextPos;
     }
 
-    bool checkPlayerInRange()
+    // check if player is within room bounds plus tolerance
+    bool CheckPlayerInRange()
     {
-        
+
         Vector3 playerPosLocal = meHandle.GetPosition();
-        //Vector3 playerPosLocal = this.transform.InverseTransformPoint(playerPos);
-        if (playerPosLocal.x >= roomMinX-roomTolerance && playerPosLocal.x <= roomMaxX + roomTolerance &&
-            playerPosLocal.z >= roomMinZ-roomTolerance && playerPosLocal.z <= roomMaxZ + roomTolerance)
+        if (playerPosLocal.x >= roomMinX - roomTolerance && playerPosLocal.x <= roomMaxX + roomTolerance &&
+            playerPosLocal.z >= roomMinZ - roomTolerance && playerPosLocal.z <= roomMaxZ + roomTolerance)
         {
+            PlayEnemyIsPresentSound(playerPosLocal);
             if (playerInRange == false)
             {
                 lowerHandle.SwitchTo(this.gameObject, 100.0f);
@@ -164,12 +170,24 @@ public class Enemy : MonoBehaviour
         playerInRange = false;
         return false;
     }
-
-    void hitPlayer()
+    
+    // play sound indicating enemy is present (volume based on distance to player)
+    void PlayEnemyIsPresentSound(Vector3 playerPos)
+    {
+        if (Time.time - lastEnemyPresent > enemyPresentCooldown)
+        {
+            var XvolumeFactor = 1.0f - (Vector3.Distance(this.transform.position, playerPos));
+            rogueAudioManager.PlayEnemyPresentSound(XvolumeFactor);
+            lastEnemyPresent = Time.time;
+        }
+    }
+    
+    // enemy attacks player
+    void HitPlayer()
     {
         if (rogueManager != null)
         {
-            // roll 1..20 inclusive
+            // roll 1..20 inclusive for attack (original rogue like system)
             int attackRoll = Random.Range(1, 21);
             if (attackRoll >= (rogueManager.playerAC + ((0 - enemyLevel) + 10) + 1))
             {
@@ -177,14 +195,18 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    // enemy takes damage
     public void TakeDamage(int damage)
     {
         health -= damage;
         Debug.Log("Enemy took damage, current health: " + health);
         if (health <= 0)
         {
+            rogueAudioManager.PlayEnemyDeathSound();
             Destroy(this.gameObject);
         }
+        rogueAudioManager.PlayEnemyHitSound();
     }
 
     
