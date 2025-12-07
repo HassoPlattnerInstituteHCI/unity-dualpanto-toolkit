@@ -1,5 +1,7 @@
 using UnityEngine;
 using ClipperLib;
+using System.Linq;
+
 
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
@@ -52,9 +54,8 @@ namespace DualPantoToolkit
             Collider coll = colliders[0];
 
             Paths solution = new Paths();
-            solution.Add(PathFromBounds(colliders[0].bounds));
 
-            for (int i = 1; i < colliders.Length; i++)
+            for (int i = 0; i < colliders.Length; i++)
             {
                 Paths newPath = new Paths(1);
                 newPath.Add(PathFromBounds(colliders[i].bounds));
@@ -64,8 +65,8 @@ namespace DualPantoToolkit
                 c.AddPaths(newPath, PolyType.ptClip, true);
                 c.Execute(ClipType.ctUnion, solution);
             }
-            Debug.Log("[DualPanto] Vector array length: " + Vector2ArrayFromPath(solution[0]).Length);
-            CreateFromCorners(Vector2ArrayFromPath(solution[0]));
+            var cornersList = solution.Select(s => Vector2ArrayFromPath(s)).ToList();
+            CreateFromCorners(cornersList);
         }
     }
 }
