@@ -9,61 +9,34 @@ public class PlayerRecoil : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    private UpperHandle meHandle;
+    [SerializeField]
+    [Range(0.0f, 10.0f)]
+    private float recoilStrength = 3f;
 
-    private Queue<Vector3> lastPositions = new Queue<Vector3>(10);
+    [SerializeField]
+    [Range(1.0f, 10.0f)]
+    private float recoilSpeed = 5f;
+
+    private UpperHandle meHandle;
    
     void Start()
     {
         meHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
     }
-
-    // Update is called once per frame
-    async void Update()
-    {
-        UpdateLastPositions();
-        await Task.Delay(10);
-    }
-
     void OnCollisionEnter(Collision collision){
         if (collision.gameObject.CompareTag("Enemy")){
-            ApplyRecoil();
+            var collisionPoint = collision.contacts[0].normal;
+            ApplyRecoil(collisionPoint);
         }
     }
-
-    void UpdateLastPositions(){
-        lastPositions.Enqueue(meHandle.GetPosition());
-        if (lastPositions.Count > 10)
-        {
-            lastPositions.Dequeue();
-        }
-    }
-
-    void ApplyRecoil(){
-        if (lastPositions.Count == 0) return;
-        
-        // Durchschnittsposition der letzten Positionen berechnen
-        Vector3 averagePosition = Vector3.zero;
-        foreach (Vector3 position in lastPositions)
-        {
-            averagePosition += position;
-        }
-        averagePosition /= lastPositions.Count;
-        
-        // Aktuelle Position
+    async void ApplyRecoil(Vector3 collisionPoint){
+       
         Vector3 currentPosition = meHandle.GetPosition();
+        // calculate the direction of the recoil
+        Vector3 recoilDirection = (collisionPoint.normalized - currentPosition.normalized).normalized;    
+        // apply the recoil to meHandle
+        await meHandle.MoveToPosition(currentPosition + (recoilDirection * recoilStrength), recoilSpeed);
         
-        // Vektor von Durchschnittsposition zur aktuellen Position (Richtung Spieler)
-        Vector3 directionToPlayer = currentPosition - averagePosition;
-        
-        // Y-Koordinate ignorieren (nur X und Z)
-        directionToPlayer.y = 0;
-        
-        // Vektor normalisieren und umdrehen (entgegen der Bewegungsrichtung)
-        Vector3 recoilDirection = -directionToPlayer.normalized;
-        
-        // Kraft anwenden
-        meHandle.ApplyForce(currentPosition + recoilDirection, 10.0f);
     }
     
 }

@@ -17,8 +17,8 @@ public class Enemy : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float speed = 0.2f;
 
-    public Vector2 roomCenter;
-    public Vector2 roomSize;
+    private Vector2 roomCenter;
+    private Vector2 roomSize;
 
     private float lastAttackTime = -Mathf.Infinity;
     private float attackCooldown = 8.0f; // in seconds

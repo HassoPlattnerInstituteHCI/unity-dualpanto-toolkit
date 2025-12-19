@@ -9,9 +9,10 @@ namespace Rogue
 {
     public class GameManager : MonoBehaviour
     {
-        public static GameManager instance; // what's this?
-        
+        [SerializeField]
         public GameObject player;
+
+        [SerializeField]
         public Transform spawnPosition;
 
         private UpperHandle upperHandle;
@@ -21,17 +22,6 @@ namespace Rogue
         private SpeechOut speechOut;
         PantoCollider[] pantoColliders;
 
-        void Awake()
-        {
-            if (instance == null)
-            {
-                instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
         
         // Start is called before the first frame update
         void Start()
@@ -52,9 +42,7 @@ namespace Rogue
 
             //await Task.Delay(2000);
 
-            await TransformPlayerToSpawn();
-            
-            
+            //await TransformPlayerToSpawn();
             //upperHandle.Free();
            
             // lowerHandle.Free();
@@ -64,9 +52,7 @@ namespace Rogue
         {
             if (upperHandle != null)
             {
-                
                 await upperHandle.MoveToPosition(spawnPosition.position,1f);
-                //upperHandle.GetComponent<Collider>().enabled = true;
             }
         }
 

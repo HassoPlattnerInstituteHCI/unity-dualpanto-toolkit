@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5096202260244526150}
   - component: {fileID: 2918151921920437874}
   m_Layer: 0
-  m_Name: Food
+  m_Name: FoorPrefab
   m_TagString: Food
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
