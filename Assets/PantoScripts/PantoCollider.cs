@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace DualPantoToolkit
 {
@@ -159,30 +160,39 @@ namespace DualPantoToolkit
             CreateFromCorners(newPoints);
         }
 
-        public void CreateFromCorners(Vector2[] corners)
+        public void CreateFromCorners(Vector2[] corners){CreateFromCorners(new List<Vector2[]>{corners});}
+
+        public void CreateFromCorners(List<Vector2[]> cornersList)
         {
             byte index = getPantoIndex();
+            var initialCorners = cornersList[0];
             if (index == 2)
             {
                 Debug.LogWarning("[DualPanto] Skipping creation for object with no handles");
             }
+            
             if (this.isPassable)
             {
-                pantoSync.CreatePassableObstacle(index, id, corners[0], corners[1]);
-                DrawLine(corners[0], corners[1]);
+                pantoSync.CreatePassableObstacle(index, id, initialCorners[0], initialCorners[1]);
+                DrawLine(initialCorners[0], initialCorners[1]);
             }
             else
             {
-                pantoSync.CreateObstacle(index, id, corners[0], corners[1]);
-                DrawLine(corners[0], corners[1]);
+                pantoSync.CreateObstacle(index, id, initialCorners[0], initialCorners[1]);
+                DrawLine(initialCorners[0], initialCorners[1]);
             }
-            for (int i = 1; i < corners.Length - 1; i++)
-            {
-                pantoSync.AddToObstacle(index, id, corners[i], corners[i + 1]);
-                DrawLine(corners[i], corners[i + 1]);
+            foreach(var corners in cornersList){
+                for (int i = 0; i < corners.Length - 1; i++)
+                {
+                    pantoSync.AddToObstacle(index, id, corners[i], corners[i + 1]);
+                    DrawLine(corners[i], corners[i + 1]);
+                }
+                pantoSync.AddToObstacle(index, id, corners[corners.Length - 1], corners[0]);
+                pantoSync.AddToObstacle(index, id, corners[0], corners[0]);
+                // add separator
+                pantoSync.AddToObstacle(index, id, new Vector2(float.NaN, float.NaN), new Vector2(float.NaN, float.NaN));
+                DrawLine(corners[corners.Length - 1], corners[0]);
             }
-            pantoSync.AddToObstacle(index, id, corners[corners.Length - 1], corners[0]);
-            DrawLine(corners[corners.Length - 1], corners[0]);
         }
 
         void DrawLine(Vector2 start, Vector2 end)

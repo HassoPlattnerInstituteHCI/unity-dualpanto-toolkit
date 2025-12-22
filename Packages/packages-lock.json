@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.chaser324.unity-wireframe": {
+      "version": "https://github.com/insominx/unity-wireframe.git?path=/Packages/unity-wireframe",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "46a40dfa1c1ce7f0144041f6b69adda131da3241"
+    },
     "com.unity.collab-proxy": {
       "version": "1.15.16",
       "depth": 0,
@@ -53,9 +60,9 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.androidjni": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.modules.androidjni": "1.0.0"
+        "com.unity.modules.unitywebrequest": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -84,9 +91,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
