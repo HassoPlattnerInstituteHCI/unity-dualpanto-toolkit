@@ -1,81 +1,91 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.EnterpriseServices;
-using DualPantoToolkit;
-using JetBrains.Annotations;
 using UnityEngine;
+using DualPantoToolkit;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 public class GridRoomSpawner : MonoBehaviour
 {
     public class RoomData
     {
         public int id;
-        public List<Vector2Int> tiles = new List<Vector2Int>();
-        public List<Vector2Int> perimeter = new List<Vector2Int>();
+        public float roomSizeX = 0f;
+        public float roomSizeY = 0f;
+
+        public int col;
+        public int row;
+
+        public bool connected = false;  // Whether room is connected to the dungeon network
 
         public RoomData(int id)
         {
             this.id = id;
         }
-    }
-    public class UnionFind<T>
-    {
-        Dictionary<T, T> parent = new Dictionary<T, T>();
-
-        public void MakeSet(T x)
+        public RoomData(int id, float roomSizeX, float roomSizeY, int col, int row)
         {
-            parent[x] = x;
-        }
-
-        public T Find(T x)
-        {
-            if (!EqualityComparer<T>.Default.Equals(parent[x], x))
-                parent[x] = Find(parent[x]);
-            return parent[x];
-        }
-
-        public void Union(T a, T b)
-        {
-            var ra = Find(a);
-            var rb = Find(b);
-            if (!ra.Equals(rb))
-                parent[rb] = ra;
+            this.id = id;
+            this.roomSizeX = roomSizeX;
+            this.roomSizeY = roomSizeY;
+            this.col = col;
+            this.row = row;
         }
     }
-
-
 
     public GameObject plane;      // The Plane GameObject in the scene
-    public float cellSize = 0.2f;
 
+    // Grid dimensions - defines the number of cells for room placement
+    public int rows = 3;
+    public int columns = 3;
+   
+
+    // Room Inspector Settings
+    [Header("Room Settings")]
     public GameObject roomPrefab;
 
-    public GameObject map;
+    [Range(0.2f, 1.0f)]
+    public float minRoomSize = 0.5f;
+    [Range(0.2f, 1.0f)]
+    public float maxRoomSize = 0.7f;
 
-    [HideInInspector] public int gridWidth;
-    [HideInInspector] public int gridHeight;
+    [Range(0, 100)]
+    public int properbiltyOfRoomInCell = 80;
 
+    // Corridor Inspector Settings
+    [Header("Corridor Settings")]
+    public GameObject corridorPrefab;  
 
-    public int maxRoomSize = 10;
-    private int minRoomSize = 5;
+    [Range(0.05f, 1.0f)]
+    public float corridorWidth = 0.3f;  
+    
+    private List<RoomData> rooms = new List<RoomData>();
 
+    // Calculated cell dimensions based on plane size and grid dimensions
+    private float cellWidth;
+    private float cellHeight;
 
-
-    public int[,] grid;
+    public int[,] grid;  // 2D grid storing room IDs (0 = empty cell)
 
     void Awake()
     {
-        
+        Create();
+
     }
 
-    public void Create(){
+    public void Create()
+    {
         CalculateGridFromPlane();
-        grid = new int[gridWidth, gridHeight];
+        grid = new int[rows, columns];
+        //DrawGridWithIndices();
         CreateRooms();
         CreateCorridor();
-        map.AddComponent<PantoCompoundCollider>();
-    }
 
+        this.gameObject.AddComponent<PantoCompoundCollider>();
+        this.gameObject.GetComponent<PantoCompoundCollider>().onLower = false;
+    }
+    
     void CalculateGridFromPlane()
     {
         if (plane == null)
@@ -84,309 +94,225 @@ public class GridRoomSpawner : MonoBehaviour
             return;
         }
 
-        // Unity's Plane primitive is 10x10 units in size by default
+        // Unity plane default size is 10x10, scaled by transform
         Vector3 worldScale = plane.transform.localScale;
         float totalWidth = 10f * worldScale.x;
         float totalHeight = 10f * worldScale.z;
 
-        gridWidth = Mathf.FloorToInt(totalWidth / cellSize);
-        gridHeight = Mathf.FloorToInt(totalHeight / cellSize);
-    }
-
-    public bool IsCellFree(int x, int y)
-    {
-        return x >= 0 && x < gridWidth &&
-               y >= 0 && y < gridHeight &&
-               (grid[x, y] == 0);
-    }
-
-    public bool CanPlaceRoom(int x, int y, int width, int height)
-    {
-        for (int i = x; i < x + width; i++)
-        {
-            for (int j = y; j < y + height; j++)
-            {
-                if (!IsCellFree(i, j)) return false;
-            }
-        }
-        return true;
-    }
-
-    public void OccupyCells(int x, int y, int width, int height, int id)
-    {
-        for (int i = x; i < x + width; i++)
-        {
-            for (int j = y; j < y + height; j++)
-            {
-                grid[i, j] = id;
-            }
-        }
+        cellWidth = totalWidth / columns;
+        cellHeight = totalHeight / rows;
     }
 
     public void CreateRooms()
     {
-        int maxRooms = Random.Range(4, 6);
-        var roomsId = new List<int>();
-
-        int maxTry = 10;
-        for (int i = 1; i < maxRooms; i++)
+        int currentRoomId = 1;
+        for (int row = 0; row < rows; row++)
         {
-            int roomHeight = Random.Range(minRoomSize, maxRoomSize);
-            int roomWidth = Random.Range(minRoomSize, maxRoomSize);
-
-            var randomPos = GetRandomGridCoordiantes();
-
-            int countTry = 0;
-            while (!CanPlaceRoom(randomPos.x, randomPos.y, roomWidth, roomHeight) && countTry <= maxTry)
+            for (int col = 0; col < columns; col++)
             {
-                countTry++;
-                randomPos = GetRandomGridCoordiantes();
-            }
-            if (countTry <= maxTry)
-            {
-                OccupyCells(randomPos.x, randomPos.y, roomWidth, roomHeight, i);
-                roomsId.Add(i);
-                AddRoomToMap(randomPos.x, randomPos.y, roomWidth, roomHeight);
+                if (grid[row, col] == 0)
+                {
+                    if (UnityEngine.Random.Range(0, 100) < properbiltyOfRoomInCell)
+                    {
+                        float roomSizeX = UnityEngine.Random.Range(minRoomSize, maxRoomSize) * cellWidth;
+                        float roomSizeY = UnityEngine.Random.Range(minRoomSize, maxRoomSize) * cellHeight;
+
+                        var roomData = new RoomData(currentRoomId, roomSizeX, roomSizeY, col, row);
+                        if (currentRoomId == 1)
+                        {
+                            AddRoomToMap(roomData, true); // First room is spawn room
+                        }else
+                        {
+                            AddRoomToMap(roomData);
+                        }
+                        
+                        rooms.Add(roomData);
+                        grid[row, col] = currentRoomId;
+                        currentRoomId++;
+                    }
+                }
             }
         }
     }
-
-    public void CreateCorridor(List<int> roomIds)
+    private void AddRoomToMap(RoomData roomData, bool isSpawnRoom = false)
     {
+        Vector3 pos = RoomWorldCenterPos(roomData.col, roomData.row);
+
+        var room = Instantiate(roomPrefab, pos, Quaternion.identity, this.gameObject.transform);
+
+        // Scale the room to its calculated dimensions
+        room.transform.localScale = new Vector3(roomData.roomSizeX, 0f, roomData.roomSizeY);
+
+        var roomComponent = room.GetComponent<Room>();
+        if (roomComponent != null)
+        {
+            roomComponent.isSpawnRoom = isSpawnRoom;
+        }
+    }
+
+    private Vector3 RoomWorldCenterPos(RoomData roomData)
+    {
+        return RoomWorldCenterPos(roomData.col, roomData.row);
+    }
+
+    private Vector3 RoomWorldCenterPos(int col, int row)
+    {
+        Vector3 worldScale = plane.transform.localScale;
+        float totalWidth = 10f * worldScale.x;
+        float totalHeight = 10f * worldScale.z;
+
+        // Calculate bottom-left corner of the plane
+        Vector3 planeZero = plane.transform.position - new Vector3(totalWidth * 0.5f, 0f, totalHeight * 0.5f);
+
+        return planeZero + new Vector3((col + 0.5f) * cellWidth, 0f, (rows - 1 - row + 0.5f) * cellHeight);
+    }
+
+    private void CreateCorridor()
+    {
+        if (rooms.Count == 0)
+            return;
+
+        // Start with the first room as connected
+        rooms[0].connected = true;
+
+        // Connect all other rooms with already connected rooms
+        for (int i = 1; i < rooms.Count; i++)
+        {
+            RoomData room = rooms[i];
+            
+            // Search for an already connected neighbor (recursion in nextNeighbor automatically increases radius)
+            var neighbors = nextNeighbor(room.id, room.col, room.row, 1);
+            if (neighbors == null || neighbors.Count == 0)
+                continue;
+
+            // Find an already connected neighbor
+            int neighborRoomId = -1;
+            foreach (int neighborId in neighbors)
+            {
+                var neighbor = rooms.FirstOrDefault(r => r.id == neighborId && r.connected);
+                if (neighbor != null)
+                {
+                    neighborRoomId = neighborId;
+                    break;
+                }
+            }
+
+            // If no connected neighbor found, simply take the first one (only happens on first iteration)
+            if (neighborRoomId == -1)
+                neighborRoomId = neighbors[0];
+
+            connectNeighbor(room, neighborRoomId);
+            room.connected = true;
+        }
+    }
+
+    private List<int> nextNeighbor(int roomId, int startCol, int startRow, int maxSearchRadius)
+    {
+        var canidates = new List<int>();
+
+        if (maxSearchRadius > Math.Max(columns, rows))
+        {
+            Debug.LogError("room could not be connected");
+            return null;
+        }
+
+        // Search in a square area around the starting position
+        for (int col = startCol - maxSearchRadius; col <= startCol + maxSearchRadius; col++)
+        {
+            for (int row = startRow - maxSearchRadius; row <= startRow + maxSearchRadius; row++)
+            {
+                if (col >= 0 && row >= 0 && col < columns && row < rows)
+                {
+                    var cell = grid[row, col];
+                    if (cell > 0 && cell != roomId)  // Found a room that's not the current one
+                    {
+                        canidates.Add(cell);
+                    }
+                }
+            }
+        }
+        // If no neighbors found at this radius, expand the search
+        if (canidates.Count == 0)
+        {
+            return nextNeighbor(roomId, startCol, startRow, maxSearchRadius + 1);
+        }
+        else
+        {
+            return canidates;
+        }
 
     }
 
-    public void AddRoomToMap(int x, int y, int roomWidth, int roomHeight)
+    private void connectNeighbor(RoomData room, int roomIdNeighbor)
     {
-        var pos = GetWorldPosition(x, y);
+        var neighborRoom = rooms.FirstOrDefault(x => x.id == roomIdNeighbor);
+        if (neighborRoom == null)
+            return;
 
-        // Mittelpunkt des ganzen Raums (mehrere Zellen) treffen
-        pos += new Vector3((roomWidth - 1) * cellSize * 0.5f, 0f,
-                           (roomHeight - 1) * cellSize * 0.5f);
+        // Calculate the offset to determine corridor shape
+        int offsetCol = neighborRoom.col - room.col;
+        int offsetRow = neighborRoom.row - room.row;
 
-        var room = Instantiate(roomPrefab, pos, Quaternion.identity, map.transform);
+        // Same row or column: simple, straight corridor
+        if (offsetCol == 0 || offsetRow == 0)
+        {
+            Vector3 start = RoomWorldCenterPos(room);
+            Vector3 end = RoomWorldCenterPos(neighborRoom);
+            CreateCorridorSegment(start, end);
+        }
+        else
+        {
+            // Offset cells: corridor in two segments (L-shape)
+            // First segment horizontal, second vertical
+            Vector3 a = RoomWorldCenterPos(room);
+            Vector3 b = RoomWorldCenterPos(neighborRoom.col, room.row);   // Same row, target column
+            Vector3 c = RoomWorldCenterPos(neighborRoom);
 
-        float worldWidth = roomWidth * cellSize;
-        float worldDepth = roomHeight * cellSize;
-
-        // 3D-Objekt: über localScale skalieren
-        room.transform.localScale = new Vector3(worldWidth,
-                                                room.transform.localScale.y,
-                                                worldDepth);
-
-        // Falls 2D/SpriteRenderer im Prefab (Draw Mode Tiled/Sliced):
-        // var sr = room.GetComponent<SpriteRenderer>();
-        // if (sr != null) sr.size = new Vector2(worldWidth, worldDepth);
+            CreateCorridorSegment(a, b);
+            CreateCorridorSegment(b, c);
+        }
     }
 
-    (int x, int y) GetRandomGridCoordiantes()
+    private void CreateCorridorSegment(Vector3 start, Vector3 end)
     {
-        return (Random.Range(0, gridWidth), Random.Range(0, gridHeight));
+        if (corridorPrefab == null)
+            return;
+
+        Vector3 dir = end - start;
+        float length = dir.magnitude;
+        if (length <= 0.001f)  // Skip if points are too close
+            return;
+
+        // Position corridor at midpoint between start and end
+        Vector3 pos = start + dir * 0.5f;
+        Quaternion rot = Quaternion.LookRotation(dir.normalized, Vector3.up);
+
+        var corridor = Instantiate(corridorPrefab, pos, rot, this.gameObject.transform);
+
+        // We assume the prefab is aligned along its local Z-axis
+        Vector3 scale = corridor.transform.localScale;
+        scale.z = length;
+        // Adapt corridor width to cell size (scalable via corridorWidth)
+        scale.x = cellWidth * corridorWidth;
+        corridor.transform.localScale = scale;
     }
+
+    
 
     public Vector3 GetWorldPosition(int x, int y)
     {
-        // Align cell centers to the middle of the plane
-        float originX = plane.transform.position.x - (gridWidth * cellSize) / 2f + cellSize / 2f;
-        float originZ = plane.transform.position.z - (gridHeight * cellSize) / 2f + cellSize / 2f;
+        // Determine the size of the plane in world space
+        Vector3 worldScale = plane.transform.localScale;
+        float totalWidth = 10f * worldScale.x;
+        float totalHeight = 10f * worldScale.z;
 
-        return new Vector3(originX + x * cellSize, 0, originZ + y * cellSize);
+        // Align cell centers to the center of the plane
+        float originX = plane.transform.position.x - totalWidth / 2f + cellWidth / 2f;
+        float originZ = plane.transform.position.z - totalHeight / 2f + cellHeight / 2f;
+
+        return new Vector3(originX + x * cellWidth, 0, originZ + y * cellHeight);
     }
 
-    //ChatGPT krams
-    public List<Vector2Int> BFS(Vector2Int start, Vector2Int goal, HashSet<Vector2Int> blocked)
-    {
-        Queue<Vector2Int> q = new Queue<Vector2Int>();
-        Dictionary<Vector2Int, Vector2Int> parent = new Dictionary<Vector2Int, Vector2Int>();
-        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-
-        q.Enqueue(start);
-        visited.Add(start);
-
-        Vector2Int[] dirs = {
-        new Vector2Int(1,0),
-        new Vector2Int(-1,0),
-        new Vector2Int(0,1),
-        new Vector2Int(0,-1)
-    };
-
-        while (q.Count > 0)
-        {
-            var cur = q.Dequeue();
-            if (cur == goal)
-            {
-                // reconstruct
-                List<Vector2Int> path = new List<Vector2Int>();
-                var t = goal;
-                while (t != start)
-                {
-                    path.Add(t);
-                    t = parent[t];
-                }
-                path.Add(start);
-                path.Reverse();
-                return path;
-            }
-
-            foreach (var d in dirs)
-            {
-                var n = cur + d;
-
-                if (n.x < 0 || n.x >= gridWidth || n.y < 0 || n.y >= gridHeight)
-                    continue;
-
-                if (blocked.Contains(n) && n != goal)
-                    continue;
-
-                if (!visited.Contains(n))
-                {
-                    visited.Add(n);
-                    parent[n] = cur;
-                    q.Enqueue(n);
-                }
-            }
-        }
-
-        return null;
-    }
-    public List<RoomData> ExtractRooms()
-    {
-        Dictionary<int, RoomData> dict = new Dictionary<int, RoomData>();
-
-        for (int x = 0; x < gridWidth; x++)
-        {
-            for (int y = 0; y < gridHeight; y++)
-            {
-                int id = grid[x, y];
-                if (id > 0)
-                {
-                    if (!dict.ContainsKey(id))
-                        dict[id] = new RoomData(id);
-
-                    dict[id].tiles.Add(new Vector2Int(x, y));
-                }
-            }
-        }
-
-        // Perimeter berechnen
-        foreach (var r in dict.Values)
-        {
-            foreach (var tile in r.tiles)
-            {
-                bool edge = false;
-
-                foreach (var d in new Vector2Int[]{
-                new Vector2Int(1,0),
-                new Vector2Int(-1,0),
-                new Vector2Int(0,1),
-                new Vector2Int(0,-1)})
-                {
-                    Vector2Int n = tile + d;
-
-                    if (n.x < 0 || n.x >= gridWidth || n.y < 0 || n.y >= gridHeight)
-                    {
-                        edge = true;
-                        break;
-                    }
-
-                    if (grid[n.x, n.y] != r.id)
-                    {
-                        edge = true;
-                        break;
-                    }
-                }
-
-                if (edge)
-                    r.perimeter.Add(tile);
-            }
-        }
-
-        return new List<RoomData>(dict.Values);
-    }
-    public void CreateCorridor()
-    {
-        List<RoomData> rooms = ExtractRooms();
-
-        UnionFind<int> uf = new UnionFind<int>();
-        foreach (var r in rooms)
-            uf.MakeSet(r.id);
-
-        // Verbotene Tiles
-        HashSet<Vector2Int> blocked = new HashSet<Vector2Int>();
-        foreach (var r in rooms)
-            foreach (var t in r.tiles)
-                blocked.Add(t);
-
-        // Raum-Paare nach Nähe sortieren
-        List<(RoomData A, RoomData B, int dist)> pairs = new List<(RoomData, RoomData, int)>();
-
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            for (int j = i + 1; j < rooms.Count; j++)
-            {
-                int minDist = int.MaxValue;
-
-                foreach (var a in rooms[i].perimeter)
-                    foreach (var b in rooms[j].perimeter)
-                    {
-                        int d = Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-                        if (d < minDist) minDist = d;
-                    }
-
-                pairs.Add((rooms[i], rooms[j], minDist));
-            }
-        }
-
-        pairs.Sort((a, b) => a.dist.CompareTo(b.dist));
-
-        // Verbindungen erstellen
-        foreach (var (A, B, _) in pairs)
-        {
-            if (uf.Find(A.id) == uf.Find(B.id))
-                continue;
-
-            List<Vector2Int> best = null;
-            int bestLen = int.MaxValue;
-
-            foreach (var from in A.perimeter)
-                foreach (var to in B.perimeter)
-                {
-                    var p = BFS(from, to, blocked);
-                    if (p != null && p.Count < bestLen)
-                    {
-                        best = p;
-                        bestLen = p.Count;
-                    }
-                }
-
-            if (best != null)
-            {
-                // blockieren
-                foreach (var t in best)
-                    blocked.Add(t);
-
-                // sichtbar machen
-                DrawCorridor(best);
-
-                // Union
-                uf.Union(A.id, B.id);
-            }
-        }
-    }
-    public void DrawCorridor(List<Vector2Int> path)
-    {
-        float scaleFactor = 1f;
-        foreach (var p in path)
-        {
-            Vector3 pos = GetWorldPosition(p.x, p.y);
-            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.transform.position = pos;
-            cube.transform.localScale = new Vector3(cellSize*scaleFactor, 0.1f, cellSize*scaleFactor);
-            cube.transform.parent = map.transform;
-            cube.name = "CorridorTile";
-        }
-    }
-
-
-
+    
+    
 }

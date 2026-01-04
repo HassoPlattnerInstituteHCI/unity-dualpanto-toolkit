@@ -38,18 +38,6 @@ public class RoomManager : MonoBehaviour
         MovePlayerToSpawn(spawnPosition);
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void GenerateRooms()
-    {
-        var roomSpawner = GetComponent<GridRoomSpawner2>();
-        roomSpawner?.Create();
-    }
     void CreateRoomObsticles()
     {
         if (rooms.Count != 0)

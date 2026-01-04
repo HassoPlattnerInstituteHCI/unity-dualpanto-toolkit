@@ -18,48 +18,34 @@ public class Player : MonoBehaviour
             Debug.LogWarning("RogueManager not found in scene.");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    // Handles collisions with enemies, food items, and finish point
     void OnCollisionEnter(Collision collision)
     {
-         if(collision.gameObject.CompareTag("Finish"))
+        if (collision.gameObject.CompareTag("Finish"))
         {
             rogueManager.LevelFinished();
         }
-    }
-    async void OnCollisionStay(Collision collision)
-    {
-        Debug.Log("Player collided with: " + collision.gameObject.name);
-
+        // Attack enemy if cooldown has elapsed
         if (collision.gameObject.CompareTag("Enemy") && Time.time - lastAttackTime > attackCooldown)
         {
             Debug.Log("Attacking enemy: " + collision.gameObject.name);
-            hitEnemy(collision.gameObject.GetComponent<Enemy>());
+            HitEnemy(collision.gameObject.GetComponent<Enemy>());
             lastAttackTime = Time.time;
         }
         if (collision.gameObject.CompareTag("Food"))
         {
-            heal();
+            Heal();
 
             Destroy(collision.gameObject.transform.parent.gameObject);
         }
-
     }
-    
-    
-
-
-    
-    private void heal()
+     
+    private void Heal()
     {
         rogueManager.playerHealth++;
     }
     
-    public void hitEnemy(Enemy enemyScript)
+    public void HitEnemy(Enemy enemyScript)
     {
         if (enemyScript != null)
         {

@@ -33,12 +33,6 @@ public class RogueManager : MonoBehaviour
         TransformPlayerToSpawn();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void LevelFinished(){
         UnityEditor.EditorApplication.isPlaying = false;
     }

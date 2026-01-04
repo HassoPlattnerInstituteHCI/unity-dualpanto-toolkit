@@ -28,12 +28,6 @@ public class RogueAudioManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void PlayPlayerHitSound()
     {
         if (playerHitSound != null)

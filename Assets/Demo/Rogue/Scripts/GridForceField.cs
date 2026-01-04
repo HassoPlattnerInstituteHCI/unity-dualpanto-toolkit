@@ -42,7 +42,7 @@ namespace DualPantoToolkit
             Vector3 direction = transform.position - other.transform.position;
             float distance = direction.magnitude;
 
-            // Avoid jitter when too close to the center
+            // Avoid oscillation when too close to the center
             if (isAttractive && distance < deadZoneRadius)
                 return Vector3.zero;
 
