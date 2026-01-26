@@ -10,14 +10,13 @@ public class MeToIt : MonoBehaviour
     public bool shouldFreeHandle;
     public float speed = 10f;
     bool inTransition = false;
-    // Start is called before the first frame update
+    
     void Start()
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         lowerHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
     }
 
-    // Update is called once per frame
     async void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))

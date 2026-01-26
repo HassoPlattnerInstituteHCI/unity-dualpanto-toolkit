@@ -14,12 +14,13 @@ public class Trap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         if (upperHandle == null)
         {
             Debug.LogError("[DualPanto] UpperHandle not found on Panto GameObject!");
         }
-        
+
         speech = new SpeechOut();
     }
 
