@@ -23,7 +23,7 @@ If you haven't already, get the driver needed to communicate with the dualpanto 
 cd path/to/repo
 cd Assets
 git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit.git
-git submodule update --init --recursive
+git submodule update --init --recursive (git submodule update --remote --recursive)
 ```
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
 
