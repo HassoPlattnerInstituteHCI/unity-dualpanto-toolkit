@@ -3,7 +3,7 @@
 
 ### 1. Install Unity
 - Install [Unity Hub](https://unity.com/download).
-- Install editor version 6000.3.17f1 (alternatively  6000.3.18f1) from the [Unity Download Archive](https://unity.com/de/releases/editor/archive).
+- Install editor version 2021.3.0f1 (alternatively  2020.1.6f1) from the [Unity Download Archive](https://unity.com/de/releases/editor/archive). **If on Apple Silicon, use Intel version under Rosetta.**
 
 ### 2. Install Code Editor & Git
 - You will need something to edit C# code (VSCode or Rider work great, VisualStudio IDE is fine too).
@@ -22,7 +22,7 @@ If you haven't already, get the driver needed to communicate with the dualpanto 
 ```
 cd path/to/repo
 cd Assets
-git submodule add https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit.git
+git submodule add git@github.com:HassoPlattnerInstituteHCI/unity-dualpanto-toolkit
 git submodule update --init --recursive
 ```
 You can find the installation instructions for SpeechIO [here](https://github.com/HassoPlattnerInstituteHCI/SpeechIOForUnity#installation). 
@@ -59,8 +59,6 @@ The _Port Name_ in your Panto Object would hence be needed to be changed to "//.
 - Select the cube and attach the `Me Handle` component to it.
 When you run your application in the next section, the cube should follow the movement of the Upper Panto Handle.
 ![Adding the player script to the cube](/Documentation/readme_images/adding-script-to-object-2.jpg)
-- Create obstacles by adding a cube using the global menu `GameObject -> 3D Object -> Cube` and attaching the `Panto Box Collider` component to it.
-- Create an empty GameObject in the scene and attach the `Obstacle Manager` component to it. This will find all Panto Colliders in the scene and create obstacles for them on start. You can toggle obstacles on/off at runtime with the `E` and `D` keys.
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
