@@ -3,8 +3,7 @@
 
 ### 1. Install Unity
 - Install [Unity Hub](https://unity.com/download).
-- Install editor version 2021.3.0f1 (alternatively  2020.1.6f1) from the [Unity Download Archive](https://unity.com/de/releases/editor/archive). **If on Apple Silicon, use Intel version under Rosetta.**
-
+- Install editor version 6000.3.17f1 (alternatively 6000.3.18f1) from the [Unity Download Archive](https://unity.com/de/releases/editor/archive).
 ### 2. Install Code Editor & Git
 - You will need something to edit C# code (VSCode or Rider work great, VisualStudio IDE is fine too).
 - For version control you will need git.
@@ -59,6 +58,8 @@ The _Port Name_ in your Panto Object would hence be needed to be changed to "//.
 - Select the cube and attach the `Me Handle` component to it.
 When you run your application in the next section, the cube should follow the movement of the Upper Panto Handle.
 ![Adding the player script to the cube](/Documentation/readme_images/adding-script-to-object-2.jpg)
+- Create obstacles by adding a cube using the global menu GameObject -> 3D Object -> Cube and attaching the Panto Box Collider component to it.
+- Create an empty GameObject in the scene and attach the Obstacle Manager component to it. This will find all Panto Colliders in the scene and create obstacles for them on start. You can toggle obstacles on/off at runtime with the E and D keys.
   
 **You can find more sample scenes to get inspired in `ExampleScenes`, the relevant scripts can be found in `ExampleScripts`**
 
@@ -110,7 +111,7 @@ Have you turned the device on? For this see [How do I turn my dualPanto device o
 Don't hold the handles too hard or push against the motors too hard.
 
 ### Game objects do not collide with obstacles in debug mode.
-Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/blob/master/Assets/documentation/documentation.md) for more info on usage.
+Make sure you use `HandlePosition()` instead of `GetPosition()`. See the [documentation](https://github.com/HassoPlattnerInstituteHCI/unity-dualpanto-toolkit/blob/develop/Documentation/documentation.md)  for more info on usage.
 
 ### No input or output from the DualPanto is arriving, the Console is showing *Received sync*, but no *Received heartbeat*.  
 This might be due to obstacles registering before the device is ready. Insert a `Task.Delay(1000)` to wait 1 second before registering an obstacle.  
