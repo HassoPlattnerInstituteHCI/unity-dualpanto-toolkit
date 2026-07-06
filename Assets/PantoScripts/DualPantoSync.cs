@@ -459,6 +459,16 @@ namespace DualPantoToolkit
                 Close(Handle);
                 Handle = 0;
             }
+            // connected is static, so it outlives this GameObject. Loading a new scene
+            // destroys the Panto and creates a fresh one; without this reset the new
+            // instance sees the stale connected == true, skips its SYNC wait in Awake
+            // (while (Handle != 0 && !connected)) and treats the still-rebooting device
+            // as connected, so the heartbeat stays red and no input or output arrives.
+            // Clearing it here makes the recreated Panto re-run the handshake against the
+            // freshly reset device. The other statics that outlive a scene load need no
+            // reset: upperHandle/lowerHandle are re-registered by the new scene's handles
+            // in their own Awake, and globalSync is reassigned in Awake.
+            connected = false;
         }
 
         void Update()
