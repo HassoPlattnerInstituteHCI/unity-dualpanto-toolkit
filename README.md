@@ -82,6 +82,9 @@ Blind Mode                 | Mixed Mode                | Develop Mode
 :-------------------------:|:-------------------------:|:--------------------:
 ![Blind Mode](/Documentation/readme_images/blind_mode.jpg)            |  ![Mixed Mode](/Documentation/readme_images/mixed_mode.jpg)          | ![Develop Mode](/Documentation/readme_images/develop_mode.jpg)
 
+## Multi-Scene Applications
+If your application spans multiple Unity scenes, see the [Scene Manager documentation](Documentation/documentation_scenes.md) for setting up scene navigation while keeping the DualPanto connection alive.
+
 ## Troubleshooting
 
 ### MacOS Error "libserial.dylib not opened"
