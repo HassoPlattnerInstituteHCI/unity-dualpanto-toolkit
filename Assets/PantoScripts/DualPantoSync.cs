@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -53,6 +54,12 @@ namespace DualPantoToolkit
         public bool debug = false;
         public float debugRotationSpeed = 10.0f;
         public bool showRawValues = true;
+
+        [Header("Connection (hardware mode only)")]
+        [Tooltip("Hard-reset the Panto via the serial DTR/RTS lines before connecting. The firmware only initiates the SYNC handshake right after booting, so without a reset a reconnect (e.g. re-entering Play mode) can wait forever for a SYNC that never comes.")]
+        public bool resetDeviceOnConnect = true;
+        [Tooltip("Seconds to wait for the firmware's SYNC handshake before giving up with an error instead of freezing Unity. 0 = wait forever (legacy behavior).")]
+        public float syncTimeout = 8f;
         protected ulong Handle;
         private static LowerHandle lowerHandle;
         private static UpperHandle upperHandle;
@@ -302,6 +309,10 @@ namespace DualPantoToolkit
             portName = name;
             uiManager.UpdatePort(portName);
             uiManager.ShowPortWindow(false);
+            if (resetDeviceOnConnect && SerialPortReset.TryHardReset(portName))
+            {
+                Debug.Log("[DualPanto] Device reset via DTR/RTS, waiting for it to boot and SYNC");
+            }
             Handle = OpenPort(portName);
             if (Handle == (ulong)0)
             {
@@ -355,11 +366,25 @@ namespace DualPantoToolkit
                 SetTransitionHandler(StaticTransitionHandler);
 
                 SetPort(portName);
-                // keep polling until we receive the first SYNC (which we ACK in the handler and set connected)
-                // only then everyone else can start sending their own stuff
+                // Keep polling until we receive the first SYNC (which we ACK in the handler
+                // and set connected). Only then may everyone else start sending their own
+                // data. The wait must be bounded: the firmware only initiates the handshake
+                // right after booting, so a device that missed the reset would never SYNC,
+                // and an unbounded loop here would freeze the whole editor because this runs
+                // on the main thread and never returns to the UI event loop.
+                float syncWaitStart = Time.realtimeSinceStartup;
                 while (Handle != 0 && !connected)
                 {
                     Poll(Handle);
+                    Thread.Sleep(1); // don't burn a full core while waiting
+                    if (syncTimeout > 0 && Time.realtimeSinceStartup - syncWaitStart > syncTimeout)
+                    {
+                        Debug.LogError($"[DualPanto] No SYNC from the device within {syncTimeout}s. Power-cycle or reset the Panto, then press Play again.");
+                        Close(Handle);
+                        Handle = 0;
+                        uiManager.ShowPortWindow(true);
+                        break;
+                    }
                 }
             }
             else

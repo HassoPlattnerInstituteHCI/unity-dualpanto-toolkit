@@ -99,7 +99,7 @@ On the back of your dualPanto device is a power switch. Push so that it turns to
 On the back of your dualPanto device is a button next to the USB port. Move the linkages back in the closing position, turn the handles so they point to the right, press the button and wait 3 seconds.
 
 ### Unity freezes upon starting the dualpanto application
-Press the reset button right next to the USB port.
+The toolkit resets the device over its serial control lines before connecting, so the firmware boots fresh and completes the SYNC handshake. If the device still does not answer within the configured timeout, connecting aborts with a Console error instead of freezing Unity. If you see that error, power-cycle the Panto or press the reset button next to the USB port, then press Play again.
 
 ### dualPanto handles not moving inside the game/Message _Revision id not matching. Try resetting the panto._ appears.
 Try to reset the dualPanto device using the button on the back. For this see _How do I reset my dualPanto device._
