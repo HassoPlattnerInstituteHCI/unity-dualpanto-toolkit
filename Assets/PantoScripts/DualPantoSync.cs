@@ -92,6 +92,7 @@ namespace DualPantoToolkit
 #endif
 
         private static bool connected = false;
+        private static bool espBooted = false;
 
 
         [DllImport(plugin)]
@@ -152,6 +153,11 @@ namespace DualPantoToolkit
 
         private static void SyncHandler(ulong handle)
         {
+            if (!espBooted)
+            {
+                Debug.Log("[DualPanto] Stale sync ignored (ESP is not booted)");
+                return;
+            }
             Debug.Log("[DualPanto] Received sync");
             connected = true;
             Debug.Log("[DualPanto] Sending SyncAck");
@@ -205,6 +211,7 @@ namespace DualPantoToolkit
             }
             else if (message.Contains("START"))
             {
+                espBooted = true;
                 Debug.Log("[DualPanto] " + message);
                 OnPantoStarted();
             }
@@ -346,6 +353,7 @@ namespace DualPantoToolkit
 
         void Awake()
         {
+            espBooted = false;
             ParseCommandLineArguments();
 
             Vector3 handleDefaultPosition = transform.position + new Vector3(0, 0, 3);
