@@ -72,7 +72,7 @@ namespace DualPantoToolkit
 
             while (inTransition)
             {
-                if (time > 3000)
+                if (time > 1)
                 {
                     Debug.Log("Abandoning gameobject that couldn't be reached: " + handledGameObject.name);
                     inTransition = false;
