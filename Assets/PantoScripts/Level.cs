@@ -30,7 +30,6 @@ namespace DualPantoToolkit
 
             for (int index = 0; index < gos.Length; index++)
             {
-                Debug.LogWarning("Here:" + gos[index].ToString());
                 await IntroduceObject(gos[index], msDelayBetweenObjects);
             }
 
